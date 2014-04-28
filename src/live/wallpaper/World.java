@@ -12,37 +12,39 @@ import java.util.*;
 
 import static live.wallpaper.Geometry.Point.cw;
 
-public class LiveWallpaperPainting {
+public class World {
 
     private SurfaceHolder surfaceHolder;
 
-    private Bitmap bg;
-    private Bitmap dustTextute;
-    private Bitmap spawnTexture;
-    private LinkedList<Unit> units;
-    private LinkedList<Unit> unitsAddBuffer;
-    private LinkedList<float[]> dust;
-    private LinkedList<float[]> deathes;
-    private LinkedList<float[]> spawns;
-    private LinkedList<live.wallpaper.Geometry.Point> intersections;
+    private Bitmap bg;//background picture
+    private Bitmap dustTextute;//blood texture
+    private Bitmap spawnTexture;//spawn texture
+    private LinkedList<Unit> units;//all units
+    private LinkedList<Unit> unitsAddBuffer;//units, which'll be added in next update
+    private LinkedList<float[]> dust;//blood doordinates
+    private LinkedList<float[]> deathes;//coordinates of "-1"
+    private LinkedList<float[]> spawns;//spawn coordinates
+    private LinkedList<live.wallpaper.Geometry.Point> intersections;//intersection coordinates (to interpolate between checking)
     private Random rnd = new Random();
-    private int width, height;
-    private boolean active=true;
-    private int[] deaths;
-    private Paint p;
-    private Paint bluredP;
-    private Path polygon = new Path();
-    private int allowAdd=0;
-    private int gcTime=0;
-    private int reWayAndReIntersectTimer;
-    private boolean drawContur=false;
-    private LinkedList<live.wallpaper.Geometry.Point>[] pts=new LinkedList[]{new LinkedList(), new LinkedList()};
-    private AI ai=new SimpleAI();
-    private LinkedList<ControlledUnit>[] controlledUnits= new LinkedList[]{new LinkedList(), new LinkedList()};
-    private LinkedList<NotControlledUnit>[] uncontrolledUnits= new LinkedList[]{new LinkedList(), new LinkedList()};
+    private int width, height;//size of screen
+    private boolean active=true;//is working
+    private int[] deaths;//count of death of reds and blues
+    private Paint p; //Main paint for everything
+    private Path polygon = new Path(); //Path for drawing strategy situation
+    private Ticker allowTouchScreen; //timer for touching
+    private Ticker gcTime;//timer for hand calling for gc()
+    private Ticker reWayAndReIntersectTime; //timer for recalculating intersections and calling AI
+    private boolean drawContur=false;//draw or not draw strategic situation
+    private AI ai=new SimpleAI();//AI
+    private LinkedList<live.wallpaper.Geometry.Point>[] pts=
+            new LinkedList[]{new LinkedList(), new LinkedList()}; //Points for calculating strategic situation
+    private LinkedList<ControlledUnit>[] controlledUnits=
+            new LinkedList[]{new LinkedList(), new LinkedList()}; //Lists of units to send in AI
+    private LinkedList<NotControlledUnit>[] uncontrolledUnits=
+            new LinkedList[]{new LinkedList(), new LinkedList()}; //Lists of units to send in AI
 
 
-    public LiveWallpaperPainting(SurfaceHolder surfaceHolder, Context context) {
+    public World(SurfaceHolder surfaceHolder, Context context) {
         this.surfaceHolder = surfaceHolder;
 
         Bitmap[][] menTexture = new Bitmap[2][3];
@@ -66,10 +68,13 @@ public class LiveWallpaperPainting {
         spawns=new LinkedList<>();
         intersections=new LinkedList<>();
 
+        allowTouchScreen =new Ticker(10);
+        gcTime=new Ticker(1000);
+        reWayAndReIntersectTime=new Ticker(10);
+
+
         p = new Paint();
         p.setTextSize(20f);
-
-        bluredP=new Paint();
     }
 
     public void pausePainting() {
@@ -99,15 +104,12 @@ public class LiveWallpaperPainting {
                         catch (Exception e) {}
                         if (timer[0] <= 0) {
                             timer[0] = 10;
-                            //dublicate();
-                            add();
+                            autoSpawn();
                         }
                         timer[0]--;
-                        gcTime--;
-                        if (gcTime<=0) {
-                            gcTime=1000;
+                        gcTime.tick();
+                        if (gcTime.getIsNextRound())
                             System.gc();
-                        }
                     }
             }
         }, 0, 20);
@@ -123,7 +125,7 @@ public class LiveWallpaperPainting {
     }
 
     public boolean doTouchEvent(MotionEvent event) {
-        if (allowAdd<=0) {
+        if (allowTouchScreen.getIsNextRound()) {
             /*float posX = event.getX();
             float posY = event.getY();
 
@@ -136,7 +138,6 @@ public class LiveWallpaperPainting {
                         team, gigant?0.2f:1f
                 ));*/
             drawContur=!drawContur;
-            allowAdd = 10;
         }
         return true;
     }
@@ -146,7 +147,7 @@ public class LiveWallpaperPainting {
         units.add(m);
     }
 
-    private void add() {
+    private void autoSpawn() {
         for (int team=0; team<2; team++) {
             float x=((team==0)?0:width*2/3)+rnd.nextInt(width/3);
             float y=rnd.nextInt(height);
@@ -164,8 +165,7 @@ public class LiveWallpaperPainting {
         }
     }
 
-    private void update() {
-
+    private void updateDeath() {
         for (int i = 0; i < units.size(); i++) {
             if (units.get(i).getHealth() <= 0) {
                 deaths[units.get(i).getTeam()]++;
@@ -173,7 +173,9 @@ public class LiveWallpaperPainting {
                 units.remove(i);
             }
         }
+    }
 
+    private void updateGraphicStuff() {
         for (int i=0; i<spawns.size(); i++) {
             spawns.get(i)[2]-=0.02f;
             if (spawns.get(i)[2]<=0)
@@ -191,52 +193,82 @@ public class LiveWallpaperPainting {
             if (deathes.get(i)[2]<=0)
                 deathes.remove(i);
         }
+    }
 
-        reWayAndReIntersectTimer--;
-        if (reWayAndReIntersectTimer<=0) {
+    private void updateAI() {
+        controlledUnits[0].clear();
+        controlledUnits[1].clear();
+        uncontrolledUnits[0].clear();
+        uncontrolledUnits[1].clear();
 
-            controlledUnits[0].clear();
-            controlledUnits[1].clear();
-            uncontrolledUnits[0].clear();
-            uncontrolledUnits[1].clear();
+        for (Unit u: units) {
+            controlledUnits[u.getTeam()].add(u);
+            uncontrolledUnits[u.getTeam()].add(u);
+        }
 
-            for (Unit u: units) {
-                controlledUnits[u.getTeam()].add(u);
-                uncontrolledUnits[u.getTeam()].add(u);
+        ai.solve(controlledUnits[0], uncontrolledUnits[1], new LinkedList<Stone>());
+        ai.solve(controlledUnits[1], uncontrolledUnits[0], new LinkedList<Stone>());
+    }
+
+    private void updateIntersections() {
+        intersections.clear();
+        for (int i = 0; i < units.size() - 1; i++)
+            for (int j = i + 1; j < units.size(); j++) {
+                if ((units.get(i).getTeam() != units.get(j).getTeam()))
+                    if (units.get(i).getIntersect(units.get(j))) {
+                        units.get(i).changeHealth(-0.1f / units.get(j).getPower());
+                        units.get(j).changeHealth(-0.1f / units.get(i).getPower());
+                        dust.add(new float[]{units.get(i).getX() - 28 + rnd.nextInt(20), units.get(i).getY() - 28 + rnd.nextInt(20), 1f});
+                        intersections.add(units.get(i).clone());
+                    }
             }
+    }
 
-            ai.solve(controlledUnits[0], uncontrolledUnits[1], new LinkedList<Stone>());
-            ai.solve(controlledUnits[1], uncontrolledUnits[0], new LinkedList<Stone>());
+    private void addInterpolatedBlood() {
+        for (live.wallpaper.Geometry.Point p: intersections)
+            dust.add(new float[]{p.getX() - 28 + rnd.nextInt(20), p.getY() - 28 + rnd.nextInt(20), 1f});
+    }
 
-            intersections.clear();
-            for (int i = 0; i < units.size() - 1; i++)
-                for (int j = i + 1; j < units.size(); j++) {
-                    if ((units.get(i).getTeam() != units.get(j).getTeam()))
-                        if (units.get(i).getIntersect(units.get(j))) {
-                            units.get(i).changeHealth(-0.1f / units.get(j).getPower());
-                            units.get(j).changeHealth(-0.1f / units.get(i).getPower());
-                            dust.add(new float[]{units.get(i).getX() - 28 + rnd.nextInt(20), units.get(i).getY() - 28 + rnd.nextInt(20), 1f});
-                            intersections.add(units.get(i).clone());
-                        }
-                }
-            reWayAndReIntersectTimer=10;
+    private void updateIntersectionAndAI() {
+        reWayAndReIntersectTime.tick();
+        if (reWayAndReIntersectTime.getIsNextRound()) {
+            updateAI();
+            updateIntersections();
         }
         else {
-            for (live.wallpaper.Geometry.Point p: intersections)
-            dust.add(new float[]{p.getX() - 28 + rnd.nextInt(20), p.getY() - 28 + rnd.nextInt(20), 1f});
+            addInterpolatedBlood();
         }
+    }
 
+    private void moveUnits() {
         for (Unit aMen : units) {
             aMen.move();
         }
+    }
 
+    private void addUnitsFromBuffer() {
         while (!unitsAddBuffer.isEmpty())  {
             units.add(unitsAddBuffer.get(0));
             unitsAddBuffer.remove(0);
         }
+    }
 
-        if (allowAdd>0)
-        allowAdd--;
+    private void doRegeneration() {
+        for (Unit unit : units) {
+            unit.changeHealth(0.001f);
+        }
+    }
+
+    private void update() {
+
+        doRegeneration();
+        updateDeath();
+        updateGraphicStuff();
+        updateIntersectionAndAI();
+        moveUnits();
+        addUnitsFromBuffer();
+
+        allowTouchScreen.tick();
     }
 
     private void drawBackground(Canvas canvas) {
@@ -313,11 +345,11 @@ public class LiveWallpaperPainting {
                     polygon.lineTo(cont[i].getX(), cont[i].getY());
                 polygon.close();
                 if (team == 0)
-                    bluredP.setColor(Color.rgb(255, 0, 0));
+                    p.setColor(Color.rgb(255, 0, 0));
                 else
-                    bluredP.setColor(Color.rgb(0, 0, 255));
-                bluredP.setAlpha(50);
-                canvas.drawPath(polygon, bluredP);
+                    p.setColor(Color.rgb(0, 0, 255));
+                p.setAlpha(50);
+                canvas.drawPath(polygon, p);
             }
         }
     }

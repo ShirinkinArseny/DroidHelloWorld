@@ -24,11 +24,11 @@ public class LiveWallpaperService extends WallpaperService {
 
     public class SampleEngine extends Engine implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-        private LiveWallpaperPainting painting;
+        private World painting;
 
         SampleEngine() {
             SurfaceHolder holder = getSurfaceHolder();
-            painting = new LiveWallpaperPainting(holder, getApplicationContext()
+            painting = new World(holder, getApplicationContext()
             );
         }
 
