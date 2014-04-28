@@ -1,4 +1,6 @@
-package live.wallpaper;
+package live.wallpaper.Geometry;
+
+import android.util.Log;
 
 import java.util.Comparator;
 

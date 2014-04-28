@@ -4,10 +4,13 @@ import android.content.Context;
 import android.graphics.*;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
+import live.wallpaper.AI.AI;
+import live.wallpaper.AI.SimpleAI;
+import live.wallpaper.Units.*;
 
 import java.util.*;
 
-import static live.wallpaper.Point.cw;
+import static live.wallpaper.Geometry.Point.cw;
 
 public class LiveWallpaperPainting {
 
@@ -16,13 +19,12 @@ public class LiveWallpaperPainting {
     private Bitmap bg;
     private Bitmap dustTextute;
     private Bitmap spawnTexture;
-    private Bitmap[][] menTexture;
-    private LinkedList<Man> men;
-    private LinkedList<Man> menAddBuffer;
+    private LinkedList<Unit> units;
+    private LinkedList<Unit> unitsAddBuffer;
     private LinkedList<float[]> dust;
     private LinkedList<float[]> deathes;
     private LinkedList<float[]> spawns;
-    private LinkedList<Point> intersections;
+    private LinkedList<live.wallpaper.Geometry.Point> intersections;
     private Random rnd = new Random();
     private int width, height;
     private boolean active=true;
@@ -34,23 +36,31 @@ public class LiveWallpaperPainting {
     private int gcTime=0;
     private int reWayAndReIntersectTimer;
     private boolean drawContur=false;
-    private LinkedList<Point>[] pts=new LinkedList[]{new LinkedList(), new LinkedList()};
+    private LinkedList<live.wallpaper.Geometry.Point>[] pts=new LinkedList[]{new LinkedList(), new LinkedList()};
+    private AI ai=new SimpleAI();
+    private LinkedList<ControlledUnit>[] controlledUnits= new LinkedList[]{new LinkedList(), new LinkedList()};
+    private LinkedList<NotControlledUnit>[] uncontrolledUnits= new LinkedList[]{new LinkedList(), new LinkedList()};
+
 
     public LiveWallpaperPainting(SurfaceHolder surfaceHolder, Context context) {
         this.surfaceHolder = surfaceHolder;
 
-        menTexture = new Bitmap[2][2];
+        Bitmap[][] menTexture = new Bitmap[2][3];
         menTexture[0][0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.red);
         menTexture[0][1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.bigred);
+        menTexture[0][2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.redtower);
         menTexture[1][0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.blue);
         menTexture[1][1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.bigblue);
+        menTexture[1][2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.bluetower);
+        Unit.init(menTexture);
+
         bg =               BitmapFactory.decodeResource(context.getResources(), R.drawable.bg);
         dustTextute  =     BitmapFactory.decodeResource(context.getResources(), R.drawable.dust);
         spawnTexture=      BitmapFactory.decodeResource(context.getResources(), R.drawable.spawn);
 
         deaths=new int[]{0, 0};
-        men = new LinkedList<>();
-        menAddBuffer=new LinkedList<>();
+        units = new LinkedList<>();
+        unitsAddBuffer =new LinkedList<>();
         dust=new LinkedList<>();
         deathes=new LinkedList<>();
         spawns=new LinkedList<>();
@@ -131,30 +141,36 @@ public class LiveWallpaperPainting {
         return true;
     }
 
-    private void spawn(Man m) {
+    private void spawn(Unit m) {
         spawns.add(new float[]{m.getX()-spawnTexture.getWidth()/2, m.getY()-spawnTexture.getHeight()/2, 1f});
-        men.add(m);
+        units.add(m);
     }
 
     private void add() {
         for (int team=0; team<2; team++) {
+            float x=((team==0)?0:width*2/3)+rnd.nextInt(width/3);
+            float y=rnd.nextInt(height);
             boolean gigant=0==rnd.nextInt(100);
-            spawn(new Man(
-                    menTexture[team][gigant?1:0],
-                    ((team==0)?0:width*2/3)+rnd.nextInt(width/3),
-                    rnd.nextInt(height),
-                    team, gigant?0.2f:1f
-            ));
+            if (gigant){
+                spawn(new Giant(x, y, team));
+                return;
+            }
+            /*boolean tower=0==rnd.nextInt(1000);
+            if (tower){
+                spawn(new Tower(x, y, team));
+                return;
+            }*/
+            spawn(new Man(x, y, team));
         }
     }
 
     private void update() {
 
-        for (int i = 0; i < men.size(); i++) {
-            if (men.get(i).getHealth() <= 0) {
-                deaths[men.get(i).getTeam()]++;
-                deathes.add(new float[]{men.get(i).getX(), men.get(i).getY(), 1f, men.get(i).getTeam()});
-                men.remove(i);
+        for (int i = 0; i < units.size(); i++) {
+            if (units.get(i).getHealth() <= 0) {
+                deaths[units.get(i).getTeam()]++;
+                deathes.add(new float[]{units.get(i).getX(), units.get(i).getY(), 1f, units.get(i).getTeam()});
+                units.remove(i);
             }
         }
 
@@ -178,42 +194,45 @@ public class LiveWallpaperPainting {
 
         reWayAndReIntersectTimer--;
         if (reWayAndReIntersectTimer<=0) {
+
+            controlledUnits[0].clear();
+            controlledUnits[1].clear();
+            uncontrolledUnits[0].clear();
+            uncontrolledUnits[1].clear();
+
+            for (Unit u: units) {
+                controlledUnits[u.getTeam()].add(u);
+                uncontrolledUnits[u.getTeam()].add(u);
+            }
+
+            ai.solve(controlledUnits[0], uncontrolledUnits[1], new LinkedList<Stone>());
+            ai.solve(controlledUnits[1], uncontrolledUnits[0], new LinkedList<Stone>());
+
             intersections.clear();
-            for (int i = 0; i < men.size() - 1; i++)
-                for (int j = i + 1; j < men.size(); j++) {
-                    if ((men.get(i).getTeam() != men.get(j).getTeam()))
-                        if (men.get(i).getIntersect(men.get(j))) {
-                            men.get(i).changeHealth(-0.1f / men.get(j).getPower());
-                            men.get(j).changeHealth(-0.1f / men.get(i).getPower());
-                            dust.add(new float[]{men.get(i).getX() - 28 + rnd.nextInt(20), men.get(i).getY() - 28 + rnd.nextInt(20), 1f});
-                            intersections.add(men.get(i).clone());
+            for (int i = 0; i < units.size() - 1; i++)
+                for (int j = i + 1; j < units.size(); j++) {
+                    if ((units.get(i).getTeam() != units.get(j).getTeam()))
+                        if (units.get(i).getIntersect(units.get(j))) {
+                            units.get(i).changeHealth(-0.1f / units.get(j).getPower());
+                            units.get(j).changeHealth(-0.1f / units.get(i).getPower());
+                            dust.add(new float[]{units.get(i).getX() - 28 + rnd.nextInt(20), units.get(i).getY() - 28 + rnd.nextInt(20), 1f});
+                            intersections.add(units.get(i).clone());
                         }
                 }
             reWayAndReIntersectTimer=10;
         }
         else {
-            for (Point p: intersections)
+            for (live.wallpaper.Geometry.Point p: intersections)
             dust.add(new float[]{p.getX() - 28 + rnd.nextInt(20), p.getY() - 28 + rnd.nextInt(20), 1f});
         }
 
-        for (Man aMen1 : men) aMen1.dropWay();
-
-        for (int i = 0; i < men.size(); i++) {
-            if (men.get(i).getNeedReway())
-                for (Man aMen : men) {
-                    if (men.get(i).getTeam() != aMen.getTeam()) {
-                        men.get(i).setWay(aMen.getX(), aMen.getY());
-                    }
-                }
-        }
-
-        for (Man aMen : men) {
+        for (Unit aMen : units) {
             aMen.move();
         }
 
-        while (!menAddBuffer.isEmpty())  {
-            men.add(menAddBuffer.get(0));
-            menAddBuffer.remove(0);
+        while (!unitsAddBuffer.isEmpty())  {
+            units.add(unitsAddBuffer.get(0));
+            unitsAddBuffer.remove(0);
         }
 
         if (allowAdd>0)
@@ -233,8 +252,8 @@ public class LiveWallpaperPainting {
         }
     }
 
-    private void drawMen(Canvas canvas) {
-        for (Man m : men)
+    private void drawUnits(Canvas canvas) {
+        for (Unit m : units)
             m.draw(canvas);
     }
 
@@ -257,12 +276,12 @@ public class LiveWallpaperPainting {
         }
     }
 
-    public static Point[] convexHull(LinkedList<Point> p) {
+    public static live.wallpaper.Geometry.Point[] convexHull(LinkedList<live.wallpaper.Geometry.Point> p) {
         int n = p.size();
         if (n <= 1)
             return null;
-        Collections.sort(p, Point.comparer);
-        Point[] q = new Point[n * 2];
+        Collections.sort(p, live.wallpaper.Geometry.Point.comparer);
+        live.wallpaper.Geometry.Point[] q = new live.wallpaper.Geometry.Point[n * 2];
         int cnt = 0;
         for (int i = 0; i < n; q[cnt++] = p.get(i++))
             for (; cnt > 1 && !cw(q[cnt - 2], q[cnt - 1], p.get(i)); --cnt)
@@ -270,7 +289,7 @@ public class LiveWallpaperPainting {
         for (int i = n - 2, t = cnt; i >= 0; q[cnt++] = p.get(i--))
             for (; cnt > t && !cw(q[cnt - 2], q[cnt - 1], p.get(i)); --cnt)
                 ;
-        Point[] res = new Point[cnt - 1 - (q[0].compareTo(q[1]) == 0 ? 1 : 0)];
+        live.wallpaper.Geometry.Point[] res = new live.wallpaper.Geometry.Point[cnt - 1 - (q[0].compareTo(q[1]) == 0 ? 1 : 0)];
         System.arraycopy(q, 0, res, 0, res.length);
         return res;
     }
@@ -278,7 +297,7 @@ public class LiveWallpaperPainting {
     private void drawContures(Canvas canvas) {
         for (int team=0; team<2; team++)
             pts[team].clear();
-        for (Man m : men)
+        for (Unit m : units)
             if (m.getTeam() == 0)
                 pts[0].add(m);
             else pts[1].add(m);
@@ -286,7 +305,7 @@ public class LiveWallpaperPainting {
         for (int team=0; team<2; team++) {
             if (pts[team].size()>1) {
 
-                Point[] cont=convexHull(pts[team]);
+                live.wallpaper.Geometry.Point[] cont=convexHull(pts[team]);
 
                 polygon.reset();
                 polygon.moveTo(cont[0].getX(), cont[0].getY());
@@ -308,7 +327,7 @@ public class LiveWallpaperPainting {
         drawBlood(canvas);
         if (drawContur) drawContures(canvas);
         drawSpawns(canvas);
-        drawMen(canvas);
+        drawUnits(canvas);
         drawDeathes(canvas);
     }
 }
