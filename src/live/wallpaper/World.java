@@ -22,14 +22,15 @@ public class World {
     private LinkedList<Unit> units;//all units
     private LinkedList<Unit> unitsAddBuffer;//units, which'll be added in next update
     private LinkedList<float[]> dust;//blood doordinates
-    private LinkedList<float[]> deathes;//coordinates of "-1"
     private LinkedList<float[]> spawns;//spawn coordinates
-    private LinkedList<live.wallpaper.Geometry.Point> intersections;//intersection coordinates (to interpolate between checking)
+    private LinkedList<Message> messages;//coordinates of messages
     private Random rnd = new Random();
     private int width, height;//size of screen
     private boolean active=true;//is working
     private int[] deaths;//count of death of reds and blues
     private Paint p; //Main paint for everything
+    private Paint pBlue; //Blue paint
+    private Paint pRed; //Red paint
     private Path polygon = new Path(); //Path for drawing strategy situation
     private Ticker allowTouchScreen; //timer for touching
     private Ticker gcTime;//timer for hand calling for gc()
@@ -64,9 +65,8 @@ public class World {
         units = new LinkedList<>();
         unitsAddBuffer =new LinkedList<>();
         dust=new LinkedList<>();
-        deathes=new LinkedList<>();
+        messages =new LinkedList<>();
         spawns=new LinkedList<>();
-        intersections=new LinkedList<>();
 
         allowTouchScreen =new Ticker(10);
         gcTime=new Ticker(1000);
@@ -75,6 +75,16 @@ public class World {
 
         p = new Paint();
         p.setTextSize(20f);
+
+        pBlue=new Paint();
+        pBlue.setColor(Color.rgb(128, 128, 255));
+        pBlue.setAlpha(128);
+        pBlue.setTextSize(20f);
+
+        pRed=new Paint();
+        pRed.setColor(Color.rgb(255, 128, 128));
+        pRed.setAlpha(128);
+        pRed.setTextSize(20f);
     }
 
     public void pausePainting() {
@@ -90,7 +100,7 @@ public class World {
     }
 
     public void run() {
-        final int[] timer = {0};
+        final Ticker spawnTimer=new Ticker(20);
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -102,11 +112,9 @@ public class World {
                         surfaceHolder.unlockCanvasAndPost(c);
                         }
                         catch (Exception e) {}
-                        if (timer[0] <= 0) {
-                            timer[0] = 10;
+                        spawnTimer.tick();
+                        if(spawnTimer.getIsNextRound())
                             autoSpawn();
-                        }
-                        timer[0]--;
                         gcTime.tick();
                         if (gcTime.getIsNextRound())
                             System.gc();
@@ -154,6 +162,7 @@ public class World {
             boolean gigant=0==rnd.nextInt(100);
             if (gigant){
                 spawn(new Giant(x, y, team));
+                showMessage(x, y, "GIANT SPAWNED!", team);
                 return;
             }
             /*boolean tower=0==rnd.nextInt(1000);
@@ -165,11 +174,23 @@ public class World {
         }
     }
 
+    private void showMessage(float x, float y, String text, int color) {
+        messages.add(
+                new Message(text, x, y,
+                        0.03f, color == 0 ? pRed : pBlue)
+        );
+    }
+
     private void updateDeath() {
         for (int i = 0; i < units.size(); i++) {
             if (units.get(i).getHealth() <= 0) {
                 deaths[units.get(i).getTeam()]++;
-                deathes.add(new float[]{units.get(i).getX(), units.get(i).getY(), 1f, units.get(i).getTeam()});
+
+                if (units.get(i).getType()== NotControlledUnit.Type.Giant)
+                showMessage(units.get(i).getX(), units.get(i).getY(), "GIANT DEATH!", units.get(i).getTeam());
+
+                for (int j=0; j<10; j++)
+                dust.add(new float[]{units.get(i).getX() - 28 + rnd.nextInt(20), units.get(i).getY() - 28 + rnd.nextInt(20), 1f+j/5f});
                 units.remove(i);
             }
         }
@@ -188,10 +209,10 @@ public class World {
                 dust.remove(i);
         }
 
-        for (int i=0; i<deathes.size(); i++) {
-            deathes.get(i)[2]-=0.1f;
-            if (deathes.get(i)[2]<=0)
-                deathes.remove(i);
+        for (int i=0; i< messages.size(); i++) {
+            messages.get(i).update();
+            if (messages.get(i).getNeedToRemove())
+                messages.remove(i);
         }
     }
 
@@ -211,22 +232,30 @@ public class World {
     }
 
     private void updateIntersections() {
-        intersections.clear();
         for (int i = 0; i < units.size() - 1; i++)
             for (int j = i + 1; j < units.size(); j++) {
                 if ((units.get(i).getTeam() != units.get(j).getTeam()))
                     if (units.get(i).getIntersect(units.get(j))) {
-                        units.get(i).changeHealth(-0.1f / units.get(j).getPower());
-                        units.get(j).changeHealth(-0.1f / units.get(i).getPower());
-                        dust.add(new float[]{units.get(i).getX() - 28 + rnd.nextInt(20), units.get(i).getY() - 28 + rnd.nextInt(20), 1f});
-                        intersections.add(units.get(i).clone());
+                        float attack1=-0.1f / units.get(j).getPower()* rnd.nextFloat();
+                        float attack2=-0.1f / units.get(i).getPower() * rnd.nextFloat();
+                        int att[] =new int[]{(int)(attack1*100000*units.get(j).getPower()),
+                                             (int)(attack2*100000*units.get(i).getPower())};
+
+                        if (att[0]<-9991) {
+                            attack1*=att[0]+10000;
+                            showMessage(units.get(i).getX(), units.get(i).getY(), "CRITICAL x"+(att[0]+10000)+"!", units.get(i).getTeam());
+
+                        }
+                        if (att[1]<-9991) {
+                            attack2*=att[1]+10000;
+                            showMessage(units.get(j).getX(), units.get(j).getY(), "CRITICAL x"+(att[1]+10000)+"!", units.get(j).getTeam());
+                        }
+
+
+                        units.get(i).changeHealth(attack1);
+                        units.get(j).changeHealth(attack2);
                     }
             }
-    }
-
-    private void addInterpolatedBlood() {
-        for (live.wallpaper.Geometry.Point p: intersections)
-            dust.add(new float[]{p.getX() - 28 + rnd.nextInt(20), p.getY() - 28 + rnd.nextInt(20), 1f});
     }
 
     private void updateIntersectionAndAI() {
@@ -234,9 +263,6 @@ public class World {
         if (reWayAndReIntersectTime.getIsNextRound()) {
             updateAI();
             updateIntersections();
-        }
-        else {
-            addInterpolatedBlood();
         }
     }
 
@@ -289,16 +315,9 @@ public class World {
             m.draw(canvas);
     }
 
-    private void drawDeathes(Canvas canvas) {
-        for (float[] f: deathes) {
-            if (f[3]==0)
-                p.setColor(Color.rgb(255, 128, 128));
-            else
-                p.setColor(Color.rgb(128, 128, 255));
-            p.setAlpha((int) (f[2]*256));
-
-            canvas.drawText("-1", f[0], f[1]-(1-f[2])*50, p);
-        }
+    private void drawMessages(Canvas canvas) {
+        for (Message f: messages)
+            f.draw(canvas);
     }
 
     private void drawSpawns(Canvas canvas) {
@@ -360,7 +379,7 @@ public class World {
         if (drawContur) drawContures(canvas);
         drawSpawns(canvas);
         drawUnits(canvas);
-        drawDeathes(canvas);
+        drawMessages(canvas);
     }
 }
         
