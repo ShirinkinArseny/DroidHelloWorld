@@ -10,8 +10,6 @@ import live.wallpaper.Units.*;
 
 import java.util.*;
 
-import static live.wallpaper.Geometry.Point.cw;
-
 public class World {
 
     private SurfaceHolder surfaceHolder;
@@ -23,7 +21,8 @@ public class World {
     private LinkedList<Unit> unitsAddBuffer;//units, which'll be added in next update
     private LinkedList<float[]> dust;//blood doordinates
     private LinkedList<float[]> spawns;//spawn coordinates
-    private LinkedList<Message> messages;//coordinates of messages
+    private LinkedList<float[]> spawnsAddBuffer;//spawn coordinates
+    private final LinkedList<Message> messages;//coordinates of messages
     private Random rnd = new Random();
     private int width, height;//size of screen
     private boolean active=true;//is working
@@ -31,17 +30,17 @@ public class World {
     private Paint p; //Main paint for everything
     private Paint pBlue; //Blue paint
     private Paint pRed; //Red paint
-    private Path polygon = new Path(); //Path for drawing strategy situation
     private Ticker allowTouchScreen; //timer for touching
     private Ticker gcTime;//timer for hand calling for gc()
     private Ticker reWayAndReIntersectTime; //timer for recalculating intersections and calling AI
-    private boolean drawContur=false;//draw or not draw strategic situation
     private AI ai=new SimpleAI();//AI
     private LinkedList<live.wallpaper.Geometry.Point>[] pts=
             new LinkedList[]{new LinkedList(), new LinkedList()}; //Points for calculating strategic situation
     private LinkedList<ControlledUnit>[] controlledUnits=
             new LinkedList[]{new LinkedList(), new LinkedList()}; //Lists of units to send in AI
     private LinkedList<NotControlledUnit>[] uncontrolledUnits=
+            new LinkedList[]{new LinkedList(), new LinkedList()}; //Lists of units to send in AI
+    private LinkedList<Unit>[] dividedUnits=
             new LinkedList[]{new LinkedList(), new LinkedList()}; //Lists of units to send in AI
 
 
@@ -67,11 +66,11 @@ public class World {
         dust=new LinkedList<>();
         messages =new LinkedList<>();
         spawns=new LinkedList<>();
+        spawnsAddBuffer=new LinkedList<>();
 
         allowTouchScreen =new Ticker(10);
         gcTime=new Ticker(1000);
-        reWayAndReIntersectTime=new Ticker(10);
-
+        reWayAndReIntersectTime=new Ticker(5);
 
         p = new Paint();
         p.setTextSize(20f);
@@ -100,7 +99,7 @@ public class World {
     }
 
     public void run() {
-        final Ticker spawnTimer=new Ticker(20);
+        final Ticker spawnTimer=new Ticker(10);
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -111,7 +110,7 @@ public class World {
                         draw(c);
                         surfaceHolder.unlockCanvasAndPost(c);
                         }
-                        catch (Exception e) {}
+                        catch (IllegalArgumentException e) {}
                         spawnTimer.tick();
                         if(spawnTimer.getIsNextRound())
                             autoSpawn();
@@ -128,31 +127,31 @@ public class World {
             this.width = width;
             this.height = height;
             this.notify();
+            Unit.setScreenSize(width, height);
             bg = Bitmap.createScaledBitmap(bg, width, height, true);
         }
     }
 
     public boolean doTouchEvent(MotionEvent event) {
         if (allowTouchScreen.getIsNextRound()) {
-            /*float posX = event.getX();
+            float posX = event.getX();
             float posY = event.getY();
+            int team=(posX<width/2)?0:1;
 
-                int team=(posX<width/2)?0:1;
-                boolean gigant=0==rnd.nextInt(100);
-                spawn(new Man(
-                        menTexture[team][gigant?1:0],
-                        posX,
-                        posY,
-                        team, gigant?0.2f:1f
-                ));*/
-            drawContur=!drawContur;
+            boolean gigant=true;//0==rnd.nextInt(100);
+            if (gigant){
+                spawn(new Giant(posX, posY, team));
+                showMessage(posX, posY, "GIANT SPAWNED!", team);
+            }
+            else
+            spawn(new Man(posX, posY, team));
         }
         return true;
     }
 
     private void spawn(Unit m) {
-        spawns.add(new float[]{m.getX()-spawnTexture.getWidth()/2, m.getY()-spawnTexture.getHeight()/2, 1f});
-        units.add(m);
+        spawnsAddBuffer.add(new float[]{m.getX()-spawnTexture.getWidth()/2, m.getY()-spawnTexture.getHeight()/2, 1f});
+        unitsAddBuffer.add(m);
     }
 
     private void autoSpawn() {
@@ -188,6 +187,19 @@ public class World {
 
                 if (units.get(i).getType()== NotControlledUnit.Type.Giant)
                 showMessage(units.get(i).getX(), units.get(i).getY(), "GIANT DEATH!", units.get(i).getTeam());
+                else
+                if (rnd.nextInt(1000)==0) {
+                    showMessage(units.get(i).getX(), units.get(i).getY(), "KAMIKADZE BOOM!", units.get(i).getTeam());
+                    for (Unit c: units) {
+                        float ro=c.getSquaredLength(units.get(i));
+                        if (ro<=10000) {
+                            c.changeHealth((ro - 10000f) / 2500f);
+                        }
+                    }
+                }
+                else
+                    showMessage(units.get(i).getX(), units.get(i).getY(), "-1", units.get(i).getTeam());
+
 
                 for (int j=0; j<10; j++)
                 dust.add(new float[]{units.get(i).getX() - 28 + rnd.nextInt(20), units.get(i).getY() - 28 + rnd.nextInt(20), 1f+j/5f});
@@ -232,30 +244,29 @@ public class World {
     }
 
     private void updateIntersections() {
-        for (int i = 0; i < units.size() - 1; i++)
-            for (int j = i + 1; j < units.size(); j++) {
-                if ((units.get(i).getTeam() != units.get(j).getTeam()))
-                    if (units.get(i).getIntersect(units.get(j))) {
-                        float attack1=-0.1f / units.get(j).getPower()* rnd.nextFloat();
-                        float attack2=-0.1f / units.get(i).getPower() * rnd.nextFloat();
-                        int att[] =new int[]{(int)(attack1*100000*units.get(j).getPower()),
-                                             (int)(attack2*100000*units.get(i).getPower())};
 
-                        if (att[0]<-9991) {
-                            attack1*=att[0]+10000;
-                            showMessage(units.get(i).getX(), units.get(i).getY(), "CRITICAL x"+(att[0]+10000)+"!", units.get(i).getTeam());
+        dividedUnits[0].clear();
+        dividedUnits[1].clear();
+        for (Unit u: units)
+            dividedUnits[u.getTeam()].add(u);
 
+        for (Unit unit : units) {
+            int enemyTeam = unit.getTeam() == 0 ? 1 : 0;
+            for (Unit enemy : dividedUnits[enemyTeam]) {
+                    if (unit.getIntersect(enemy)) {
+                        float attack1 = -0.1f / enemy.getPower() * rnd.nextFloat();
+                        int att = (int) (attack1 * 100000 * enemy.getPower());
+
+                        if (att < -9991) {
+                            attack1 *= att + 10000;
+                            showMessage(unit.getX(), unit.getY(),
+                                    "CRITICAL x" + (att + 10000) + "!", unit.getTeam());
                         }
-                        if (att[1]<-9991) {
-                            attack2*=att[1]+10000;
-                            showMessage(units.get(j).getX(), units.get(j).getY(), "CRITICAL x"+(att[1]+10000)+"!", units.get(j).getTeam());
-                        }
 
-
-                        units.get(i).changeHealth(attack1);
-                        units.get(j).changeHealth(attack2);
+                        unit.changeHealth(attack1);
                     }
             }
+        }
     }
 
     private void updateIntersectionAndAI() {
@@ -276,6 +287,8 @@ public class World {
         while (!unitsAddBuffer.isEmpty())  {
             units.add(unitsAddBuffer.get(0));
             unitsAddBuffer.remove(0);
+            spawns.add(spawnsAddBuffer.get(0));
+            spawnsAddBuffer.remove(0);
         }
     }
 
@@ -316,8 +329,10 @@ public class World {
     }
 
     private void drawMessages(Canvas canvas) {
-        for (Message f: messages)
-            f.draw(canvas);
+        synchronized (messages) {
+            for (Message f : messages)
+                f.draw(canvas);
+        }
     }
 
     private void drawSpawns(Canvas canvas) {
@@ -327,56 +342,9 @@ public class World {
         }
     }
 
-    public static live.wallpaper.Geometry.Point[] convexHull(LinkedList<live.wallpaper.Geometry.Point> p) {
-        int n = p.size();
-        if (n <= 1)
-            return null;
-        Collections.sort(p, live.wallpaper.Geometry.Point.comparer);
-        live.wallpaper.Geometry.Point[] q = new live.wallpaper.Geometry.Point[n * 2];
-        int cnt = 0;
-        for (int i = 0; i < n; q[cnt++] = p.get(i++))
-            for (; cnt > 1 && !cw(q[cnt - 2], q[cnt - 1], p.get(i)); --cnt)
-                ;
-        for (int i = n - 2, t = cnt; i >= 0; q[cnt++] = p.get(i--))
-            for (; cnt > t && !cw(q[cnt - 2], q[cnt - 1], p.get(i)); --cnt)
-                ;
-        live.wallpaper.Geometry.Point[] res = new live.wallpaper.Geometry.Point[cnt - 1 - (q[0].compareTo(q[1]) == 0 ? 1 : 0)];
-        System.arraycopy(q, 0, res, 0, res.length);
-        return res;
-    }
-
-    private void drawContures(Canvas canvas) {
-        for (int team=0; team<2; team++)
-            pts[team].clear();
-        for (Unit m : units)
-            if (m.getTeam() == 0)
-                pts[0].add(m);
-            else pts[1].add(m);
-
-        for (int team=0; team<2; team++) {
-            if (pts[team].size()>1) {
-
-                live.wallpaper.Geometry.Point[] cont=convexHull(pts[team]);
-
-                polygon.reset();
-                polygon.moveTo(cont[0].getX(), cont[0].getY());
-                for (int i=1; i<cont.length; i++)
-                    polygon.lineTo(cont[i].getX(), cont[i].getY());
-                polygon.close();
-                if (team == 0)
-                    p.setColor(Color.rgb(255, 0, 0));
-                else
-                    p.setColor(Color.rgb(0, 0, 255));
-                p.setAlpha(50);
-                canvas.drawPath(polygon, p);
-            }
-        }
-    }
-
     private void draw(Canvas canvas) {
         drawBackground(canvas);
         drawBlood(canvas);
-        if (drawContur) drawContures(canvas);
         drawSpawns(canvas);
         drawUnits(canvas);
         drawMessages(canvas);

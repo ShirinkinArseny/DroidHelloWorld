@@ -31,6 +31,6 @@ public class Rectangle extends Point{
     }
 
     public boolean getIntersect(Rectangle m) {
-        return (Math.abs(getX()-m.getX())+Math.abs(getY()-m.getY())<=m.w2+m.h2+w2+h2);
+        return (Math.abs(getX()-m.getX())+Math.abs(getY()-m.getY())<=(m.w2+m.h2+w2+h2)*2/3);
     }
 }

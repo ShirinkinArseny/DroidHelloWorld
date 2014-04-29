@@ -1,7 +1,5 @@
 package live.wallpaper.Geometry;
 
-import android.util.Log;
-
 import java.util.Comparator;
 
 public class Point {
@@ -16,6 +14,10 @@ public class Point {
 
     public float getY() {
         return y;
+    }
+
+    public float getSquaredLength(Point p) {
+        return (p.x-x)*(p.x-x)+(p.y-y)*(p.y-y);
     }
 
     public void changePosition(float dx, float dy) {

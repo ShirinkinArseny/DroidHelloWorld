@@ -16,9 +16,23 @@ public class NotControlledUnit extends Rectangle {
     public enum Type {Man, Giant, Tower}
     private Type type;
     private float speed;
+    private static float screenWidth, screenHeight;
+
+    public static void setScreenSize(float w, float h) {
+        screenWidth=w;
+        screenHeight=h;
+    }
 
     public static void init(Bitmap[][] menTextures) {
         menTexture=menTextures;
+    }
+
+    protected static float getScreenWidth() {
+        return screenWidth;
+    }
+
+    protected static float getScreenHeight() {
+        return screenHeight;
     }
 
     protected static Bitmap getBitmap(int team, Type type) {

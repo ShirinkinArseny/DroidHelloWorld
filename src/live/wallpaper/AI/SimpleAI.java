@@ -1,5 +1,6 @@
 package live.wallpaper.AI;
 
+import android.util.Log;
 import live.wallpaper.Stone;
 import live.wallpaper.Units.ControlledUnit;
 import live.wallpaper.Units.NotControlledUnit;
@@ -23,6 +24,7 @@ public class SimpleAI implements AI{
 
         if ((was100 || enemies.size()>=50) && (enemies.size()>1)) {
             was100=true;
+
             float midX = 0;
             float midY = 0;
 
@@ -34,7 +36,11 @@ public class SimpleAI implements AI{
             midY /= enemies.size();
 
             for (ControlledUnit c : yours) {
-                    c.setWay(midX+(rnd.nextFloat()-0.5f)*200f, midY+(rnd.nextFloat()-0.5f)*200f);
+                if (c.getHealth()<0.4f) {
+                    c.setWay(c.getX()*2-midX, c.getY()*2-midY);
+                }
+                else
+                    c.setWay(midX+rnd.nextInt(200)-100, midY+rnd.nextInt(200)-100);
             }
         }
 

@@ -27,6 +27,6 @@ public class Ticker {
     public Ticker(int limit) {
         this.limit=limit;
         value=0;
-        can=false;
+        can=true;
     }
 }

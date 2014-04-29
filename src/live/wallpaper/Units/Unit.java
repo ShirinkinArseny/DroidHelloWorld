@@ -27,8 +27,12 @@ public class Unit extends ControlledUnit {
         double dl=Math.sqrt((getX()-getXWay())*(getX()-getXWay())+(getY()-getYWay())*(getY()-getYWay()));
         float dx= (float) ((getXWay()-getX())/dl);
         float dy= (float) ((getYWay()-getY())/dl);
-        dx*=getSpeed()+getSpeed()*rnd.nextFloat();
-        dy*=getSpeed()+getSpeed()*rnd.nextFloat();
+        dx*=getSpeed()*(1+2*rnd.nextFloat());
+        dy*=getSpeed()*(1+2*rnd.nextFloat());
+        if (getX()+dx-getWHalf()<0) dx=1;
+        if (getX()+dx-getWHalf()>getScreenWidth()) dx=-1;
+        if (getY()+dy<0) dy=1;
+        if (getY()+dy>getScreenHeight()) dy=-1;
         changePosition(dx, dy);
     }
 
