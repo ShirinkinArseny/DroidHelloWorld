@@ -17,7 +17,6 @@ public class World {
     private Bitmap bg;//background picture
     private Bitmap dustTextute;//blood texture
     private Bitmap spawnTexture;//spawn texture
-    private LinkedList<Unit> units;//all units
     private LinkedList<Unit> unitsAddBuffer;//units, which'll be added in next update
     private LinkedList<float[]> dust;//blood doordinates
     private LinkedList<float[]> spawns;//spawn coordinates
@@ -34,8 +33,6 @@ public class World {
     private Ticker gcTime;//timer for hand calling for gc()
     private Ticker reWayAndReIntersectTime; //timer for recalculating intersections and calling AI
     private AI ai=new SimpleAI();//AI
-    private LinkedList<live.wallpaper.Geometry.Point>[] pts=
-            new LinkedList[]{new LinkedList(), new LinkedList()}; //Points for calculating strategic situation
     private LinkedList<ControlledUnit>[] controlledUnits=
             new LinkedList[]{new LinkedList(), new LinkedList()}; //Lists of units to send in AI
     private LinkedList<NotControlledUnit>[] uncontrolledUnits=
@@ -63,7 +60,6 @@ public class World {
         spawnTexture=      BitmapFactory.decodeResource(context.getResources(), R.drawable.spawn);
 
         deaths=new int[]{0, 0};
-        units = new LinkedList<>();
         unitsAddBuffer =new LinkedList<>();
         dust=new LinkedList<>();
         messages =new LinkedList<>();
@@ -166,7 +162,7 @@ public class World {
                 showMessage(x, y, "GIANT SPAWNED!", team);
                 return;
             }
-            boolean tower=0==rnd.nextInt(100);
+            boolean tower=0==rnd.nextInt(20);
             if (tower){
                 spawn(new Tower(x, y, team));
                 return;
@@ -182,7 +178,7 @@ public class World {
         );
     }
 
-    private void updateDeath() {
+    private void updateDeath(LinkedList<Unit> units) {
         for (int i = 0; i < units.size(); i++) {
             if (units.get(i).getHealth() <= 0) {
                 deaths[units.get(i).getTeam()]++;
@@ -190,21 +186,12 @@ public class World {
                 if (units.get(i).getType()== NotControlledUnit.Type.Giant)
                 showMessage(units.get(i).getX(), units.get(i).getY(), "GIANT DEATH!", units.get(i).getTeam());
                 else
-                if (rnd.nextInt(1000)==0) {
-                    showMessage(units.get(i).getX(), units.get(i).getY(), "KAMIKADZE BOOM!", units.get(i).getTeam());
-                    for (Unit c: units) {
-                        float ro=c.getSquaredLength(units.get(i));
-                        if (ro<=10000) {
-                            c.changeHealth((ro - 10000f) / 2500f);
-                        }
-                    }
-                }
-                else
+                if (units.get(i).getType()== NotControlledUnit.Type.Man)
                     showMessage(units.get(i).getX(), units.get(i).getY(), "-1", units.get(i).getTeam());
-
 
                 for (int j=0; j<10; j++)
                 dust.add(new float[]{units.get(i).getX() - 28 + rnd.nextInt(20), units.get(i).getY() - 28 + rnd.nextInt(20), 1f+j/5f});
+
                 units.remove(i);
             }
         }
@@ -236,10 +223,11 @@ public class World {
         uncontrolledUnits[0].clear();
         uncontrolledUnits[1].clear();
 
-        for (Unit u: units)
-            if (u.getType()!= NotControlledUnit.Type.Bullet) {
-            controlledUnits[u.getTeam()].add(u);
-            uncontrolledUnits[u.getTeam()].add(u);
+
+        for (int i=0; i<2; i++)
+        for (Unit u: dividedUnits[i]) {
+            controlledUnits[i].add(u);
+            uncontrolledUnits[i].add(u);
         }
 
         ai.solve(controlledUnits[0], uncontrolledUnits[1], new LinkedList<Stone>());
@@ -262,27 +250,17 @@ public class World {
     }
 
     private void updateIntersections() {
-
-        dividedUnits[0].clear();
-        dividedUnits[1].clear();
-        for (Unit u: units) {
-            if (u.getType()== NotControlledUnit.Type.Bullet)
-            dividedUnits[u.getTeam()+2].add(u);
-            else
-                dividedUnits[u.getTeam()].add(u);
-        }
-
-        for (Unit unit : units) {
-            if (unit.getType() != NotControlledUnit.Type.Bullet) {
-                int enemyTeam = unit.getTeam() == 0 ? 1 : 0;
-                for (Unit enemy : dividedUnits[enemyTeam]) {
-                    fightUnits(unit, enemy);
+                for (int i=0; i<2; i++) {
+                    int enemyTeam=Math.abs(i-1);
+                    for (Unit unit: dividedUnits[i]) {
+                        for (Unit enemy : dividedUnits[enemyTeam]) {
+                            fightUnits(unit, enemy);
+                        }
+                        for (Unit enemy : dividedUnits[enemyTeam + 2]) {
+                            fightUnits(enemy, unit);
+                        }
+                    }
                 }
-                for (Unit enemy : dividedUnits[enemyTeam+2]) {
-                    fightUnits(enemy, unit);
-                }
-            }
-        }
     }
 
     private void updateIntersectionAndAI() {
@@ -293,19 +271,28 @@ public class World {
         }
     }
 
+    private void moveUnit(Unit u) {
+        Unit[] add=new Unit[1];
+        u.move(add);
+        if (add[0]!=null) {
+            spawn(add[0]);
+        }
+    }
+
     private void moveUnits() {
-        for (Unit aMen : units) {
-            Unit[] add=new Unit[1];
-            aMen.move(add);
-            if (add[0]!=null) {
-                spawn(add[0]);
-            }
+        for (int i=0; i<4; i++)
+        for (Unit aMen : dividedUnits[i]) {
+            moveUnit(aMen);
         }
     }
 
     private void addUnitsFromBuffer() {
         while (!unitsAddBuffer.isEmpty())  {
-            units.add(unitsAddBuffer.get(0));
+            Unit add=unitsAddBuffer.get(0);
+            if (add.getType()== NotControlledUnit.Type.Bullet)
+                dividedUnits[add.getTeam()+2].add(add);
+            else
+                dividedUnits[add.getTeam()].add(add);
             unitsAddBuffer.remove(0);
             spawns.add(spawnsAddBuffer.get(0));
             spawnsAddBuffer.remove(0);
@@ -313,7 +300,8 @@ public class World {
     }
 
     private void doRegeneration() {
-        for (Unit unit : units) {
+        for (int i=0; i<2; i++)
+        for (Unit unit : dividedUnits[i]) {
             unit.changeHealth(0.001f);
         }
     }
@@ -321,7 +309,8 @@ public class World {
     private void update() {
 
         doRegeneration();
-        updateDeath();
+        for (int i=0; i<4; i++)
+        updateDeath(dividedUnits[i]);
         updateGraphicStuff();
         updateIntersectionAndAI();
         moveUnits();
@@ -344,15 +333,14 @@ public class World {
     }
 
     private void drawUnits(Canvas canvas) {
-        for (Unit m : units)
+        for (int i=0; i<4; i++)
+        for (Unit m : dividedUnits[i])
             m.draw(canvas);
     }
 
     private void drawMessages(Canvas canvas) {
-        synchronized (messages) {
             for (Message f : messages)
                 f.draw(canvas);
-        }
     }
 
     private void drawSpawns(Canvas canvas) {

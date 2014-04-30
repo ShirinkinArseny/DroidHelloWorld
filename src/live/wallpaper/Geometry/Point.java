@@ -8,16 +8,20 @@ public class Point {
     private float x;
     private float y;
 
-    public float getX() {
+    public Float getX() {
         return x;
     }
 
-    public float getY() {
+    public Float getY() {
         return y;
     }
 
     public float getSquaredLength(Point p) {
-        return (p.x-x)*(p.x-x)+(p.y-y)*(p.y-y);
+        return getSquaredLength(p.x, p.y);
+    }
+
+    public float getSquaredLength(float x2, float y2) {
+        return (x2-x)*(x2-x)+(y2-y)*(y2-y);
     }
 
     public void changePosition(float dx, float dy) {

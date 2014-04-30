@@ -5,24 +5,10 @@ import live.wallpaper.Units.ControlledUnit;
 import live.wallpaper.Units.NotControlledUnit;
 
 import java.util.LinkedList;
-import java.util.Random;
 
 public class SimpleAI implements AI{
 
-    private Random rnd;
-    private static int deltaWay=200;
-    private static int halfDeltaWay=deltaWay/2;
-
-
     public SimpleAI() {
-        rnd=new Random();
-    }
-
-    private float getDelta(ControlledUnit u) {
-         if (u.getType()== NotControlledUnit.Type.Tower) {
-             return 0;
-         }
-        else return rnd.nextInt(deltaWay)-halfDeltaWay;
     }
 
     public void solve(LinkedList<ControlledUnit> yours,
@@ -31,7 +17,6 @@ public class SimpleAI implements AI{
 
             LinkedList<NotControlledUnit> theirGiants=new LinkedList<>();
             LinkedList<NotControlledUnit> theirTowers=new LinkedList<>();
-            LinkedList<NotControlledUnit> theirSmalls=new LinkedList<>();
 
             for (NotControlledUnit u : enemies) {
                 if (u.getType()== NotControlledUnit.Type.Giant)
@@ -39,29 +24,55 @@ public class SimpleAI implements AI{
                 else
                 if (u.getType()== NotControlledUnit.Type.Tower)
                     theirTowers.add(u);
-                else theirSmalls.add(u);
             }
+
+        float x=0, y=0;
+
+        if (theirTowers.size()>0) {
+            x=theirTowers.get(0).getX();
+            y=theirTowers.get(0).getY();
+        }
+        else
+        if (theirGiants.size()>0) {
+            x=theirGiants.get(0).getX();
+            y=theirGiants.get(0).getY();
+        }
+        else
+        {
+            for (NotControlledUnit nc: enemies) {
+                x+=nc.getX();
+                y+=nc.getY();
+            }
+            x/=enemies.size();
+            y/=enemies.size();
+        }
 
             for (ControlledUnit c: yours) {
-                if (theirTowers.size()>0)
-                    c.setWay(theirTowers.get(0).getX()+getDelta(c), theirTowers.get(0).getY()+getDelta(c));
-                else
-                if (theirGiants.size()>0)
-                    c.setWay(theirGiants.get(0).getX()+getDelta(c), theirGiants.get(0).getY()+getDelta(c));
-                else
-                {
-                    float x=0;
-                    float y=0;
-                    for (NotControlledUnit nc: enemies) {
-                        x+=nc.getX();
-                        y+=nc.getY();
-                    }
-                    x/=enemies.size();
-                    y/=enemies.size();
+                if (c.getType()!= NotControlledUnit.Type.Tower) {
+                    c.setWay(x, y);
+                }
+                else {
+                    boolean isFirst=true;
+                    float smallest=0;
+                    NotControlledUnit nearest=null;
 
-                    c.setWay(x+getDelta(c), y+getDelta(c));
+                    for (NotControlledUnit n: enemies) {
+                         if (isFirst)
+                         {
+                             nearest=n;
+                             smallest=n.getSquaredLength(c);
+                             isFirst=false;
+                         }
+                        else {
+                             float l=n.getSquaredLength(c);
+                             if (l<smallest) {
+                                 smallest=l;
+                                 nearest=n;
+                             }
+                         }
+                    }
+                    c.setWay(nearest.getX(), nearest.getY());
                 }
             }
-
     }
 }

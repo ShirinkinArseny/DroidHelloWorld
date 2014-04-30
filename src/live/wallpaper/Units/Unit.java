@@ -34,6 +34,9 @@ public class Unit extends ControlledUnit {
         if (getY()+dy<0) dy=1;
         if (getY()+dy>getScreenHeight()) dy=-1;
         changePosition(dx, dy);
+        if (getX().isNaN() || getY().isNaN()) {
+            changeHealth(-10f);
+        }     ;
     }
 
     protected void drawBase(Canvas c) {
