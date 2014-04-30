@@ -41,19 +41,21 @@ public class World {
     private LinkedList<NotControlledUnit>[] uncontrolledUnits=
             new LinkedList[]{new LinkedList(), new LinkedList()}; //Lists of units to send in AI
     private LinkedList<Unit>[] dividedUnits=
-            new LinkedList[]{new LinkedList(), new LinkedList()}; //Lists of units to send in AI
+            new LinkedList[]{new LinkedList(), new LinkedList(), new LinkedList(), new LinkedList()}; //Lists of units to send in AI
 
 
     public World(SurfaceHolder surfaceHolder, Context context) {
         this.surfaceHolder = surfaceHolder;
 
-        Bitmap[][] menTexture = new Bitmap[2][3];
+        Bitmap[][] menTexture = new Bitmap[2][4];
         menTexture[0][0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.red);
         menTexture[0][1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.bigred);
         menTexture[0][2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.redtower);
         menTexture[1][0] = BitmapFactory.decodeResource(context.getResources(), R.drawable.blue);
         menTexture[1][1] = BitmapFactory.decodeResource(context.getResources(), R.drawable.bigblue);
         menTexture[1][2] = BitmapFactory.decodeResource(context.getResources(), R.drawable.bluetower);
+        menTexture[0][3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.bullet);
+        menTexture[1][3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.bullet);
         Unit.init(menTexture);
 
         bg =               BitmapFactory.decodeResource(context.getResources(), R.drawable.bg);
@@ -164,11 +166,11 @@ public class World {
                 showMessage(x, y, "GIANT SPAWNED!", team);
                 return;
             }
-            /*boolean tower=0==rnd.nextInt(1000);
+            boolean tower=0==rnd.nextInt(100);
             if (tower){
                 spawn(new Tower(x, y, team));
                 return;
-            }*/
+            }
             spawn(new Man(x, y, team));
         }
     }
@@ -234,7 +236,8 @@ public class World {
         uncontrolledUnits[0].clear();
         uncontrolledUnits[1].clear();
 
-        for (Unit u: units) {
+        for (Unit u: units)
+            if (u.getType()!= NotControlledUnit.Type.Bullet) {
             controlledUnits[u.getTeam()].add(u);
             uncontrolledUnits[u.getTeam()].add(u);
         }
@@ -243,28 +246,41 @@ public class World {
         ai.solve(controlledUnits[1], uncontrolledUnits[0], new LinkedList<Stone>());
     }
 
+    private void fightUnits(Unit unit, Unit enemy) {
+        if (unit.getIntersect(enemy)) {
+            float attack1 = -0.1f * unit.getPower() * rnd.nextFloat();
+            int att = (int) (attack1 * 100000/unit.getPower());
+
+            if (att < -9991) {
+                attack1 *= att + 10000;
+                showMessage(enemy.getX(), enemy.getY(),
+                        "CRITICAL x" + (att + 10000) + "!", enemy.getTeam());
+            }
+
+            enemy.changeHealth(attack1);
+        }
+    }
+
     private void updateIntersections() {
 
         dividedUnits[0].clear();
         dividedUnits[1].clear();
-        for (Unit u: units)
-            dividedUnits[u.getTeam()].add(u);
+        for (Unit u: units) {
+            if (u.getType()== NotControlledUnit.Type.Bullet)
+            dividedUnits[u.getTeam()+2].add(u);
+            else
+                dividedUnits[u.getTeam()].add(u);
+        }
 
         for (Unit unit : units) {
-            int enemyTeam = unit.getTeam() == 0 ? 1 : 0;
-            for (Unit enemy : dividedUnits[enemyTeam]) {
-                    if (unit.getIntersect(enemy)) {
-                        float attack1 = -0.1f / enemy.getPower() * rnd.nextFloat();
-                        int att = (int) (attack1 * 100000 * enemy.getPower());
-
-                        if (att < -9991) {
-                            attack1 *= att + 10000;
-                            showMessage(unit.getX(), unit.getY(),
-                                    "CRITICAL x" + (att + 10000) + "!", unit.getTeam());
-                        }
-
-                        unit.changeHealth(attack1);
-                    }
+            if (unit.getType() != NotControlledUnit.Type.Bullet) {
+                int enemyTeam = unit.getTeam() == 0 ? 1 : 0;
+                for (Unit enemy : dividedUnits[enemyTeam]) {
+                    fightUnits(unit, enemy);
+                }
+                for (Unit enemy : dividedUnits[enemyTeam+2]) {
+                    fightUnits(enemy, unit);
+                }
             }
         }
     }
@@ -279,7 +295,11 @@ public class World {
 
     private void moveUnits() {
         for (Unit aMen : units) {
-            aMen.move();
+            Unit[] add=new Unit[1];
+            aMen.move(add);
+            if (add[0]!=null) {
+                spawn(add[0]);
+            }
         }
     }
 

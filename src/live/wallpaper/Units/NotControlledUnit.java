@@ -13,7 +13,7 @@ public class NotControlledUnit extends Rectangle {
     protected float health;
     private float healthCoef;
     private static Bitmap[][] menTexture;
-    public enum Type {Man, Giant, Tower}
+    public enum Type {Man, Giant, Tower, Bullet}
     private Type type;
     private float speed;
     private static float screenWidth, screenHeight;
@@ -40,6 +40,7 @@ public class NotControlledUnit extends Rectangle {
             case Man:    return menTexture[team][0];
             case Giant:  return menTexture[team][1];
             case Tower:  return menTexture[team][2];
+            case Bullet: return menTexture[team][3];
         }
         return null;
     }
@@ -49,6 +50,7 @@ public class NotControlledUnit extends Rectangle {
             case Man:    return menTexture[team][0];
             case Giant:  return menTexture[team][1];
             case Tower:  return menTexture[team][2];
+            case Bullet: return menTexture[team][3];
         }
         return null;
     }
@@ -83,6 +85,6 @@ public class NotControlledUnit extends Rectangle {
     }
 
     public float getPower() {
-        return healthCoef;
+        return 1f/healthCoef;
     }
 }

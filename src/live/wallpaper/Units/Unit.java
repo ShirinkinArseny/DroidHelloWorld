@@ -23,7 +23,7 @@ public class Unit extends ControlledUnit {
          if (health>1f) health=1f;
     }
 
-    public void move() {
+    public void move(Unit[] add) {
         double dl=Math.sqrt((getX()-getXWay())*(getX()-getXWay())+(getY()-getYWay())*(getY()-getYWay()));
         float dx= (float) ((getXWay()-getX())/dl);
         float dy= (float) ((getYWay()-getY())/dl);
