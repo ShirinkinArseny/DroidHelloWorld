@@ -12,6 +12,7 @@ public class NotControlledUnit extends Rectangle {
     private int team;
     protected float health;
     private float healthCoef;
+    private float power;
     private static Bitmap[][] menTexture;
     public enum Type {Man, Giant, Tower, Bullet}
     private Type type;
@@ -62,6 +63,7 @@ public class NotControlledUnit extends Rectangle {
         this.speed=speed;
         this.type=type;
         this.healthCoef=healthCoef;
+        power=1/healthCoef;
     }
 
     public Type getType() {
@@ -85,6 +87,6 @@ public class NotControlledUnit extends Rectangle {
     }
 
     public float getPower() {
-        return 1f/healthCoef;
+        return power;
     }
 }

@@ -5,73 +5,104 @@ import live.wallpaper.Units.ControlledUnit;
 import live.wallpaper.Units.NotControlledUnit;
 
 import java.util.LinkedList;
+import java.util.Random;
 
 public class SimpleAI implements AI{
 
+    private Random rnd;
+
     public SimpleAI() {
+        rnd=new Random();
+    }
+
+    private float getDeltaPos() {
+        return rnd.nextInt(300)-150;
     }
 
     public void solve(LinkedList<ControlledUnit> yours,
                       LinkedList<NotControlledUnit> enemies, LinkedList<Stone> stones){
 
+            if (enemies.size()>0) {
+                LinkedList<NotControlledUnit> theirGiants = new LinkedList<>();
+                LinkedList<NotControlledUnit> theirTowers = new LinkedList<>();
+                LinkedList<NotControlledUnit> theirMen = new LinkedList<>();
 
-            LinkedList<NotControlledUnit> theirGiants=new LinkedList<>();
-            LinkedList<NotControlledUnit> theirTowers=new LinkedList<>();
+                for (NotControlledUnit u : enemies) {
+                    if (u.getType() == NotControlledUnit.Type.Giant)
+                        theirGiants.add(u);
+                    else if (u.getType() == NotControlledUnit.Type.Tower)
+                        theirTowers.add(u);
+                    else theirMen.add(u);
+                }
 
-            for (NotControlledUnit u : enemies) {
-                if (u.getType()== NotControlledUnit.Type.Giant)
-                    theirGiants.add(u);
-                else
-                if (u.getType()== NotControlledUnit.Type.Tower)
-                    theirTowers.add(u);
-            }
+                boolean hasOurGiant=false;
+                for (ControlledUnit u : yours) {
+                    if (u.getType() == NotControlledUnit.Type.Giant)
+                    {
+                        hasOurGiant=true;
+                        break;
+                    }
+                }
 
-        float x=0, y=0;
+                float x = 0, y = 0;
 
-        if (theirTowers.size()>0) {
-            x=theirTowers.get(0).getX();
-            y=theirTowers.get(0).getY();
-        }
-        else
-        if (theirGiants.size()>0) {
-            x=theirGiants.get(0).getX();
-            y=theirGiants.get(0).getY();
-        }
-        else
-        {
-            for (NotControlledUnit nc: enemies) {
-                x+=nc.getX();
-                y+=nc.getY();
-            }
-            x/=enemies.size();
-            y/=enemies.size();
-        }
-
-            for (ControlledUnit c: yours) {
-                if (c.getType()!= NotControlledUnit.Type.Tower) {
-                    c.setWay(x, y);
+                if (theirGiants.size() > 0) {
+                    float lastHP=theirGiants.get(0).getHealth();
+                    x = theirGiants.get(0).getX();
+                    y = theirGiants.get(0).getY();
+                    for (int i=1; i<theirGiants.size(); i++) {
+                        if (theirGiants.get(i).getHealth()<lastHP) {
+                            lastHP=theirGiants.get(i).getHealth();
+                            x = theirGiants.get(i).getX();
+                            y = theirGiants.get(i).getY();
+                        }
+                    }
+                } else if (theirTowers.size() > 0 && hasOurGiant) {
+                    x = theirTowers.get(0).getX();
+                    y = theirTowers.get(0).getY();
+                    float lastHP=theirTowers.get(0).getHealth();
+                    for (int i=1; i<theirTowers.size(); i++) {
+                        if (theirTowers.get(i).getHealth()<lastHP) {
+                            lastHP=theirTowers.get(i).getHealth();
+                            x = theirTowers.get(i).getX();
+                            y = theirTowers.get(i).getY();
+                        }
+                    }
+                } else if (theirMen.size()>0) {
+                    x=theirMen.get(0).getX();
+                    y=theirMen.get(0).getY();
                 }
                 else {
-                    boolean isFirst=true;
-                    float smallest=0;
-                    NotControlledUnit nearest=null;
+                    x=enemies.get(0).getX();
+                    y=enemies.get(0).getY();
+                }
 
-                    for (NotControlledUnit n: enemies) {
-                         if (isFirst)
-                         {
-                             nearest=n;
-                             smallest=n.getSquaredLength(c);
-                             isFirst=false;
-                         }
-                        else {
-                             float l=n.getSquaredLength(c);
-                             if (l<smallest) {
-                                 smallest=l;
-                                 nearest=n;
-                             }
-                         }
+                for (ControlledUnit c : yours) {
+                    if (c.getType() != NotControlledUnit.Type.Tower) {
+                        if (theirTowers.size()==0 && theirGiants.size()==0)
+                            c.setWay(x+getDeltaPos(), y+getDeltaPos());
+                        else
+                        c.setWay(x, y);
+                    } else {
+                        boolean isFirst = true;
+                        float smallest = 0;
+                        NotControlledUnit nearest = null;
+
+                        for (NotControlledUnit n : enemies) {
+                            if (isFirst) {
+                                nearest = n;
+                                smallest = n.getSquaredLength(c);
+                                isFirst = false;
+                            } else {
+                                float l = n.getSquaredLength(c);
+                                if (l < smallest) {
+                                    smallest = l;
+                                    nearest = n;
+                                }
+                            }
+                        }
+                        c.setWay(nearest.getX(), nearest.getY());
                     }
-                    c.setWay(nearest.getX(), nearest.getY());
                 }
             }
     }

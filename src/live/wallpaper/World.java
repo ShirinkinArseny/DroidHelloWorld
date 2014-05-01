@@ -2,6 +2,7 @@ package live.wallpaper;
 
 import android.content.Context;
 import android.graphics.*;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import live.wallpaper.AI.AI;
@@ -15,7 +16,7 @@ public class World {
     private SurfaceHolder surfaceHolder;
 
     private Bitmap bg;//background picture
-    private Bitmap dustTextute;//blood texture
+    private Bitmap dustTextute[];//blood texture
     private Bitmap spawnTexture;//spawn texture
     private LinkedList<Unit> unitsAddBuffer;//units, which'll be added in next update
     private LinkedList<float[]> dust;//blood doordinates
@@ -40,7 +41,6 @@ public class World {
     private LinkedList<Unit>[] dividedUnits=
             new LinkedList[]{new LinkedList(), new LinkedList(), new LinkedList(), new LinkedList()}; //Lists of units to send in AI
 
-
     public World(SurfaceHolder surfaceHolder, Context context) {
         this.surfaceHolder = surfaceHolder;
 
@@ -55,8 +55,10 @@ public class World {
         menTexture[1][3] = BitmapFactory.decodeResource(context.getResources(), R.drawable.bullet);
         Unit.init(menTexture);
 
-        bg =               BitmapFactory.decodeResource(context.getResources(), R.drawable.bg);
-        dustTextute  =     BitmapFactory.decodeResource(context.getResources(), R.drawable.dust);
+        dustTextute=new Bitmap[2];
+        bg =               BitmapFactory.decodeResource(context.getResources(), R.drawable.background);
+        dustTextute[0]  =  BitmapFactory.decodeResource(context.getResources(), R.drawable.blood);
+        dustTextute[1]  =  BitmapFactory.decodeResource(context.getResources(), R.drawable.coal);
         spawnTexture=      BitmapFactory.decodeResource(context.getResources(), R.drawable.spawn);
 
         deaths=new int[]{0, 0};
@@ -66,7 +68,7 @@ public class World {
         spawns=new LinkedList<>();
         spawnsAddBuffer=new LinkedList<>();
 
-        allowTouchScreen =new Ticker(10);
+        allowTouchScreen =new Ticker(1);
         gcTime=new Ticker(1000);
         reWayAndReIntersectTime=new Ticker(5);
 
@@ -102,13 +104,15 @@ public class World {
             @Override
             public void run() {
                     if (active) {
-                        update();
                         try {
+                        update();
                         Canvas c = surfaceHolder.lockCanvas();
                         draw(c);
                         surfaceHolder.unlockCanvasAndPost(c);
                         }
-                        catch (IllegalArgumentException e) {}
+                        catch (Exception e) {
+                            Log.i("Cycle", String.valueOf(e));
+                        }
                         spawnTimer.tick();
                         if(spawnTimer.getIsNextRound())
                             autoSpawn();
@@ -122,6 +126,10 @@ public class World {
 
     public void setSurfaceSize(int width, int height) {
         synchronized (this) {
+            for (int i=0; i<4; i++)
+            for (Unit u: dividedUnits[i]) {
+                u.changePosition(u.getX()*width/this.width-u.getX(), u.getY()*height/this.height-u.getY());
+            }
             this.width = width;
             this.height = height;
             this.notify();
@@ -136,7 +144,7 @@ public class World {
             float posY = event.getY();
             int team=(posX<width/2)?0:1;
 
-            boolean gigant=true;//0==rnd.nextInt(100);
+            boolean gigant=0==rnd.nextInt(100);
             if (gigant){
                 spawn(new Giant(posX, posY, team));
                 showMessage(posX, posY, "GIANT SPAWNED!", team);
@@ -162,9 +170,10 @@ public class World {
                 showMessage(x, y, "GIANT SPAWNED!", team);
                 return;
             }
-            boolean tower=0==rnd.nextInt(20);
+            boolean tower=0==rnd.nextInt(100);
             if (tower){
                 spawn(new Tower(x, y, team));
+                showMessage(x, y, "TOWER BUILT!", team);
                 return;
             }
             spawn(new Man(x, y, team));
@@ -183,14 +192,22 @@ public class World {
             if (units.get(i).getHealth() <= 0) {
                 deaths[units.get(i).getTeam()]++;
 
-                if (units.get(i).getType()== NotControlledUnit.Type.Giant)
+                Unit c=units.get(i);
+                if (c.getType()== NotControlledUnit.Type.Giant)
                 showMessage(units.get(i).getX(), units.get(i).getY(), "GIANT DEATH!", units.get(i).getTeam());
                 else
-                if (units.get(i).getType()== NotControlledUnit.Type.Man)
+                if (c.getType()== NotControlledUnit.Type.Tower)
+                    showMessage(units.get(i).getX(), units.get(i).getY(), "TOWER DESTROYED!", units.get(i).getTeam());
+                else
+                if (c.getType()== NotControlledUnit.Type.Man)
                     showMessage(units.get(i).getX(), units.get(i).getY(), "-1", units.get(i).getTeam());
 
+                int tx;
+                if (c.getType()!= NotControlledUnit.Type.Tower && c.getType()!= NotControlledUnit.Type.Bullet)
+                    tx=0;
+                else tx=1;
                 for (int j=0; j<10; j++)
-                dust.add(new float[]{units.get(i).getX() - 28 + rnd.nextInt(20), units.get(i).getY() - 28 + rnd.nextInt(20), 1f+j/5f});
+                dust.add(new float[]{units.get(i).getX() - 28 + rnd.nextInt(20), units.get(i).getY() - 28 + rnd.nextInt(20), 1f+j/5f, tx});
 
                 units.remove(i);
             }
@@ -319,7 +336,7 @@ public class World {
         allowTouchScreen.tick();
     }
 
-    private void drawBackground(Canvas canvas) {
+    public void drawBackground(Canvas canvas) {
         canvas.drawColor(Color.WHITE);
         canvas.drawBitmap(bg, 0, 0, null);
     }
@@ -327,8 +344,7 @@ public class World {
     private void drawBlood(Canvas canvas) {
         p.setAlpha(255);
         for (float[] f: dust) {
-            // p.setAlpha((int) (f[2]*128));
-            canvas.drawBitmap(dustTextute, f[0], f[1], p);
+            canvas.drawBitmap(dustTextute[((int) f[3])], f[0], f[1], p);
         }
     }
 

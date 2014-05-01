@@ -19,7 +19,7 @@ public class Rectangle extends Point{
     }
 
     public float getWHalf() {
-        return w;
+        return w2;
     }
 
     public Rectangle(float x, float y, float w, float h) {
@@ -31,7 +31,7 @@ public class Rectangle extends Point{
     }
 
     public boolean getIntersect(Rectangle m) {
-        return (Math.abs(getX()-m.getX()))<=(m.w+w) &&
-               (Math.abs(getY()-m.getY()))<=(m.h+h);
+        return (Math.abs(getX()-m.getX()))<=(m.w2+w2) &&
+               (Math.abs(getY()-m.getY()))<=(m.h2+h2);
     }
 }

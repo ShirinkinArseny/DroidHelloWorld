@@ -9,7 +9,7 @@ public class LiveWallpaperService extends WallpaperService {
 
     @Override
     public Engine onCreateEngine() {
-        return new SampleEngine();
+        return new RBEngine();
     }
 
     @Override
@@ -22,14 +22,13 @@ public class LiveWallpaperService extends WallpaperService {
         super.onDestroy();
     }
 
-    public class SampleEngine extends Engine implements SharedPreferences.OnSharedPreferenceChangeListener {
+    public class RBEngine extends Engine implements SharedPreferences.OnSharedPreferenceChangeListener {
 
-        private World painting;
+        private World world;
 
-        SampleEngine() {
+        public RBEngine() {
             SurfaceHolder holder = getSurfaceHolder();
-            painting = new World(holder, getApplicationContext()
-            );
+            world = new World(holder, getApplicationContext());
         }
 
         public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
@@ -44,44 +43,42 @@ public class LiveWallpaperService extends WallpaperService {
         @Override
         public void onDestroy() {
             super.onDestroy();
-            painting.stopPainting();
+            world.stopPainting();
         }
 
         @Override
         public void onSurfaceChanged(SurfaceHolder holder, int format, int width, int height) {
             super.onSurfaceChanged(holder, format, width, height);
-            painting.setSurfaceSize(width, height);
+            world.setSurfaceSize(width, height);
         }
 
         @Override
         public void onSurfaceCreated(SurfaceHolder holder) {
             super.onSurfaceCreated(holder);
-            painting.run();
-
+            world.run();
         }
 
 
         @Override
         public void onVisibilityChanged(boolean visible) {
             if (visible) {
-                painting.resumePainting();
+                world.resumePainting();
             } else {
-                // remove listeners and callbacks here
-                painting.pausePainting();
+                world.pausePainting();
             }
         }
 
         @Override
         public void onSurfaceDestroyed(SurfaceHolder holder) {
             super.onSurfaceDestroyed(holder);
-            painting.stopPainting();
+            world.stopPainting();
         }
 
 
         @Override
         public void onTouchEvent(MotionEvent event) {
             super.onTouchEvent(event);
-            painting.doTouchEvent(event);
+            world.doTouchEvent(event);
         }
 
     }

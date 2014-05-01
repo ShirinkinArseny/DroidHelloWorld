@@ -1,6 +1,5 @@
 package live.wallpaper.Units;
 
-import android.util.Log;
 import live.wallpaper.Ticker;
 
 public class Tower extends Unit{
@@ -9,11 +8,15 @@ public class Tower extends Unit{
     private Ticker shot;
 
     public Tower(float x, float y, int team) {
-        super(x, y, team, 1f, 3f, Type.Tower);
+        super(x, y, team, 10f, 3f, Type.Tower);
         setWay(getScreenWidth()/2, getScreenHeight()/2);
         shot=new Ticker(20);
         shot.getIsNextRound();
         shot.tick();
+    }
+
+    public float getPower() {
+        return 20f;
     }
 
     public Unit dropTheBomb() {

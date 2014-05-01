@@ -36,7 +36,7 @@ public class Unit extends ControlledUnit {
         changePosition(dx, dy);
         if (getX().isNaN() || getY().isNaN()) {
             changeHealth(-10f);
-        }     ;
+        }
     }
 
     protected void drawBase(Canvas c) {

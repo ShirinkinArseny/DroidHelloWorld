@@ -19,7 +19,7 @@ public class Bullet extends Unit{
     }
 
     public float getPower() {
-        return 5f;
+        return 2f;
     }
 
     public void move(Unit[] add) {
