@@ -2,30 +2,24 @@ package live.wallpaper.Geometry;
 
 public class Rectangle extends Point{
     private float w;
-    private float h;
     private float w2;
     private float h2;
 
-    public float getH() {
-        return h;
-    }
-
-    public float getHHalf() {
+    public float getHalfHeight() {
         return h2;
     }
 
-    public float getW() {
+    public float getWidth() {
         return w;
     }
 
-    public float getWHalf() {
+    public float getHalfWidth() {
         return w2;
     }
 
     public Rectangle(float x, float y, float w, float h) {
         super(x, y);
         this.w=w;
-        this.h=h;
         w2=w/2;
         h2=h/2;
     }

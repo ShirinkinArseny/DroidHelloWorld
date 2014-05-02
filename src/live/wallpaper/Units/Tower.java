@@ -10,21 +10,20 @@ public class Tower extends Unit{
     public Tower(float x, float y, int team) {
         super(x, y, team, 10f, 3f, Type.Tower);
         setWay(getScreenWidth()/2, getScreenHeight()/2);
-        shot=new Ticker(20);
+        shot=new Ticker(0.5f);
         shot.getIsNextRound();
-        shot.tick();
     }
 
     public float getPower() {
-        return 20f;
+        return 30f;
     }
 
     public Unit dropTheBomb() {
         return new Bullet(getX(), getY(), aimX, aimY, getTeam());
     }
 
-    public void move(Unit[] add) {
-        shot.tick();
+    public void move(Unit[] add, float dt) {
+        shot.tick(dt);
         if (shot.getIsNextRound()) {
             if (getSquaredLength(aimX, aimY) < Bullet.squareDistance)
                 add[0]=dropTheBomb();

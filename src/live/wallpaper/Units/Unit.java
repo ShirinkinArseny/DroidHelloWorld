@@ -2,20 +2,13 @@ package live.wallpaper.Units;
 
 import android.graphics.*;
 import android.util.Log;
-import live.wallpaper.Geometry.Rectangle;
-import live.wallpaper.R;
-
-import java.util.Random;
 
 public class Unit extends ControlledUnit {
 
     private Paint p;
-    private Random rnd;
-
     public Unit(float x, float y, int team, float health, float speed, Type t) {
         super(x, y, team, health, speed, t);
         p = new Paint();
-        rnd=new Random();
     }
 
     public void changeHealth(float h) {
@@ -23,31 +16,28 @@ public class Unit extends ControlledUnit {
          if (health>1f) health=1f;
     }
 
-    public void move(Unit[] add) {
-        double dl=Math.sqrt((getX()-getXWay())*(getX()-getXWay())+(getY()-getYWay())*(getY()-getYWay()));
-        float dx= (float) ((getXWay()-getX())/dl);
-        float dy= (float) ((getYWay()-getY())/dl);
-        dx*=getSpeed()*(1+2*rnd.nextFloat());
-        dy*=getSpeed()*(1+2*rnd.nextFloat());
-        if (getX()+dx-getWHalf()<0) dx=1;
-        if (getX()+dx-getWHalf()>getScreenWidth()) dx=-1;
+    public void move(Unit[] add, float dt) {
+        float dx=getDX()*dt;
+        float dy=getDY()*dt;
+        if (getX()+dx- getHalfWidth()<0) dx=1;
+        if (getX()+dx- getHalfWidth()>getScreenWidth()) dx=-1;
         if (getY()+dy<0) dy=1;
         if (getY()+dy>getScreenHeight()) dy=-1;
         changePosition(dx, dy);
         if (getX().isNaN() || getY().isNaN()) {
+            Log.i("Unit.move", getX() + " " + getY());
             changeHealth(-10f);
         }
     }
 
     protected void drawBase(Canvas c) {
-        c.drawBitmap(getBitmap(), getX()-getWHalf(), getY()-getHHalf(), null);
+        c.drawBitmap(getBitmap(), getX() - getHalfWidth(), getY() - getHalfHeight(), null);
     }
 
     protected void drawHealth(Canvas c) {
-        p.setColor(Color.rgb((int)(255*(1-health)), (int)(255*health), 0));
-        p.setAlpha(128);
-        c.drawRect(getX()-getWHalf(), getY()-2-getHHalf(),
-                getX()+getW()*health-getWHalf(), getY()-getHHalf(), p);
+        p.setColor(Color.rgb((int)(255*(1-health)), (int)(128*health), 0));
+        c.drawRect(getX()- getHalfWidth(), getY()-2- getHalfHeight(),
+                getX()+ getWidth()*health- getHalfWidth(), getY()- getHalfHeight(), p);
     }
 
     public void draw(Canvas c) {

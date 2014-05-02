@@ -1,10 +1,9 @@
 package live.wallpaper;
 
 public class Ticker {
-    //like timer; calculate ticks
 
-    private int limit;
-    private int value;
+    private float limit;
+    private float value;
     private boolean can;
 
     public boolean getIsNextRound() {
@@ -16,15 +15,15 @@ public class Ticker {
             return false;
     }
 
-    public void tick() {
-        value--;
+    public void tick(float delta) {
+        value-=delta;
         if (value<0) {
-            value=limit;
+            value+=limit;
             can=true;
         }
     }
 
-    public Ticker(int limit) {
+    public Ticker(float limit) {
         this.limit=limit;
         value=0;
         can=true;

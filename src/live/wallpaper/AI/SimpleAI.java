@@ -1,6 +1,5 @@
 package live.wallpaper.AI;
 
-import live.wallpaper.Stone;
 import live.wallpaper.Units.ControlledUnit;
 import live.wallpaper.Units.NotControlledUnit;
 
@@ -16,11 +15,11 @@ public class SimpleAI implements AI{
     }
 
     private float getDeltaPos() {
-        return rnd.nextInt(300)-150;
+        return rnd.nextInt(200)-100;
     }
 
     public void solve(LinkedList<ControlledUnit> yours,
-                      LinkedList<NotControlledUnit> enemies, LinkedList<Stone> stones){
+                      LinkedList<NotControlledUnit> enemies){
 
             if (enemies.size()>0) {
                 LinkedList<NotControlledUnit> theirGiants = new LinkedList<>();
@@ -44,7 +43,7 @@ public class SimpleAI implements AI{
                     }
                 }
 
-                float x = 0, y = 0;
+                float x, y;
 
                 if (theirGiants.size() > 0) {
                     float lastHP=theirGiants.get(0).getHealth();
@@ -57,7 +56,7 @@ public class SimpleAI implements AI{
                             y = theirGiants.get(i).getY();
                         }
                     }
-                } else if (theirTowers.size() > 0 && hasOurGiant) {
+                } else if (theirTowers.size() > 0 && (yours.size()>40 || yours.size()>20 && hasOurGiant) && theirMen.size()<50) {
                     x = theirTowers.get(0).getX();
                     y = theirTowers.get(0).getY();
                     float lastHP=theirTowers.get(0).getHealth();
@@ -79,7 +78,7 @@ public class SimpleAI implements AI{
 
                 for (ControlledUnit c : yours) {
                     if (c.getType() != NotControlledUnit.Type.Tower) {
-                        if (theirTowers.size()==0 && theirGiants.size()==0)
+                        if (theirGiants.isEmpty() && theirTowers.isEmpty())
                             c.setWay(x+getDeltaPos(), y+getDeltaPos());
                         else
                         c.setWay(x, y);
@@ -101,6 +100,7 @@ public class SimpleAI implements AI{
                                 }
                             }
                         }
+                        //nearest CAN'T be null, cuz enemies.size>0 and nearest enemy become nearest
                         c.setWay(nearest.getX(), nearest.getY());
                     }
                 }

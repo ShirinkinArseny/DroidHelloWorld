@@ -1,25 +1,24 @@
 package live.wallpaper.Units;
 
 public class ControlledUnit extends NotControlledUnit {
-    private float xWay;
-    private float yWay;
+    private float dx;
+    private float dy;
+
+    protected float getDX() {
+        return dx;
+    }
+
+    protected float getDY() {
+        return dy;
+    }
 
     public ControlledUnit(float x, float y, int team, float health, float speed, Type t) {
         super(x, y, team, health, speed, t);
-        xWay=x+10;
-        yWay=y+10;
-    }
-
-    public float getXWay() {
-        return xWay;
-    }
-
-    public float getYWay() {
-        return yWay;
     }
 
     public void setWay(float x, float y) {
-        xWay=x;
-        yWay=y;
+        double dl=Math.sqrt((getX()-x)*(getX()-x)+(getY()-y)*(getY()-y));
+        dx= (float) ((x-getX())/dl)*getSpeed();
+        dy= (float) ((y-getY())/dl)*getSpeed();
     }
 }

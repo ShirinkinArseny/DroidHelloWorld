@@ -6,8 +6,8 @@ public class Bullet extends Unit{
 
     private float dx;
     private float dy;
-    private static final float speed=6f;
-    private static final float dHealth=-0.04f;
+    private static final float speed=200f;
+    private static final float dHealth=-1f;
     private static final float distance=Math.abs(speed/dHealth);
     public static final float squareDistance=distance*distance;
 
@@ -22,13 +22,13 @@ public class Bullet extends Unit{
         return 2f;
     }
 
-    public void move(Unit[] add) {
-        changePosition(dx, dy);
+    public void move(Unit[] add, float dt) {
+        changePosition(dx*dt, dy*dt);
 
-        changeHealth(dHealth);
+        changeHealth(dHealth*dt);
 
-        if (getX()+dx-getWHalf()<0) changeHealth(-10f);
-        if (getX()+dx-getWHalf()>getScreenWidth()) changeHealth(-10f);
+        if (getX()+dx- getHalfWidth()<0) changeHealth(-10f);
+        if (getX()+dx- getHalfWidth()>getScreenWidth()) changeHealth(-10f);
         if (getY()+dy<0) changeHealth(-10f);
         if (getY()+dy>getScreenHeight()) changeHealth(-10f);
     }

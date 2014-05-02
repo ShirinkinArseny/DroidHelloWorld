@@ -1,12 +1,7 @@
 package live.wallpaper.Units;
 
 import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import live.wallpaper.Geometry.Rectangle;
-
-import java.util.Random;
 
 public class NotControlledUnit extends Rectangle {
     private int team;
