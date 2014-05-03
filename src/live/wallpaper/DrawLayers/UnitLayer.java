@@ -26,6 +26,11 @@ public class UnitLayer{
     private static LinkedList<Unit> unitsAddBuffer;//units, which will be added in next update
     private static Ticker reWayAndReIntersectTime = new Ticker(0.1f);
     private static boolean lockChangeUnits=false;
+    private static int[] kills=new int[]{0, 0};
+
+    public static int[] getTeamSizes() {
+        return kills;
+    }
 
     public static void init() {
         unitsAddBuffer =new LinkedList<>();
@@ -39,6 +44,14 @@ public class UnitLayer{
             }
         UnitLayer.width=width;
         UnitLayer.height=height;
+    }
+
+    private static void lock() {
+        lockChangeUnits=true;
+    }
+
+    private static void unlock() {
+        lockChangeUnits=false;
     }
 
     private static void updateAI() {
@@ -116,7 +129,7 @@ public class UnitLayer{
 
     private static void addUnitsFromBuffer() {
         waitForUnlock();
-        lockChangeUnits=true;
+        lock();
         while (!unitsAddBuffer.isEmpty())  {
             Unit add=unitsAddBuffer.get(0);
             if (add.getType()== NotControlledUnit.Type.Bullet)
@@ -125,7 +138,7 @@ public class UnitLayer{
                 dividedUnits[add.getTeam()].add(add);
             unitsAddBuffer.remove(0);
         }
-        lockChangeUnits=false;
+        unlock();
     }
 
     private static void doRegeneration(float dt) {
@@ -150,6 +163,14 @@ public class UnitLayer{
         }
     }
 
+    public static void killEverybody() {
+        for (int i=0; i<4; i++)
+            for (Unit u: dividedUnits[i])
+                u.changeHealth(-10f);
+        kills[0]=0;
+        kills[1]=0;
+    }
+
     public static void spawn(Unit m) {
         SpawnsLayer.addSpawn(m.getX(), m.getY());
         unitsAddBuffer.add(m);
@@ -157,7 +178,7 @@ public class UnitLayer{
 
     private static void updateDeath(LinkedList<Unit> units) {
         waitForUnlock();
-        lockChangeUnits=true;
+        lock();
         for (int i = 0; i < units.size(); i++) {
             if (units.get(i).getHealth() <= 0) {
 
@@ -178,10 +199,11 @@ public class UnitLayer{
                 for (int j=0; j<10; j++)
                     BloodLayer.add(units.get(i).getX() - 28 + rnd.nextInt(20), units.get(i).getY() - 28 + rnd.nextInt(20), 1f+j/5f, tx);
 
+                kills[c.getTeam()]++;
                 units.remove(i);
             }
         }
-        lockChangeUnits=false;
+        unlock();
     }
 
     public static void update(float dt) {

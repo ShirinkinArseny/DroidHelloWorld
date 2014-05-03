@@ -37,6 +37,7 @@ public class World {
 
         //gcTime = new Ticker(5);
 
+        TimerLayer.init();
         UnitLayer.init();
         TerritoryLayer.init(BitmapFactory.decodeResource(context.getResources(), R.drawable.background));
         BloodLayer.init(new Bitmap[]{BitmapFactory.decodeResource(context.getResources(), R.drawable.blood),
@@ -92,6 +93,7 @@ public class World {
         synchronized (this) {
             Unit.setScreenSize(width, height);
             UnitLayer.resize(width, height);
+            TimerLayer.resize(width, height);
             this.width = width;
             this.height = height;
             this.notify();
@@ -100,7 +102,7 @@ public class World {
     }
 
     public boolean doTouchEvent(MotionEvent event) {
-        float posX = event.getX();
+        /*float posX = event.getX();
         float posY = event.getY();
         int team = (posX < width / 2) ? 0 : 1;
 
@@ -109,7 +111,7 @@ public class World {
             UnitLayer.spawn(new Giant(posX, posY, team));
             showMessage(posX, posY, "GIANT SPAWNED!", team);
         } else
-            UnitLayer.spawn(new Man(posX, posY, team));
+            UnitLayer.spawn(new Man(posX, posY, team));*/
         return true;
     }
 
@@ -140,6 +142,7 @@ public class World {
 
     private void update(float dt) {
         TerritoryLayer.update(dt);
+        TimerLayer.update(dt);
         UnitLayer.update(dt);
         SpawnsLayer.update(dt);
         BloodLayer.update(dt);
@@ -148,6 +151,7 @@ public class World {
 
     private void draw(Canvas canvas) {
         TerritoryLayer.draw(canvas);
+        TimerLayer.draw(canvas);
         BloodLayer.draw(canvas);
         SpawnsLayer.draw(canvas);
         UnitLayer.draw(canvas);

@@ -15,6 +15,10 @@ public class Ticker {
             return false;
     }
 
+    public float getTime() {
+        return value;
+    }
+
     public void tick(float delta) {
         value-=delta;
         if (value<0) {
