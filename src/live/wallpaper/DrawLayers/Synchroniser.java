@@ -24,7 +24,7 @@ public class Synchroniser {
     public void waitForUnlock() {
         try {
             while (lock)
-                Thread.sleep(2);
+                Thread.sleep(5);
         } catch (InterruptedException e) {
             System.exit(0);
         }

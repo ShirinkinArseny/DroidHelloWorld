@@ -88,8 +88,11 @@ public class UnitLayer{
             new Thread(new Runnable() {
                 @Override
                 public void run() {
+                    syncer.waitForUnlock();
+                    syncer.lock();
                     updateAI();
                     updateIntersections();
+                    syncer.unlock();
                 }
             }).start();
         }
