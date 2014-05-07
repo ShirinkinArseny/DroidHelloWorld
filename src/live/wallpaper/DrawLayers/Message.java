@@ -2,11 +2,11 @@ package live.wallpaper.DrawLayers;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
+import live.wallpaper.Configs;
 
 public class Message {
 
     private float[] deathes;
-    private float delta;
     private String text;
     private Paint p;
 
@@ -15,7 +15,7 @@ public class Message {
     }
 
     public void update(float dt) {
-        deathes[2]-=delta*dt;
+        deathes[2]-= Configs.messageHideCoef *dt;
     }
 
     public Message(String text, float x, float y, Paint p) {
@@ -25,7 +25,6 @@ public class Message {
         deathes[2]=1f;
         this.text=text;
         this.p=p;
-        this.delta=1.5f;
     }
 
     public void draw(Canvas c) {

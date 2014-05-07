@@ -1,8 +1,10 @@
 package live.wallpaper.AI;
 
+import live.wallpaper.Configs;
 import live.wallpaper.Units.ControlledUnit;
 import live.wallpaper.Units.NotControlledUnit;
 
+import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -15,7 +17,7 @@ public class SimpleAI implements AI{
     }
 
     private float getDeltaPos() {
-        return rnd.nextInt(200)-100;
+        return rnd.nextInt(2* Configs.aiDeltaTarget)-Configs.aiDeltaTarget;
     }
 
     public void solve(LinkedList<ControlledUnit> yours,
@@ -56,7 +58,9 @@ public class SimpleAI implements AI{
                             y = theirGiants.get(i).getY();
                         }
                     }
-                } else if (theirTowers.size() > 0 && (yours.size()>40 || yours.size()>20 && hasOurGiant) && theirMen.size()<50) {
+                } else if (theirTowers.size() > 0 && (yours.size()>Configs.aiOurUnitsCountToAttack
+                        || yours.size()>Configs.aiOurUnitsWithGiantCountToAttack && hasOurGiant)
+                        && theirMen.size()<Configs.aiTheirUnitsCountToNotAttack) {
                     x = theirTowers.get(0).getX();
                     y = theirTowers.get(0).getY();
                     float lastHP=theirTowers.get(0).getHealth();

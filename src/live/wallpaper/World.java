@@ -3,6 +3,7 @@ package live.wallpaper;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.*;
+import android.util.Log;
 import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import live.wallpaper.DrawLayers.*;
@@ -52,6 +53,7 @@ public class World {
 
     public void resumePainting() {
         active = true;
+        lastTime = System.currentTimeMillis();
     }
 
     public void stopPainting() {
@@ -81,7 +83,7 @@ public class World {
                         //    System.gc();
                         //}
                     } catch (Exception e) {
-                        //EXCEPTION, LOL
+                        Log.i("run", e.getMessage());
                     }
                 }
             }
@@ -91,7 +93,8 @@ public class World {
 
     public void setSurfaceSize(int width, int height) {
         synchronized (this) {
-            Unit.setScreenSize(width, height);
+            Configs.displayHeight=height;
+            Configs.displayWidth=width;
             UnitLayer.resize(width, height);
             TimerLayer.resize(width, height);
             this.width = width;
@@ -117,15 +120,16 @@ public class World {
 
     private void autoSpawn() {
         for (int team = 0; team < 2; team++) {
-            float x = ((team == 0) ? 0 : width * 2 / 3) + rnd.nextInt(width / 3);
-            float y = rnd.nextInt(height);
-            boolean gigant = 0 == rnd.nextInt(100);
+            float x = ((team == 0) ? Configs.worldBorders : width * 2 / 3-Configs.worldBorders)
+                    + rnd.nextInt(width / 3);
+            float y = rnd.nextInt(height-2*Configs.worldBorders)+Configs.worldBorders;
+            boolean gigant = 0 == rnd.nextInt(Configs.worldGianSpawnProbability);
             if (gigant) {
                 UnitLayer.spawn(new Giant(x, y, team));
                 showMessage(x, y, "GIANT SPAWNED!", team);
                 return;
             }
-            boolean tower = 0 == rnd.nextInt(80);
+            boolean tower = 0 == rnd.nextInt(Configs.worldTowerSpawnProbability);
             if (tower) {
                 UnitLayer.spawn(new Tower(x, y, team));
                 showMessage(x, y, "TOWER BUILT!", team);

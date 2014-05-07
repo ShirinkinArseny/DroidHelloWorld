@@ -1,9 +1,9 @@
 package live.wallpaper.DrawLayers;
 
 import android.graphics.Canvas;
-import android.util.Log;
 import live.wallpaper.AI.AI;
 import live.wallpaper.AI.SimpleAI;
+import live.wallpaper.Configs;
 import live.wallpaper.Ticker;
 import live.wallpaper.Units.ControlledUnit;
 import live.wallpaper.Units.NotControlledUnit;
@@ -164,9 +164,13 @@ public class UnitLayer{
     }
 
     public static void killEverybody() {
-        for (int i=0; i<4; i++)
+        for (int i=0; i<4; i++) {
             for (Unit u: dividedUnits[i])
                 u.changeHealth(-10f);
+        }
+        for (int i=0; i<4; i++)
+        updateDeath(dividedUnits[i]);
+
         kills[0]=0;
         kills[1]=0;
     }
@@ -196,7 +200,7 @@ public class UnitLayer{
                 if (c.getType()!= NotControlledUnit.Type.Tower && c.getType()!= NotControlledUnit.Type.Bullet)
                     tx=0;
                 else tx=1;
-                for (int j=0; j<10; j++)
+                for (int j=0; j< Configs.bloodCount; j++)
                     BloodLayer.add(units.get(i).getX() - 28 + rnd.nextInt(20), units.get(i).getY() - 28 + rnd.nextInt(20), 1f+j/5f, tx);
 
                 kills[c.getTeam()]++;

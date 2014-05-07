@@ -24,13 +24,7 @@ public class Bullet extends Unit{
 
     public void move(Unit[] add, float dt) {
         changePosition(dx*dt, dy*dt);
-
         changeHealth(dHealth*dt);
-
-        if (getX()+dx- getHalfWidth()<0) changeHealth(-10f);
-        if (getX()+dx- getHalfWidth()>getScreenWidth()) changeHealth(-10f);
-        if (getY()+dy<0) changeHealth(-10f);
-        if (getY()+dy>getScreenHeight()) changeHealth(-10f);
     }
 
     public void draw(Canvas c) {

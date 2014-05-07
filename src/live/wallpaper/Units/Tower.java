@@ -1,5 +1,6 @@
 package live.wallpaper.Units;
 
+import live.wallpaper.Configs;
 import live.wallpaper.Ticker;
 
 public class Tower extends Unit{
@@ -9,7 +10,7 @@ public class Tower extends Unit{
 
     public Tower(float x, float y, int team) {
         super(x, y, team, 10f, 3f, Type.Tower);
-        setWay(getScreenWidth()/2, getScreenHeight()/2);
+        setWay(Configs.displayWidth/2, Configs.displayHeight/2);
         shot=new Ticker(0.3f);
         shot.getIsNextRound();
     }

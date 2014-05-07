@@ -2,6 +2,7 @@ package live.wallpaper.Units;
 
 import android.graphics.*;
 import android.util.Log;
+import live.wallpaper.Configs;
 
 public class Unit extends ControlledUnit {
 
@@ -20,10 +21,10 @@ public class Unit extends ControlledUnit {
     public void move(Unit[] add, float dt) {
         float dx = getDX() * dt;
         float dy = getDY() * dt;
-        if (getX() + dx - getHalfWidth() < 0) dx = 1;
-        if (getX() + dx - getHalfWidth() > getScreenWidth()) dx = -1;
-        if (getY() + dy < 0) dy = 1;
-        if (getY() + dy > getScreenHeight()) dy = -1;
+        if (getX() + dx < Configs.worldBorders) dx = 1;
+        if (getX() + dx > Configs.displayWidth-Configs.worldBorders) dx = -1;
+        if (getY() + dy < Configs.worldBorders) dy = 1;
+        if (getY() + dy > Configs.displayHeight-Configs.worldBorders) dy = -1;
         changePosition(dx, dy);
         if (getX().isNaN() || getY().isNaN()) {
             Log.i("Unit.move", getX() + " " + getY());
@@ -36,6 +37,7 @@ public class Unit extends ControlledUnit {
     }
 
     protected void drawHealth(Canvas c) {
+        float health=Math.max(0, this.getHealth());
         p.setColor(Color.rgb((int) (255 * (1 - health)), (int) (128 * health), 0));
         c.drawRect(getX() - getHalfWidth(), getY() - 2 - getHalfHeight(),
                 getX() + getWidth() * health - getHalfWidth(), getY() - getHalfHeight(), p);
