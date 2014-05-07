@@ -1,6 +1,7 @@
 package live.wallpaper.DrawLayers;
 
 import android.graphics.Canvas;
+import android.util.Log;
 import live.wallpaper.AI.AI;
 import live.wallpaper.AI.SimpleAI;
 import live.wallpaper.Configs;
@@ -9,8 +10,6 @@ import live.wallpaper.Units.ControlledUnit;
 import live.wallpaper.Units.NotControlledUnit;
 import live.wallpaper.Units.Unit;
 
-import java.util.Collections;
-import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -25,19 +24,16 @@ public class UnitLayer{
             new LinkedList[]{new LinkedList(), new LinkedList()}; //Lists of units to send in AI
     private static LinkedList<Unit>[] dividedUnits=
             new LinkedList[]{new LinkedList(), new LinkedList(), new LinkedList(), new LinkedList()}; //Lists of units to send in AI
-    private static LinkedList<Unit> unitsAddBuffer;//units, which will be added in next update
     private static Ticker reWayAndReIntersectTime = new Ticker(0.1f);
-    private static boolean lockChangeUnits=false;
     private static int[] kills=new int[]{0, 0};
-    private static LinkedList<Unit> unitsForDraw;
+    private static Synchroniser syncer;
 
     public static int[] getTeamSizes() {
         return kills;
     }
 
     public static void init() {
-        unitsAddBuffer =new LinkedList<>();
-        unitsForDraw=new LinkedList<>();
+        syncer=new Synchroniser("UnitLayer");
     }
 
     public static void resize(float width, float height) {
@@ -48,14 +44,6 @@ public class UnitLayer{
             }
         UnitLayer.width=width;
         UnitLayer.height=height;
-    }
-
-    private static void lock() {
-        lockChangeUnits=true;
-    }
-
-    private static void unlock() {
-        lockChangeUnits=false;
     }
 
     private static void updateAI() {
@@ -100,11 +88,8 @@ public class UnitLayer{
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    waitForUnlock();
-                    lockChangeUnits=true;
                     updateAI();
                     updateIntersections();
-                    lockChangeUnits=false;
                 }
             }).start();
         }
@@ -116,34 +101,31 @@ public class UnitLayer{
             for (Unit aMen : dividedUnits[i]) {
                 aMen.move(add, dt);
                 if (add[0]!=null) {
-                    spawn(add[0]);
+                    unlockedSpawn(add[0]);
                     add[0]=null;
                 }
             }
     }
 
-    private static void waitForUnlock() {
-        try {
-             while (lockChangeUnits)
-                 Thread.sleep(2);
-        } catch (InterruptedException e) {
-            System.exit(0);
-        }
+    private static void unlockedSpawn(Unit m) {
+        SpawnsLayer.addSpawn(m.getX(), m.getY());
+        if (m.getType()== NotControlledUnit.Type.Bullet)
+            dividedUnits[m.getTeam()+2].add(m);
+        else
+            dividedUnits[m.getTeam()].add(m);
     }
 
-    private static void addUnitsFromBuffer() {
-        waitForUnlock();
-        lock();
-        while (!unitsAddBuffer.isEmpty())  {
-            Unit add=unitsAddBuffer.get(0);
-            if (add.getType()== NotControlledUnit.Type.Bullet)
-                dividedUnits[add.getTeam()+2].add(add);
-            else
-                dividedUnits[add.getTeam()].add(add);
-            unitsAddBuffer.remove(0);
-        }
-        unlock();
+    public static void spawn(Unit m) {
+        syncer.waitForUnlock();
+        syncer.lock();
+        SpawnsLayer.addSpawn(m.getX(), m.getY());
+        if (m.getType()== NotControlledUnit.Type.Bullet)
+            dividedUnits[m.getTeam()+2].add(m);
+        else
+            dividedUnits[m.getTeam()].add(m);
+        syncer.unlock();
     }
+
 
     private static void doRegeneration(float dt) {
         for (int i=0; i<2; i++)
@@ -168,25 +150,20 @@ public class UnitLayer{
     }
 
     public static void killEverybody() {
+        syncer.waitForUnlock();
+        syncer.lock();
         for (int i=0; i<2; i++) {
             for (Unit u: dividedUnits[i])
                 u.changeHealth(-10f);
         }
         for (int i=0; i<2; i++)
         updateDeath(dividedUnits[i]);
-        waitForUnlock();
         kills[0]=0;
         kills[1]=0;
-    }
-
-    public static void spawn(Unit m) {
-        SpawnsLayer.addSpawn(m.getX(), m.getY());
-        unitsAddBuffer.add(m);
+        syncer.unlock();
     }
 
     private static void updateDeath(LinkedList<Unit> units) {
-        waitForUnlock();
-        lock();
         for (int i = 0; i < units.size(); i++) {
             if (units.get(i).getHealth() <= 0) {
 
@@ -212,33 +189,26 @@ public class UnitLayer{
                 units.remove(i);
             }
         }
-        unlock();
     }
 
     public static void update(float dt) {
+        syncer.waitForUnlock();
+        syncer.lock();
         doRegeneration(dt);
         for (int i=0; i<4; i++)
             updateDeath(dividedUnits[i]);
         updateIntersectionAndAI(dt);
         moveUnits(dt);
-        addUnitsFromBuffer();
+        syncer.unlock();
     }
 
-    private static Comparator<Unit> comparer=new Comparator<Unit>() {
-        @Override
-        public int compare(Unit unit, Unit unit2) {
-            return unit.getY().compareTo(unit2.getY());
-        }
-    };
 
     public static void draw(Canvas canvas) {
-        //unitsForDraw.clear();
+        syncer.waitForUnlock();
+        syncer.lock();
         for (int i=0; i<4; i++)
             for (Unit m : dividedUnits[i])
                 m.draw(canvas);
-        /*        unitsForDraw.add(m);
-        Collections.sort(unitsForDraw, comparer);
-        for (Unit m : unitsForDraw)
-            m.draw(canvas);*/
+        syncer.unlock();
     }
 }

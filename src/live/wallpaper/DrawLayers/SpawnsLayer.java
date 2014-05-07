@@ -14,6 +14,7 @@ public class SpawnsLayer{
     private static LinkedList<float[]> spawnsAddBuffer;//spawn coordinates
     private static LinkedList<float[]> spawns;//spawn coordinates
     private static Paint p;
+    private static Synchroniser syncer;
 
     public static void init(Bitmap b) {
         spawnTexture=b;
@@ -21,11 +22,16 @@ public class SpawnsLayer{
         p.setColor(Color.WHITE);
         spawns=new LinkedList<>();
         spawnsAddBuffer=new LinkedList<>();
+        syncer=new Synchroniser("SpawnsLayer");
     }
 
     public static void addSpawn(float x, float y) {
-        if (Configs.spawnsDraw)
-        spawnsAddBuffer.add(new float[]{x-spawnTexture.getWidth()/2, y-spawnTexture.getHeight()/2, 1f});
+        if (Configs.spawnsDraw) {
+            syncer.waitForUnlock();
+            syncer.lock();
+            spawnsAddBuffer.add(new float[]{x - spawnTexture.getWidth() / 2, y - spawnTexture.getHeight() / 2, 1f});
+            syncer.unlock();
+        }
     }
 
     public static void update(float dt) {

@@ -35,6 +35,7 @@ public class World {
 
         TimerLayer.init();
         UnitLayer.init();
+        WindLayer.init(BitmapFactory.decodeResource(context.getResources(), R.drawable.noise));
         TerritoryLayer.init(BitmapFactory.decodeResource(context.getResources(), R.drawable.background));
         BloodLayer.init(new Bitmap[]{BitmapFactory.decodeResource(context.getResources(), R.drawable.blood),
                 BitmapFactory.decodeResource(context.getResources(), R.drawable.coal)});
@@ -91,6 +92,7 @@ public class World {
             Configs.displayWidth=width;
             UnitLayer.resize(width, height);
             TimerLayer.resize(width, height);
+            WindLayer.resize(width, height);
             this.width = width;
             this.height = height;
             this.notify();
@@ -131,6 +133,7 @@ public class World {
         SpawnsLayer.update(dt);
         BloodLayer.update(dt);
         MessagesLayer.update(dt);
+        WindLayer.update(dt);
     }
 
     private void draw(Canvas canvas) {
@@ -140,6 +143,7 @@ public class World {
         SpawnsLayer.draw(canvas);
         UnitLayer.draw(canvas);
         MessagesLayer.draw(canvas);
+        WindLayer.draw(canvas);
     }
 }
         

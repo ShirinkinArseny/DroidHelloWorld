@@ -20,13 +20,15 @@ public class Configs {
     public static int       timerTimer =60*5;
     public static boolean   timerDraw =true;
 
+    public static boolean   windDraw=false;
+
     public static int       worldGianSpawnProbability =100;
     public static int       worldTowerSpawnProbability =80;
     public static int       worldHorizontalBorders=15;
     public static int       worldVerticalTopBorders=40;
     public static int       worldVerticalBottomBorders=15;
     public static boolean   worldBoardersDraw=true;
-    public static int[]     worldBoardersColor=new int[]{128, 128, 128, 192};
+    public static int[]     worldBoardersColor=new int[]{32, 32, 32, 128};
 
     public static int[] redFontColor=new int[]{192, 64, 64, 128};
     public static int[] blueFontColor=new int[]{64, 64, 192, 128};

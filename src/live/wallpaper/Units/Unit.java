@@ -2,7 +2,6 @@ package live.wallpaper.Units;
 
 import android.graphics.*;
 import android.util.Log;
-import live.wallpaper.Configs;
 
 public class Unit extends ControlledUnit {
 
@@ -34,7 +33,7 @@ public class Unit extends ControlledUnit {
 
     protected void drawHealth(Canvas c) {
         float health=Math.max(0, this.getHealth());
-        p.setColor(Color.rgb((int) (255 * (1 - health)), (int) (128 * health), 0));
+        p.setColor(Color.rgb((int) (255 * (1 - health)), (int) (192 * health), 0));
         c.drawRect(getX() - getHalfWidth(), getY() - 2 - getHalfHeight(),
                 getX() + getWidth() * health - getHalfWidth(), getY() - getHalfHeight(), p);
     }
