@@ -3,8 +3,6 @@ package live.wallpaper;
 import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.*;
-import android.util.Log;
-import android.view.MotionEvent;
 import android.view.SurfaceHolder;
 import live.wallpaper.DrawLayers.*;
 import live.wallpaper.Units.*;
@@ -13,16 +11,13 @@ import java.util.*;
 
 public class World {
 
-    private SurfaceHolder surfaceHolder;
-
     private Random rnd = new Random();
     private int width, height;//size of screen
     private boolean active = true;//is working
-    //private Ticker gcTime;//timer for hand calling for gc()
     private long lastTime;
+    private SurfaceHolder holder;
 
-    public World(SurfaceHolder surfaceHolder, Context context) {
-        this.surfaceHolder = surfaceHolder;
+    public World(Context context) {
 
         Bitmap[][] menTexture = new Bitmap[2][4];
         Resources res=context.getResources();
@@ -61,38 +56,37 @@ public class World {
     }
 
     public void run() {
-        lastTime = System.currentTimeMillis();
-        final Ticker spawnTimer = new Ticker(0.2f);
-        new Timer().schedule(new TimerTask() {
-            @Override
-            public void run() {
-                if (active) {
-                    try {
-                        long cTime = System.currentTimeMillis();
-                        float delta = (cTime - lastTime)/1000f;
-                        lastTime = cTime;
-                        update(delta);
-                        Canvas c = surfaceHolder.lockCanvas();
-                        draw(c);
-                        surfaceHolder.unlockCanvasAndPost(c);
-                        spawnTimer.tick(delta);
-                        if (spawnTimer.getIsNextRound())
-                            autoSpawn();
-                        //gcTime.tick(delta);
-                        //if (gcTime.getIsNextRound()) {
-                        //    System.gc();
-                        //}
-                    } catch (Exception e) {
-                        Log.i("run", e.getMessage());
+            lastTime = System.currentTimeMillis();
+            final Ticker spawnTimer = new Ticker(0.2f);
+            new Timer().schedule(new TimerTask() {
+                @Override
+                public void run() {
+                    if (active) {
+                        try {
+                            long cTime = System.currentTimeMillis();
+                            float delta = (cTime - lastTime) / 1000f;
+                            lastTime = cTime;
+                            update(delta);
+                            Canvas c = holder.lockCanvas();
+                            if (c!=null) {
+                                draw(c);
+                                holder.unlockCanvasAndPost(c);
+                                spawnTimer.tick(delta);
+                                if (spawnTimer.getIsNextRound())
+                                    autoSpawn();
+                            }
+                        } catch (IllegalArgumentException e) {
+                            //Log.i("run", e.getMessage());
+                        }
                     }
                 }
-            }
 
-        }, 0, 10);
+            }, 0, 10);
     }
 
-    public void setSurfaceSize(int width, int height) {
+    public void setSurface(SurfaceHolder s, int width, int height) {
         synchronized (this) {
+            holder=s;
             Configs.displayHeight=height;
             Configs.displayWidth=width;
             UnitLayer.resize(width, height);
@@ -104,25 +98,11 @@ public class World {
         }
     }
 
-    public boolean doTouchEvent(MotionEvent event) {
-        /*float posX = event.getX();
-        float posY = event.getY();
-        int team = (posX < width / 2) ? 0 : 1;
-
-        boolean giant = 0 == rnd.nextInt(100);
-        if (giant) {
-            UnitLayer.spawn(new Giant(posX, posY, team));
-            showMessage(posX, posY, "GIANT SPAWNED!", team);
-        } else
-            UnitLayer.spawn(new Man(posX, posY, team));*/
-        return true;
-    }
-
     private void autoSpawn() {
         for (int team = 0; team < 2; team++) {
-            float x = ((team == 0) ? Configs.worldBorders : width * 2 / 3-Configs.worldBorders)
+            float x = ((team == 0) ? Configs.worldHorizontalBorders : width * 2 / 3-Configs.worldHorizontalBorders)
                     + rnd.nextInt(width / 3);
-            float y = rnd.nextInt(height-2*Configs.worldBorders)+Configs.worldBorders;
+            float y = rnd.nextInt(height-2*Configs.worldVerticalBorders)+Configs.worldVerticalBorders;
             boolean gigant = 0 == rnd.nextInt(Configs.worldGianSpawnProbability);
             if (gigant) {
                 UnitLayer.spawn(new Giant(x, y, team));

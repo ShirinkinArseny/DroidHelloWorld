@@ -34,8 +34,8 @@ public class TerritoryLayer{
     public static void draw(Canvas canvas) {
         canvas.drawBitmap(bg, 0, 0, p);
         if (Configs.worldBoardersDraw)
-        canvas.drawRect(Configs.worldBorders, Configs.worldBorders,
-                Configs.displayWidth-Configs.worldBorders,
-                Configs.displayHeight-Configs.worldBorders, border);
+        canvas.drawRect(Configs.worldHorizontalBorders, Configs.worldVerticalBorders,
+                Configs.displayWidth-Configs.worldHorizontalBorders,
+                Configs.displayHeight-Configs.worldVerticalBorders, border);
     }
 }

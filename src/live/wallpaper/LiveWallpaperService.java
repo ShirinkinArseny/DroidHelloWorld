@@ -1,8 +1,7 @@
 package live.wallpaper;
 
-import android.content.SharedPreferences;
 import android.service.wallpaper.WallpaperService;
-import android.view.MotionEvent;
+import android.util.Log;
 import android.view.SurfaceHolder;
 
 public class LiveWallpaperService extends WallpaperService {
@@ -22,16 +21,12 @@ public class LiveWallpaperService extends WallpaperService {
         super.onDestroy();
     }
 
-    public class RBEngine extends Engine implements SharedPreferences.OnSharedPreferenceChangeListener {
+    public class RBEngine extends Engine {
 
         private World world;
 
         public RBEngine() {
-            SurfaceHolder holder = getSurfaceHolder();
-            world = new World(holder, getApplicationContext());
-        }
-
-        public void onSharedPreferenceChanged(SharedPreferences prefs, String key) {
+            world = new World(getApplicationContext());
         }
 
         @Override
@@ -49,7 +44,7 @@ public class LiveWallpaperService extends WallpaperService {
         @Override
         public void onSurfaceChanged(SurfaceHolder holder, int format, int width, int height) {
             super.onSurfaceChanged(holder, format, width, height);
-            world.setSurfaceSize(width, height);
+            world.setSurface(holder, width, height);
         }
 
         @Override
@@ -72,13 +67,6 @@ public class LiveWallpaperService extends WallpaperService {
         public void onSurfaceDestroyed(SurfaceHolder holder) {
             super.onSurfaceDestroyed(holder);
             world.stopPainting();
-        }
-
-
-        @Override
-        public void onTouchEvent(MotionEvent event) {
-            super.onTouchEvent(event);
-            world.doTouchEvent(event);
         }
 
     }

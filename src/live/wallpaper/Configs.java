@@ -22,7 +22,8 @@ public class Configs {
 
     public static int       worldGianSpawnProbability =100;
     public static int       worldTowerSpawnProbability =80;
-    public static int       worldBorders=25;
+    public static int       worldHorizontalBorders=15;
+    public static int       worldVerticalBorders=35;
     public static boolean   worldBoardersDraw=true;
 
     public static int[] redFontColor=new int[]{255, 128, 128, 128};
