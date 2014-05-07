@@ -17,17 +17,19 @@ public class Configs {
     public static float     spawnsHideCoef =1f;
     public static boolean   spawnsDraw=true;
 
-    public static int       timerTimer =60;//60*5;
+    public static int       timerTimer =60*5;
     public static boolean   timerDraw =true;
 
     public static int       worldGianSpawnProbability =100;
     public static int       worldTowerSpawnProbability =80;
     public static int       worldHorizontalBorders=15;
-    public static int       worldVerticalBorders=35;
+    public static int       worldVerticalTopBorders=40;
+    public static int       worldVerticalBottomBorders=15;
     public static boolean   worldBoardersDraw=true;
+    public static int[]     worldBoardersColor=new int[]{128, 128, 128, 192};
 
-    public static int[] redFontColor=new int[]{255, 128, 128, 128};
-    public static int[] blueFontColor=new int[]{128, 128, 255, 128};
+    public static int[] redFontColor=new int[]{192, 64, 64, 128};
+    public static int[] blueFontColor=new int[]{64, 64, 192, 128};
     public static int[] grayFontColor=new int[]{128, 128, 128, 128};
 
     public static int displayWidth;

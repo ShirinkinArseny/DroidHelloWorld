@@ -9,6 +9,8 @@ import live.wallpaper.Units.ControlledUnit;
 import live.wallpaper.Units.NotControlledUnit;
 import live.wallpaper.Units.Unit;
 
+import java.util.Collections;
+import java.util.Comparator;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -27,6 +29,7 @@ public class UnitLayer{
     private static Ticker reWayAndReIntersectTime = new Ticker(0.1f);
     private static boolean lockChangeUnits=false;
     private static int[] kills=new int[]{0, 0};
+    private static LinkedList<Unit> unitsForDraw;
 
     public static int[] getTeamSizes() {
         return kills;
@@ -34,6 +37,7 @@ public class UnitLayer{
 
     public static void init() {
         unitsAddBuffer =new LinkedList<>();
+        unitsForDraw=new LinkedList<>();
     }
 
     public static void resize(float width, float height) {
@@ -164,13 +168,13 @@ public class UnitLayer{
     }
 
     public static void killEverybody() {
-        for (int i=0; i<4; i++) {
+        for (int i=0; i<2; i++) {
             for (Unit u: dividedUnits[i])
                 u.changeHealth(-10f);
         }
-        for (int i=0; i<4; i++)
+        for (int i=0; i<2; i++)
         updateDeath(dividedUnits[i]);
-
+        waitForUnlock();
         kills[0]=0;
         kills[1]=0;
     }
@@ -203,6 +207,7 @@ public class UnitLayer{
                 for (int j=0; j< Configs.bloodCount; j++)
                     BloodLayer.add(units.get(i).getX() - 28 + rnd.nextInt(20), units.get(i).getY() - 28 + rnd.nextInt(20), 1f+j/5f, tx);
 
+                if (tx==0)
                 kills[c.getTeam()]++;
                 units.remove(i);
             }
@@ -219,9 +224,21 @@ public class UnitLayer{
         addUnitsFromBuffer();
     }
 
+    private static Comparator<Unit> comparer=new Comparator<Unit>() {
+        @Override
+        public int compare(Unit unit, Unit unit2) {
+            return unit.getY().compareTo(unit2.getY());
+        }
+    };
+
     public static void draw(Canvas canvas) {
+        //unitsForDraw.clear();
         for (int i=0; i<4; i++)
             for (Unit m : dividedUnits[i])
                 m.draw(canvas);
+        /*        unitsForDraw.add(m);
+        Collections.sort(unitsForDraw, comparer);
+        for (Unit m : unitsForDraw)
+            m.draw(canvas);*/
     }
 }

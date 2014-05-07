@@ -21,10 +21,6 @@ public class Unit extends ControlledUnit {
     public void move(Unit[] add, float dt) {
         float dx = getDX() * dt;
         float dy = getDY() * dt;
-        if (getX() + dx < Configs.worldHorizontalBorders) dx = 1;
-        if (getX() + dx > Configs.displayWidth-Configs.worldHorizontalBorders) dx = -1;
-        if (getY() + dy < Configs.worldVerticalBorders) dy = 1;
-        if (getY() + dy > Configs.displayHeight-Configs.worldVerticalBorders) dy = -1;
         changePosition(dx, dy);
         if (getX().isNaN() || getY().isNaN()) {
             Log.i("Unit.move", getX() + " " + getY());

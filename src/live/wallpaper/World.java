@@ -102,7 +102,7 @@ public class World {
         for (int team = 0; team < 2; team++) {
             float x = ((team == 0) ? Configs.worldHorizontalBorders : width * 2 / 3-Configs.worldHorizontalBorders)
                     + rnd.nextInt(width / 3);
-            float y = rnd.nextInt(height-2*Configs.worldVerticalBorders)+Configs.worldVerticalBorders;
+            float y = rnd.nextInt(height-Configs.worldVerticalBottomBorders-Configs.worldVerticalTopBorders)+Configs.worldVerticalTopBorders;
             boolean gigant = 0 == rnd.nextInt(Configs.worldGianSpawnProbability);
             if (gigant) {
                 UnitLayer.spawn(new Giant(x, y, team));

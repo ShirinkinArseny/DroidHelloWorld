@@ -17,8 +17,9 @@ public class TerritoryLayer{
         p = new Paint();
         p.setColor(Color.WHITE);
         border = new Paint();
-        border.setColor(Color.WHITE);
-        border.setAlpha(32);
+        border.setColor(Color.rgb(Configs.worldBoardersColor[0], Configs.worldBoardersColor[1],
+                Configs.worldBoardersColor[2]));
+        border.setAlpha(Configs.worldBoardersColor[3]);
         border.setStrokeWidth(0);
         border.setStyle(Paint.Style.STROKE);
     }
@@ -34,8 +35,8 @@ public class TerritoryLayer{
     public static void draw(Canvas canvas) {
         canvas.drawBitmap(bg, 0, 0, p);
         if (Configs.worldBoardersDraw)
-        canvas.drawRect(Configs.worldHorizontalBorders, Configs.worldVerticalBorders,
+        canvas.drawRect(Configs.worldHorizontalBorders, Configs.worldVerticalTopBorders,
                 Configs.displayWidth-Configs.worldHorizontalBorders,
-                Configs.displayHeight-Configs.worldVerticalBorders, border);
+                Configs.displayHeight-Configs.worldVerticalBottomBorders, border);
     }
 }
