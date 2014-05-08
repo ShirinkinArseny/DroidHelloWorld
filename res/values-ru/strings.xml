@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Reds VS Blues!</string>
-    <string name="description">Description!</string>
+    <string name="description">Описание!</string>
     <string name="aiDeltaTarget">Разброс толпы юнитов при атаке</string>
     <string name="aiOurUnitsCountToAttack">Кол-во юнитов, при котором можно начинать нападать на их башни</string>
     <string name="aiOurUnitsWithGiantCountToAttack">Кол-во юнитов (если есть гигант) для атаки башен</string>
