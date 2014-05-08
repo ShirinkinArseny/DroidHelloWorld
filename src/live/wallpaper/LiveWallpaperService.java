@@ -1,5 +1,7 @@
 package live.wallpaper;
 
+import android.content.Context;
+import android.preference.PreferenceManager;
 import android.service.wallpaper.WallpaperService;
 import android.util.Log;
 import android.view.SurfaceHolder;
@@ -8,12 +10,13 @@ public class LiveWallpaperService extends WallpaperService {
 
     @Override
     public Engine onCreateEngine() {
-        return new RBEngine();
+        return new RBEngine(this);
     }
 
     @Override
     public void onCreate() {
         super.onCreate();
+
     }
 
     @Override
@@ -24,9 +27,11 @@ public class LiveWallpaperService extends WallpaperService {
     public class RBEngine extends Engine {
 
         private World world;
+        private Context context;
 
-        public RBEngine() {
+        public RBEngine(Context context) {
             world = new World(getApplicationContext());
+            this.context = context;
         }
 
         @Override

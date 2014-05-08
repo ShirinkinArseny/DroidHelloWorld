@@ -46,7 +46,7 @@
             android:key="messageHideCoef"
             android:inputType="number"
             android:title="@string/messageHideCoef"
-            android:defaultValue="1.5f"
+            android:defaultValue="1.5"
             />
     <CheckBoxPreference
             android:key="messageDraw"
@@ -57,7 +57,7 @@
             android:key="spawnsHideCoef"
             android:inputType="number"
             android:title="@string/spawnsHideCoef"
-            android:defaultValue="1f"
+            android:defaultValue="1"
             />
     <CheckBoxPreference
             android:key="spawnsDraw"
@@ -68,7 +68,7 @@
             android:key="timerTimer"
             android:inputType="number"
             android:title="@string/timerTimer"
-            android:defaultValue="60*5"
+            android:defaultValue="300"
             />
     <CheckBoxPreference
             android:key="timerDraw"
