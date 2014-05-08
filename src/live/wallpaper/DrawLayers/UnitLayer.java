@@ -35,23 +35,21 @@ public class UnitLayer{
         syncer=new Synchroniser();
     }
 
-    public static void resize(float width, float height) {
+    public static void resize(int width, int height) {
+            float wOld = Configs.displayWidth - 2 * Configs.worldHorizontalBorders;
+            float hOld = Configs.displayHeight
+                    - Configs.worldVerticalTopBorders - Configs.worldVerticalBottomBorders;
 
+            float wNew = width - 2 * Configs.worldHorizontalBorders;
+            float hNew = height - Configs.worldVerticalTopBorders - Configs.worldVerticalBottomBorders;
 
-        float wOld=Configs.displayWidth-2*Configs.worldHorizontalBorders;
-        float hOld=Configs.displayHeight
-                -Configs.worldVerticalTopBorders-Configs.worldVerticalBottomBorders;
+            for (int i = 0; i < 4; i++)
+                for (Unit u : dividedUnits[i]) {
 
-        float wNew=width-2*Configs.worldHorizontalBorders;
-        float hNew=height-Configs.worldVerticalTopBorders-Configs.worldVerticalBottomBorders;
-
-        for (int i=0; i<4; i++)
-            for (Unit u: dividedUnits[i]) {
-
-                float posX=(u.getX()-Configs.worldHorizontalBorders)/wOld*wNew+Configs.worldHorizontalBorders;
-                float posY=(u.getY()-Configs.worldVerticalTopBorders)/hOld*hNew+Configs.worldVerticalTopBorders;
-                u.setPosition(posX, posY);
-            }
+                    float posX = (u.getX() - Configs.worldHorizontalBorders) / wOld * wNew + Configs.worldHorizontalBorders;
+                    float posY = (u.getY() - Configs.worldVerticalTopBorders) / hOld * hNew + Configs.worldVerticalTopBorders;
+                    u.setPosition(posX, posY);
+                }
     }
 
     private static void updateAI() {

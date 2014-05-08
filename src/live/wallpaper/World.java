@@ -5,7 +5,6 @@ import android.content.res.Resources;
 import android.graphics.*;
 import android.view.SurfaceHolder;
 import live.wallpaper.DrawLayers.*;
-import live.wallpaper.Geometry.*;
 import live.wallpaper.Geometry.Point;
 import live.wallpaper.Units.*;
 
@@ -18,17 +17,24 @@ public class World {
     private long lastTime;
     private SurfaceHolder holder;
 
+    private static final float pictureSizeCoef=0.5f;
+    private static Bitmap getScaledResource(Resources res, int id, int size) {
+        return
+        Bitmap.createScaledBitmap(
+                BitmapFactory.decodeResource(res, id), (int)(size*pictureSizeCoef), (int)(size*pictureSizeCoef), true);
+    }
+
     public World(Context context) {
 
         Bitmap[][] menTexture = new Bitmap[2][4];
         Resources res = context.getResources();
-        menTexture[0][0] = BitmapFactory.decodeResource(res, R.drawable.red);
-        menTexture[0][1] = BitmapFactory.decodeResource(res, R.drawable.bigred);
-        menTexture[0][2] = BitmapFactory.decodeResource(res, R.drawable.redtower);
-        menTexture[1][0] = BitmapFactory.decodeResource(res, R.drawable.blue);
-        menTexture[1][1] = BitmapFactory.decodeResource(res, R.drawable.bigblue);
-        menTexture[1][2] = BitmapFactory.decodeResource(res, R.drawable.bluetower);
-        menTexture[0][3] = BitmapFactory.decodeResource(res, R.drawable.bullet);
+        menTexture[0][0] = getScaledResource(res, R.drawable.red, 32);
+        menTexture[0][1] = getScaledResource(res, R.drawable.bigred, 114);
+        menTexture[0][2] = getScaledResource(res, R.drawable.redtower, 32);
+        menTexture[1][0] = getScaledResource(res, R.drawable.blue, 32);
+        menTexture[1][1] = getScaledResource(res, R.drawable.bigblue, 114);
+        menTexture[1][2] = getScaledResource(res, R.drawable.bluetower, 32);
+        menTexture[0][3] = getScaledResource(res, R.drawable.bullet, 32);
         menTexture[1][3] = menTexture[0][3];
         Unit.init(menTexture);
 
@@ -36,12 +42,12 @@ public class World {
 
         TimerLayer.init();
         UnitLayer.init();
-        WindLayer.init(BitmapFactory.decodeResource(context.getResources(), R.drawable.noise));
+        WindLayer.init(getScaledResource(context.getResources(), R.drawable.noise, 512));
         TerritoryLayer.init(BitmapFactory.decodeResource(context.getResources(), R.drawable.background));
-        BloodLayer.init(new Bitmap[]{BitmapFactory.decodeResource(context.getResources(), R.drawable.blood),
-                BitmapFactory.decodeResource(context.getResources(), R.drawable.coal)});
+        BloodLayer.init(new Bitmap[]{getScaledResource(context.getResources(), R.drawable.blood, 64),
+                getScaledResource(context.getResources(), R.drawable.coal, 64)});
         MessagesLayer.init();
-        SpawnsLayer.init(BitmapFactory.decodeResource(context.getResources(), R.drawable.spawn));
+        SpawnsLayer.init(getScaledResource(context.getResources(), R.drawable.spawn, 74));
     }
 
     public void pausePainting() {
