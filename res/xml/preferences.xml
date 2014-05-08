@@ -1,112 +1,112 @@
 <?xml version="1.0" encoding="utf-8"?>
-
-<PreferenceScreen xmlns:android="http://schemas.android.com/apk/res/android">
+<PreferenceScreen
+        xmlns:android="http://schemas.android.com/apk/res/android">
     <EditTextPreference
-            android:tag="aiDeltaTarget"
-            android:inputMethod="numeric"
+            android:key="aiDeltaTarget"
+            android:inputType="number"
             android:title="@string/aiDeltaTarget"
             android:defaultValue="100"
             />
     <EditTextPreference
-            android:tag="aiOurUnitsCountToAttack"
-            android:inputMethod="numeric"
+            android:key="aiOurUnitsCountToAttack"
+            android:inputType="number"
             android:title="@string/aiOurUnitsCountToAttack"
             android:defaultValue="40"
             />
     <EditTextPreference
-            android:tag="aiOurUnitsWithGiantCountToAttack"
-            android:inputMethod="numeric"
+            android:key="aiOurUnitsWithGiantCountToAttack"
+            android:inputType="number"
             android:title="@string/aiOurUnitsWithGiantCountToAttack"
             android:defaultValue="20"
             />
     <EditTextPreference
-            android:tag="aiTheirUnitsCountToNotAttack"
-            android:inputMethod="numeric"
+            android:key="aiTheirUnitsCountToNotAttack"
+            android:inputType="number"
             android:title="@string/aiTheirUnitsCountToNotAttack"
             android:defaultValue="50"
             />
     <EditTextPreference
-            android:tag="bloodHideCoef"
-            android:inputMethod="numeric"
+            android:key="bloodHideCoef"
+            android:inputType="number"
             android:title="@string/bloodHideCoef"
             android:defaultValue="5"
             />
     <EditTextPreference
-            android:tag="bloodCount"
-            android:inputMethod="numeric"
+            android:key="bloodCount"
+            android:inputType="number"
             android:title="@string/bloodCount"
             android:defaultValue="10"
             />
     <CheckBoxPreference
-            android:tag="bloodDraw"
+            android:key="bloodDraw"
             android:title="@string/bloodDraw"
             android:defaultValue="true"
         />
     <EditTextPreference
-            android:tag="messageHideCoef"
-            android:inputMethod="numeric"
+            android:key="messageHideCoef"
+            android:inputType="number"
             android:title="@string/messageHideCoef"
             android:defaultValue="1.5f"
             />
     <CheckBoxPreference
-            android:tag="messageDraw"
+            android:key="messageDraw"
             android:title="@string/messageDraw"
             android:defaultValue="true"
             />
     <EditTextPreference
-            android:tag="spawnsHideCoef"
-            android:inputMethod="numeric"
+            android:key="spawnsHideCoef"
+            android:inputType="number"
             android:title="@string/spawnsHideCoef"
             android:defaultValue="1f"
             />
     <CheckBoxPreference
-            android:tag="spawnsDraw"
+            android:key="spawnsDraw"
             android:title="@string/spawnsDraw"
             android:defaultValue="true"
             />
     <EditTextPreference
-            android:tag="timerTimer"
-            android:inputMethod="numeric"
+            android:key="timerTimer"
+            android:inputType="number"
             android:title="@string/timerTimer"
             android:defaultValue="60*5"
             />
     <CheckBoxPreference
-            android:tag="timerDraw"
+            android:key="timerDraw"
             android:title="@string/timerDraw"
             android:defaultValue="true"
             />
     <EditTextPreference
-            android:tag="worldGianSpawnProbability"
-            android:inputMethod="numeric"
+            android:key="worldGianSpawnProbability"
+            android:inputType="number"
             android:title="@string/worldGianSpawnProbability"
             android:defaultValue="100"
             />
     <EditTextPreference
-            android:tag="worldTowerSpawnProbability"
-            android:inputMethod="numeric"
+            android:key="worldTowerSpawnProbability"
+            android:inputType="number"
             android:title="@string/worldTowerSpawnProbability"
             android:defaultValue="80"
             />
     <EditTextPreference
-            android:tag="worldHorizontalBorders"
-            android:inputMethod="numeric"
+            android:key="worldHorizontalBorders"
+            android:inputType="number"
             android:title="@string/worldHorizontalBorders"
             android:defaultValue="15"
             />
     <EditTextPreference
-            android:tag="worldVerticalTopBorders"
-            android:inputMethod="numeric"
+            android:key="worldVerticalTopBorders"
+            android:inputType="number"
             android:title="@string/worldVerticalTopBorders"
             android:defaultValue="40"
             />
     <EditTextPreference
-            android:tag="worldVerticalBottomBorders"
-            android:inputMethod="numeric"
+            android:key="worldVerticalBottomBorders"
+            android:inputType="number"
             android:title="@string/worldVerticalBottomBorders"
             android:defaultValue="15"
             />
     <CheckBoxPreference
-            android:tag="worldBoardersDraw"
+            android:key="worldBoardersDraw"
             android:title="@string/worldBoardersDraw"
             android:defaultValue="true"
             />

@@ -10,11 +10,16 @@ public class Settings extends PreferenceActivity {
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-
+        getFragmentManager().beginTransaction().replace(android.R.id.content, new Preference()).commit();
     }
 
     private class Preference extends PreferenceFragment
     {
-
+        @Override
+        public void onCreate(Bundle savedInstanceState)
+        {
+            super.onCreate(savedInstanceState);
+            addPreferencesFromResource(R.xml.preferences);
+        }
     }
 }
