@@ -11,31 +11,31 @@
             android:tag="aiOurUnitsCountToAttack"
             android:inputMethod="numeric"
             android:title="@string/aiOurUnitsCountToAttack"
-            android:defaultValue="100"
+            android:defaultValue="40"
             />
     <EditTextPreference
             android:tag="aiOurUnitsWithGiantCountToAttack"
             android:inputMethod="numeric"
             android:title="@string/aiOurUnitsWithGiantCountToAttack"
-            android:defaultValue="100"
+            android:defaultValue="20"
             />
     <EditTextPreference
             android:tag="aiTheirUnitsCountToNotAttack"
             android:inputMethod="numeric"
             android:title="@string/aiTheirUnitsCountToNotAttack"
-            android:defaultValue="100"
+            android:defaultValue="50"
             />
     <EditTextPreference
             android:tag="bloodHideCoef"
             android:inputMethod="numeric"
             android:title="@string/bloodHideCoef"
-            android:defaultValue="100"
+            android:defaultValue="5"
             />
     <EditTextPreference
             android:tag="bloodCount"
             android:inputMethod="numeric"
             android:title="@string/bloodCount"
-            android:defaultValue="100"
+            android:defaultValue="10"
             />
     <CheckBoxPreference
             android:tag="bloodDraw"
@@ -46,7 +46,7 @@
             android:tag="messageHideCoef"
             android:inputMethod="numeric"
             android:title="@string/messageHideCoef"
-            android:defaultValue="100"
+            android:defaultValue="1.5f"
             />
     <CheckBoxPreference
             android:tag="messageDraw"
@@ -57,7 +57,7 @@
             android:tag="spawnsHideCoef"
             android:inputMethod="numeric"
             android:title="@string/spawnsHideCoef"
-            android:defaultValue="100"
+            android:defaultValue="1f"
             />
     <CheckBoxPreference
             android:tag="spawnsDraw"
@@ -68,7 +68,7 @@
             android:tag="timerTimer"
             android:inputMethod="numeric"
             android:title="@string/timerTimer"
-            android:defaultValue="100"
+            android:defaultValue="60*5"
             />
     <CheckBoxPreference
             android:tag="timerDraw"
@@ -85,25 +85,25 @@
             android:tag="worldTowerSpawnProbability"
             android:inputMethod="numeric"
             android:title="@string/worldTowerSpawnProbability"
-            android:defaultValue="100"
+            android:defaultValue="80"
             />
     <EditTextPreference
             android:tag="worldHorizontalBorders"
             android:inputMethod="numeric"
             android:title="@string/worldHorizontalBorders"
-            android:defaultValue="100"
+            android:defaultValue="15"
             />
     <EditTextPreference
             android:tag="worldVerticalTopBorders"
             android:inputMethod="numeric"
             android:title="@string/worldVerticalTopBorders"
-            android:defaultValue="100"
+            android:defaultValue="40"
             />
     <EditTextPreference
             android:tag="worldVerticalBottomBorders"
             android:inputMethod="numeric"
             android:title="@string/worldVerticalBottomBorders"
-            android:defaultValue="100"
+            android:defaultValue="15"
             />
     <CheckBoxPreference
             android:tag="worldBoardersDraw"
