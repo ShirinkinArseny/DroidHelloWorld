@@ -4,7 +4,7 @@ import android.service.wallpaper.WallpaperService;
 import android.util.Log;
 import android.view.SurfaceHolder;
 
-public class    LiveWallpaperService extends WallpaperService {
+public class LiveWallpaperService extends WallpaperService {
 
     @Override
     public Engine onCreateEngine() {
