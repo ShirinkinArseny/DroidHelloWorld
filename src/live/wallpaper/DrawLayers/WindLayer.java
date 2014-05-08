@@ -31,7 +31,7 @@ public class WindLayer {
     }
 
     public static void update(float dt) {
-        if (Configs.windDraw) {
+        if (Configs.isWindDraw()) {
             dx += dt * 50;
             dy += dt * 50;
             if (dx > width) dx -= width;
@@ -40,7 +40,7 @@ public class WindLayer {
     }
 
     public static void draw(Canvas canvas) {
-        if (Configs.windDraw) {
+        if (Configs.isWindDraw()) {
             int posX = (int) (dx - width);
             for (int i = -1; i < sx; i++) {
                 int posY = (int) (dy - height);

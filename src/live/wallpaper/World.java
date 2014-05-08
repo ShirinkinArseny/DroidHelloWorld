@@ -98,35 +98,35 @@ public class World {
             UnitLayer.resize(width, height);
             TimerLayer.resize(width, height);
             WindLayer.resize(width, height);
-            Configs.displayHeight = height;
-            Configs.displayWidth = width;
+            Configs.setDisplayHeight(height);
+            Configs.setDisplayWidth(width);
             TerritoryLayer.resize(width, height);
         }
     }
 
     private live.wallpaper.Geometry.Point getSpawnPoint(int team) {
-        if (Configs.displayWidth > Configs.displayHeight) {
+        if (Configs.getDisplayWidth() > Configs.getDisplayHeight()) {
             return new Point(
 
                     ((team == 0) ?
-                            Configs.worldHorizontalBorders :
-                            Configs.displayWidth * 2 / 3 - Configs.worldHorizontalBorders)
-                    + rnd.nextInt(Configs.displayWidth / 3),
+                            Configs.getWorldHorizontalBorders() :
+                            Configs.getDisplayWidth() * 2 / 3 - Configs.getWorldHorizontalBorders())
+                    + rnd.nextInt(Configs.getDisplayWidth() / 3),
 
-                    rnd.nextInt(Configs.displayHeight - Configs.worldVerticalBottomBorders
-                            - Configs.worldVerticalTopBorders)
-                            + Configs.worldVerticalTopBorders
+                    rnd.nextInt(Configs.getDisplayHeight() - Configs.getWorldVerticalBottomBorders()
+                            - Configs.getWorldVerticalTopBorders())
+                            + Configs.getWorldVerticalTopBorders()
             );
         } else {
             return new Point(
 
-                    rnd.nextInt(Configs.displayWidth - 2 * Configs.worldHorizontalBorders)
-                            + Configs.worldHorizontalBorders,
+                    rnd.nextInt(Configs.getDisplayWidth() - 2 * Configs.getWorldHorizontalBorders())
+                            + Configs.getWorldHorizontalBorders(),
 
                     ((team == 0) ?
-                            Configs.worldVerticalTopBorders :
-                            Configs.displayHeight * 2 / 3 - Configs.worldVerticalBottomBorders)
-                            + rnd.nextInt(Configs.displayWidth / 3)
+                            Configs.getWorldVerticalTopBorders() :
+                            Configs.getDisplayHeight() * 2 / 3 - Configs.getWorldVerticalBottomBorders())
+                            + rnd.nextInt(Configs.getDisplayWidth() / 3)
             );
         }
 
@@ -135,13 +135,13 @@ public class World {
     private void autoSpawn() {
         for (int team = 0; team < 2; team++) {
             Point p = getSpawnPoint(team);
-            boolean gigant = 0 == rnd.nextInt(Configs.worldGianSpawnProbability);
+            boolean gigant = 0 == rnd.nextInt(Configs.getWorldGianSpawnProbability());
             if (gigant) {
                 UnitLayer.spawn(new Giant(p, team));
                 showMessage(p, "GIANT SPAWNED!", team);
                 return;
             }
-            boolean tower = 0 == rnd.nextInt(Configs.worldTowerSpawnProbability);
+            boolean tower = 0 == rnd.nextInt(Configs.getWorldGianSpawnProbability());
             if (tower) {
                 UnitLayer.spawn(new Tower(p, team));
                 showMessage(p, "TOWER BUILT!", team);

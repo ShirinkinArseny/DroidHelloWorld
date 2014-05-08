@@ -11,7 +11,7 @@ public class Tower extends Unit{
 
     public Tower(Point p, int team) {
         super(p, team, 10f, 3f, Type.Tower);
-        setWay(Configs.displayWidth/2, Configs.displayHeight/2);
+        setWay(Configs.getDisplayWidth()/2, Configs.getDisplayHeight()/2);
         shot=new Ticker(0.3f);
         shot.getIsNextRound();
     }

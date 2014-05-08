@@ -26,7 +26,7 @@ public class SpawnsLayer{
     }
 
     public static void addSpawn(float x, float y) {
-        if (Configs.spawnsDraw) {
+        if (Configs.isSpawnsDraw()) {
             syncer.waitForUnlock();
             syncer.lock();
             spawnsAddBuffer.add(new float[]{x - spawnTexture.getWidth() / 2, y - spawnTexture.getHeight() / 2, 1f});
@@ -35,9 +35,9 @@ public class SpawnsLayer{
     }
 
     public static void update(float dt) {
-        if (Configs.spawnsDraw) {
+        if (Configs.isSpawnsDraw()) {
         for (int i=0; i<spawns.size(); i++) {
-            spawns.get(i)[2]-= Configs.spawnsHideCoef *dt;
+            spawns.get(i)[2]-= Configs.getSpawnsHideCoef() *dt;
             if (spawns.get(i)[2]<=0)
                 spawns.remove(i);
         }
@@ -49,7 +49,7 @@ public class SpawnsLayer{
     }
 
     public static void draw(Canvas canvas) {
-        if (Configs.spawnsDraw)
+        if (Configs.isSpawnsDraw())
         for (float[] f: spawns) {
             p.setAlpha((int) (f[2]*256));
             canvas.drawBitmap(spawnTexture, f[0], f[1], p);

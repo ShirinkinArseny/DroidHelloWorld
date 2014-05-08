@@ -24,7 +24,7 @@ public class BloodLayer{
     }
 
     public static void add(float x, float y, float val, float type) {
-        if (Configs.bloodDraw) {
+        if (Configs.isBloodDraw()) {
         syncer.waitForUnlock();
         syncer.lock();
             dust.add(new float[]{x, y, val, type});
@@ -33,11 +33,11 @@ public class BloodLayer{
     }
 
     public static void update(float dt) {
-        if (Configs.bloodDraw) {
+        if (Configs.isBloodDraw()) {
             syncer.waitForUnlock();
             syncer.lock();
             for (int i = 0; i < dust.size(); i++) {
-                dust.get(i)[2] -= Configs.bloodHideCoef * dt;
+                dust.get(i)[2] -= Configs.getBloodHideCoef() * dt;
                 if (dust.get(i)[2] <= 0)
                     dust.remove(i);
             }
@@ -46,7 +46,7 @@ public class BloodLayer{
     }
 
     public static void draw(Canvas canvas) {
-        if (Configs.bloodDraw) {
+        if (Configs.isBloodDraw()) {
             syncer.waitForUnlock();
             syncer.lock();
         for (float[] f: dust) {

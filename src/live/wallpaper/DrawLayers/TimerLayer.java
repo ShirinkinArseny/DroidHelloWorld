@@ -17,21 +17,21 @@ public class TimerLayer {
     private static int width2;
 
     public static void init() {
-        round=new Ticker(Configs.timerTimer);
+        round=new Ticker(Configs.getTimerTimer());
         pBig=new Paint();
         pBig.setAntiAlias(true);
-        pBig.setColor(Color.rgb(Configs.grayFontColor[0], Configs.grayFontColor[1], Configs.grayFontColor[2]));
-        pBig.setAlpha(Configs.grayFontColor[3]);
+        pBig.setColor(Color.rgb(Configs.getGrayFontColor()[0], Configs.getGrayFontColor()[1], Configs.getGrayFontColor()[2]));
+        pBig.setAlpha(Configs.getGrayFontColor()[3]);
         pBig.setTextSize(300f);
         pSmallRed=new Paint();
         pSmallRed.setAntiAlias(true);
-        pSmallRed.setColor(Color.rgb(Configs.redFontColor[0], Configs.redFontColor[1], Configs.redFontColor[2]));
-        pSmallRed.setAlpha(Configs.redFontColor[3]);
+        pSmallRed.setColor(Color.rgb(Configs.getRedFontColor()[0], Configs.getRedFontColor()[1], Configs.getRedFontColor()[2]));
+        pSmallRed.setAlpha(Configs.getRedFontColor()[3]);
         pSmallRed.setTextSize(20f);
         pSmallBlue=new Paint();
         pSmallBlue.setAntiAlias(true);
-        pSmallBlue.setColor(Color.rgb(Configs.blueFontColor[0], Configs.blueFontColor[1], Configs.blueFontColor[2]));
-        pSmallBlue.setAlpha(Configs.blueFontColor[3]);
+        pSmallBlue.setColor(Color.rgb(Configs.getBlueFontColor()[0], Configs.getBlueFontColor()[1], Configs.getBlueFontColor()[2]));
+        pSmallBlue.setAlpha(Configs.getBlueFontColor()[3]);
         pSmallBlue.setTextSize(20f);
     }
 
@@ -59,7 +59,7 @@ public class TimerLayer {
     }
 
     public static void draw(Canvas canvas) {
-        if (Configs.timerDraw) {
+        if (Configs.isTimerDraw()) {
             canvas.drawText(getTime(), width4, height2, pBig);
             int[] kills = UnitLayer.getTeamSizes();
             canvas.drawText(String.valueOf(kills[1]), width2 - 100, height2_3, pSmallRed);

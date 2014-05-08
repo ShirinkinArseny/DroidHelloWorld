@@ -20,12 +20,12 @@ public class MessagesLayer{
 
         pBlue=new Paint();
         pBlue.setAntiAlias(true);
-        pBlue.setColor(Color.rgb(Configs.blueFontColor[0], Configs.blueFontColor[1], Configs.blueFontColor[2]));
+        pBlue.setColor(Color.rgb(Configs.getBlueFontColor()[0], Configs.getBlueFontColor()[1], Configs.getBlueFontColor()[2]));
         pBlue.setTextSize(20f);
 
         pRed=new Paint();
         pRed.setAntiAlias(true);
-        pRed.setColor(Color.rgb(Configs.redFontColor[0], Configs.redFontColor[1], Configs.redFontColor[2]));
+        pRed.setColor(Color.rgb(Configs.getRedFontColor()[0], Configs.getRedFontColor()[1], Configs.getRedFontColor()[2]));
         pRed.setTextSize(20f);
 
         syncer=new Synchroniser();
@@ -33,7 +33,7 @@ public class MessagesLayer{
 
 
     public static void showMessage(float x, float y, String text, int color) {
-        if (Configs.messageDraw) {
+        if (Configs.isMessageDraw()) {
         syncer.waitForUnlock();
         syncer.lock();
             messagesAddBuffer.add(
@@ -48,7 +48,7 @@ public class MessagesLayer{
     }
 
     public static void update(float dt) {
-        if (Configs.messageDraw) {
+        if (Configs.isMessageDraw()) {
             syncer.waitForUnlock();
             syncer.lock();
             for (int i = 0; i < messages.size(); i++) {
@@ -65,7 +65,7 @@ public class MessagesLayer{
     }
 
     public static void draw(Canvas canvas) {
-        if (Configs.messageDraw) {
+        if (Configs.isMessageDraw()) {
             syncer.waitForUnlock();
             syncer.lock();
         for (Message f : messages)

@@ -36,18 +36,18 @@ public class UnitLayer{
     }
 
     public static void resize(int width, int height) {
-            float wOld = Configs.displayWidth - 2 * Configs.worldHorizontalBorders;
-            float hOld = Configs.displayHeight
-                    - Configs.worldVerticalTopBorders - Configs.worldVerticalBottomBorders;
+            float wOld = Configs.getDisplayWidth() - 2 * Configs.getWorldHorizontalBorders();
+            float hOld = Configs.getDisplayHeight()
+                    - Configs.getWorldVerticalTopBorders() - Configs.getWorldVerticalBottomBorders();
 
-            float wNew = width - 2 * Configs.worldHorizontalBorders;
-            float hNew = height - Configs.worldVerticalTopBorders - Configs.worldVerticalBottomBorders;
+            float wNew = width - 2 * Configs.getWorldHorizontalBorders();
+            float hNew = height - Configs.getWorldVerticalTopBorders() - Configs.getWorldVerticalBottomBorders();
 
             for (int i = 0; i < 4; i++)
                 for (Unit u : dividedUnits[i]) {
 
-                    float posX = (u.getX() - Configs.worldHorizontalBorders) / wOld * wNew + Configs.worldHorizontalBorders;
-                    float posY = (u.getY() - Configs.worldVerticalTopBorders) / hOld * hNew + Configs.worldVerticalTopBorders;
+                    float posX = (u.getX() - Configs.getWorldHorizontalBorders()) / wOld * wNew + Configs.getWorldHorizontalBorders();
+                    float posY = (u.getY() - Configs.getWorldVerticalTopBorders()) / hOld * hNew + Configs.getWorldVerticalTopBorders();
                     u.setPosition(posX, posY);
                 }
     }
@@ -190,7 +190,7 @@ public class UnitLayer{
                 if (c.getType()!= NotControlledUnit.Type.Tower && c.getType()!= NotControlledUnit.Type.Bullet)
                     tx=0;
                 else tx=1;
-                for (int j=0; j< Configs.bloodCount; j++)
+                for (int j=0; j< Configs.getBloodCount(); j++)
                     BloodLayer.add(units.get(i).getX() - 28 + rnd.nextInt(20), units.get(i).getY() - 28 + rnd.nextInt(20), 1f+j/5f, tx);
 
                 if (tx==0)

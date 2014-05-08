@@ -17,7 +17,7 @@ public class SimpleAI implements AI{
     }
 
     private float getDeltaPos() {
-        return rnd.nextInt(2* Configs.aiDeltaTarget)-Configs.aiDeltaTarget;
+        return rnd.nextInt(2* Configs.getAiDeltaTarget())-Configs.getAiDeltaTarget();
     }
 
     public void solve(LinkedList<ControlledUnit> yours,
@@ -58,9 +58,9 @@ public class SimpleAI implements AI{
                             y = theirGiants.get(i).getY();
                         }
                     }
-                } else if (theirTowers.size() > 0 && (yours.size()>Configs.aiOurUnitsCountToAttack
-                        || yours.size()>Configs.aiOurUnitsWithGiantCountToAttack && hasOurGiant)
-                        && theirMen.size()<Configs.aiTheirUnitsCountToNotAttack) {
+                } else if (theirTowers.size() > 0 && (yours.size()>Configs.getAiOurUnitsCountToAttack()
+                        || yours.size()>Configs.getAiOurUnitsWithGiantCountToAttack() && hasOurGiant)
+                        && theirMen.size()<Configs.getAiTheirUnitsCountToNotAttack()) {
                     x = theirTowers.get(0).getX();
                     y = theirTowers.get(0).getY();
                     float lastHP=theirTowers.get(0).getHealth();

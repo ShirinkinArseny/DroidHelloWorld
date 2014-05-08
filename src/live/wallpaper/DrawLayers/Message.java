@@ -15,7 +15,7 @@ public class Message {
     }
 
     public void update(float dt) {
-        deathes[2]-= Configs.messageHideCoef *dt;
+        deathes[2]-= Configs.getMessageHideCoef() *dt;
     }
 
     public Message(String text, float x, float y, Paint p) {
