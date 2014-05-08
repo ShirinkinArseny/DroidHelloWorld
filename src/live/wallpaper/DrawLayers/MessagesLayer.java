@@ -4,6 +4,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import live.wallpaper.Configs;
+import live.wallpaper.Geometry.Point;
 
 import java.util.LinkedList;
 
@@ -27,7 +28,7 @@ public class MessagesLayer{
         pRed.setColor(Color.rgb(Configs.redFontColor[0], Configs.redFontColor[1], Configs.redFontColor[2]));
         pRed.setTextSize(20f);
 
-        syncer=new Synchroniser("MessagesLayer");
+        syncer=new Synchroniser();
     }
 
 
@@ -40,6 +41,10 @@ public class MessagesLayer{
             );
         syncer.unlock();
         }
+    }
+
+    public static void showMessage(Point p, String text, int color) {
+        showMessage(p.getX(), p.getY(), text, color);
     }
 
     public static void update(float dt) {

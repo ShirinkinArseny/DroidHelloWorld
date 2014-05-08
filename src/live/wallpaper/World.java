@@ -5,6 +5,8 @@ import android.content.res.Resources;
 import android.graphics.*;
 import android.view.SurfaceHolder;
 import live.wallpaper.DrawLayers.*;
+import live.wallpaper.Geometry.*;
+import live.wallpaper.Geometry.Point;
 import live.wallpaper.Units.*;
 
 import java.util.*;
@@ -12,7 +14,6 @@ import java.util.*;
 public class World {
 
     private Random rnd = new Random();
-    private int width, height;//size of screen
     private boolean active = true;//is working
     private long lastTime;
     private SurfaceHolder holder;
@@ -20,7 +21,7 @@ public class World {
     public World(Context context) {
 
         Bitmap[][] menTexture = new Bitmap[2][4];
-        Resources res=context.getResources();
+        Resources res = context.getResources();
         menTexture[0][0] = BitmapFactory.decodeResource(res, R.drawable.red);
         menTexture[0][1] = BitmapFactory.decodeResource(res, R.drawable.bigred);
         menTexture[0][2] = BitmapFactory.decodeResource(res, R.drawable.redtower);
@@ -57,74 +58,96 @@ public class World {
     }
 
     public void run() {
-            lastTime = System.currentTimeMillis();
-            final Ticker spawnTimer = new Ticker(0.2f);
-            new Timer().schedule(new TimerTask() {
-                @Override
-                public void run() {
-                    if (active) {
-                        try {
-                            long cTime = System.currentTimeMillis();
-                            float delta = (cTime - lastTime) / 1000f;
-                            lastTime = cTime;
-                            update(delta);
-                            Canvas c = holder.lockCanvas();
-                            if (c!=null) {
-                                draw(c);
-                                holder.unlockCanvasAndPost(c);
-                                spawnTimer.tick(delta);
-                                if (spawnTimer.getIsNextRound())
-                                    autoSpawn();
-                            }
-                        } catch (IllegalArgumentException e) {
-                            //Log.i("run", e.getMessage());
+        lastTime = System.currentTimeMillis();
+        final Ticker spawnTimer = new Ticker(0.2f);
+        new Timer().schedule(new TimerTask() {
+            @Override
+            public void run() {
+                if (active) {
+                    try {
+                        long cTime = System.currentTimeMillis();
+                        float delta = (cTime - lastTime) / 1000f;
+                        lastTime = cTime;
+                        update(delta);
+                        Canvas c = holder.lockCanvas();
+                        if (c != null) {
+                            draw(c);
+                            holder.unlockCanvasAndPost(c);
+                            spawnTimer.tick(delta);
+                            if (spawnTimer.getIsNextRound())
+                                autoSpawn();
                         }
+                    } catch (IllegalArgumentException e) {
+                        //Log.i("run", e.getMessage());
                     }
                 }
+            }
 
-            }, 0, 10);
+        }, 0, 10);
     }
 
     public void setSurface(SurfaceHolder s, int width, int height) {
         synchronized (this) {
-            holder=s;
-            Configs.displayHeight=height;
-            Configs.displayWidth=width;
+            holder = s;
             UnitLayer.resize(width, height);
             TimerLayer.resize(width, height);
             WindLayer.resize(width, height);
-            this.width = width;
-            this.height = height;
-            this.notify();
+            Configs.displayHeight = height;
+            Configs.displayWidth = width;
             TerritoryLayer.resize(width, height);
         }
     }
 
+    private live.wallpaper.Geometry.Point getSpawnPoint(int team) {
+        if (Configs.displayWidth > Configs.displayHeight) {
+            return new Point(
+
+                    ((team == 0) ?
+                            Configs.worldHorizontalBorders :
+                            Configs.displayWidth * 2 / 3 - Configs.worldHorizontalBorders)
+                    + rnd.nextInt(Configs.displayWidth / 3),
+
+                    rnd.nextInt(Configs.displayHeight - Configs.worldVerticalBottomBorders
+                            - Configs.worldVerticalTopBorders)
+                            + Configs.worldVerticalTopBorders
+            );
+        } else {
+            return new Point(
+
+                    rnd.nextInt(Configs.displayWidth - 2 * Configs.worldHorizontalBorders)
+                            + Configs.worldHorizontalBorders,
+
+                    ((team == 0) ?
+                            Configs.worldVerticalTopBorders :
+                            Configs.displayHeight * 2 / 3 - Configs.worldVerticalBottomBorders)
+                            + rnd.nextInt(Configs.displayWidth / 3)
+            );
+        }
+
+    }
+
     private void autoSpawn() {
         for (int team = 0; team < 2; team++) {
-            float x = ((team == 0) ? Configs.worldHorizontalBorders : width * 2 / 3-Configs.worldHorizontalBorders)
-                    + rnd.nextInt(width / 3);
-            float y = rnd.nextInt(height-Configs.worldVerticalBottomBorders-Configs.worldVerticalTopBorders)+Configs.worldVerticalTopBorders;
+            Point p = getSpawnPoint(team);
             boolean gigant = 0 == rnd.nextInt(Configs.worldGianSpawnProbability);
             if (gigant) {
-                UnitLayer.spawn(new Giant(x, y, team));
-                showMessage(x, y, "GIANT SPAWNED!", team);
+                UnitLayer.spawn(new Giant(p, team));
+                showMessage(p, "GIANT SPAWNED!", team);
                 return;
             }
             boolean tower = 0 == rnd.nextInt(Configs.worldTowerSpawnProbability);
             if (tower) {
-                UnitLayer.spawn(new Tower(x, y, team));
-                showMessage(x, y, "TOWER BUILT!", team);
+                UnitLayer.spawn(new Tower(p, team));
+                showMessage(p, "TOWER BUILT!", team);
                 return;
             }
-            UnitLayer.spawn(new Man(x, y, team));
+            UnitLayer.spawn(new Man(p, team));
         }
     }
 
-    private void showMessage(float x, float y, String text, int color) {
-        MessagesLayer.showMessage(x, y, text, color);
+    private void showMessage(Point p, String text, int color) {
+        MessagesLayer.showMessage(p, text, color);
     }
-
 
     private void update(float dt) {
         TerritoryLayer.update(dt);

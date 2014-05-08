@@ -1,6 +1,7 @@
 package live.wallpaper.Units;
 
 import android.graphics.Bitmap;
+import live.wallpaper.Geometry.Point;
 import live.wallpaper.Geometry.Rectangle;
 
 public class NotControlledUnit extends Rectangle {
@@ -39,6 +40,16 @@ public class NotControlledUnit extends Rectangle {
 
     public NotControlledUnit(float x, float y, int team, float healthCoef, float speed, Type type) {
         super(x, y, getBitmap(team, type).getWidth(), getBitmap(team, type).getHeight());
+        this.team=team;
+        this.health=1f;
+        this.speed=speed;
+        this.type=type;
+        this.healthCoef=healthCoef;
+        power=1/healthCoef;
+    }
+
+    public NotControlledUnit(Point p, int team, float healthCoef, float speed, Type type) {
+        super(p, getBitmap(team, type).getWidth(), getBitmap(team, type).getHeight());
         this.team=team;
         this.health=1f;
         this.speed=speed;

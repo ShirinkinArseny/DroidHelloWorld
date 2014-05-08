@@ -22,7 +22,7 @@ public class SpawnsLayer{
         p.setColor(Color.WHITE);
         spawns=new LinkedList<>();
         spawnsAddBuffer=new LinkedList<>();
-        syncer=new Synchroniser("SpawnsLayer");
+        syncer=new Synchroniser();
     }
 
     public static void addSpawn(float x, float y) {

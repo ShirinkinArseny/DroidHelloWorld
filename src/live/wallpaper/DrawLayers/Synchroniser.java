@@ -1,15 +1,8 @@
 package live.wallpaper.DrawLayers;
 
-import android.util.Log;
-
 public class Synchroniser {
 
     private boolean lock =false;
-    private String name;
-
-    public Synchroniser(String debugInfo) {
-        name=debugInfo;
-    }
 
     public void lock() {
         lock =true;

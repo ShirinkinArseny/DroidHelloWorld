@@ -16,7 +16,6 @@ import java.util.Random;
 public class UnitLayer{
 
     private static Random rnd = new Random();
-    private static float width, height;
     private static AI ai=new SimpleAI();
     private static LinkedList<ControlledUnit>[] controlledUnits=
             new LinkedList[]{new LinkedList(), new LinkedList()}; //Lists of units to send in AI
@@ -33,17 +32,26 @@ public class UnitLayer{
     }
 
     public static void init() {
-        syncer=new Synchroniser("UnitLayer");
+        syncer=new Synchroniser();
     }
 
     public static void resize(float width, float height) {
 
+
+        float wOld=Configs.displayWidth-2*Configs.worldHorizontalBorders;
+        float hOld=Configs.displayHeight
+                -Configs.worldVerticalTopBorders-Configs.worldVerticalBottomBorders;
+
+        float wNew=width-2*Configs.worldHorizontalBorders;
+        float hNew=height-Configs.worldVerticalTopBorders-Configs.worldVerticalBottomBorders;
+
         for (int i=0; i<4; i++)
             for (Unit u: dividedUnits[i]) {
-                u.changePosition(u.getX()*width/UnitLayer.width-u.getX(), u.getY()*height/UnitLayer.height-u.getY());
+
+                float posX=(u.getX()-Configs.worldHorizontalBorders)/wOld*wNew+Configs.worldHorizontalBorders;
+                float posY=(u.getY()-Configs.worldVerticalTopBorders)/hOld*hNew+Configs.worldVerticalTopBorders;
+                u.setPosition(posX, posY);
             }
-        UnitLayer.width=width;
-        UnitLayer.height=height;
     }
 
     private static void updateAI() {

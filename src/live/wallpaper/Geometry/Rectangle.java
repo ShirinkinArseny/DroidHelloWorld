@@ -24,6 +24,10 @@ public class Rectangle extends Point{
         h2=h/2;
     }
 
+    public Rectangle(Point p, float w, float h) {
+        this(p.getX(), p.getY(), w, h);
+    }
+
     public boolean getIntersect(Rectangle m) {
         return (Math.abs(getX()-m.getX()))<=(m.w2+w2) &&
                (Math.abs(getY()-m.getY()))<=(m.h2+h2);

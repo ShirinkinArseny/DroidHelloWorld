@@ -1,7 +1,10 @@
 package live.wallpaper.Units;
 
-import android.graphics.*;
+import android.graphics.Canvas;
+import android.graphics.Color;
+import android.graphics.Paint;
 import android.util.Log;
+import live.wallpaper.Geometry.Point;
 
 public class Unit extends ControlledUnit {
 
@@ -9,6 +12,11 @@ public class Unit extends ControlledUnit {
 
     public Unit(float x, float y, int team, float health, float speed, Type t) {
         super(x, y, team, health, speed, t);
+        p = new Paint();
+    }
+
+    public Unit(Point p2, int team, float health, float speed, Type t) {
+        super(p2, team, health, speed, t);
         p = new Paint();
     }
 

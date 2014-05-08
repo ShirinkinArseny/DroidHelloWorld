@@ -20,7 +20,7 @@ public class BloodLayer{
         dustTexture=pics;
         p=new Paint();
         p.setColor(Color.WHITE);
-        syncer=new Synchroniser("BloodLayer");
+        syncer=new Synchroniser();
     }
 
     public static void add(float x, float y, float val, float type) {

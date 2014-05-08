@@ -21,6 +21,11 @@ public class Point {
         return (x2-x)*(x2-x)+(y2-y)*(y2-y);
     }
 
+    public void setPosition(float dx, float dy) {
+        x=dx;
+        y=dy;
+    }
+
     public void changePosition(float dx, float dy) {
         x+=dx;
         y+=dy;
