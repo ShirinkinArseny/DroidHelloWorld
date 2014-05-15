@@ -1,6 +1,23 @@
 package live.wallpaper;
 
+import android.content.Context;
+import android.content.SharedPreferences;
+import android.preference.PreferenceManager;
+
 public class Configs {
+
+    public static void init(Context context)
+    {
+        //Получаем настройки
+        //Если пользователь не поменял переменную в настройках - будет передано значение
+        //android;default_value из .xml файла
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
+        //TODO: Здесь нужно присвоить всем значениям переменных значения из sharedPreferences
+        //Например вот так (для Integer)
+        aiDeltaTarget = sharedPreferences.getInt("aiDeltaTarget", Integer.MAX_VALUE);
+        //Или вот так (для Boolean)
+        bloodDraw = sharedPreferences.getBoolean("bloodDraw", false);
+    }
 
     public static int getAiDeltaTarget() {
         return aiDeltaTarget;
