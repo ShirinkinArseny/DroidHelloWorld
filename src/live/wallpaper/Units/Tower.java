@@ -1,19 +1,26 @@
 package live.wallpaper.Units;
 
+import android.util.Log;
 import live.wallpaper.Configs;
 import live.wallpaper.Geometry.Point;
-import live.wallpaper.Ticker;
+import live.wallpaper.TimeFunctions.LoopedTicker;
 
 public class Tower extends Unit{
 
     private float aimX, aimY;
-    private Ticker shot;
+    private LoopedTicker shot;
+    private Unit addBuffer;
 
     public Tower(Point p, int team) {
         super(p, team, 10f, 3f, Type.Tower);
         setWay(Configs.getDisplayWidth()/2, Configs.getDisplayHeight()/2);
-        shot=new Ticker(0.3f);
-        shot.getIsNextRound();
+        shot=new LoopedTicker(0.2f, new Runnable() {
+            @Override
+            public void run() {
+                if (getSquaredLength(aimX, aimY) < Bullet.squareDistance)
+                    addBuffer=dropTheBomb();
+            }
+        });
     }
 
     public float getPower() {
@@ -24,12 +31,16 @@ public class Tower extends Unit{
         return new Bullet(getX(), getY(), aimX, aimY, getTeam());
     }
 
-    public void move(Unit[] add, float dt) {
+    public Unit getAddition() {
+        return addBuffer;
+    }
+
+    public void clearAddition() {
+        addBuffer=null;
+    }
+
+    public void move(float dt) {
         shot.tick(dt);
-        if (shot.getIsNextRound()) {
-            if (getSquaredLength(aimX, aimY) < Bullet.squareDistance)
-                add[0]=dropTheBomb();
-        }
     }
 
     public void setWay(float x, float y) {

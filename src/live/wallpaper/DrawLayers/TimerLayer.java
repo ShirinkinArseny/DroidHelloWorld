@@ -4,11 +4,11 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import live.wallpaper.Configs;
-import live.wallpaper.Ticker;
+import live.wallpaper.TimeFunctions.LoopedTicker;
 
 public class TimerLayer {
 
-    private static Ticker round;
+    private static LoopedTicker round;
     private static Paint pBig;
     private static Paint pSmallRed, pSmallBlue;
     private static int height2;
@@ -17,7 +17,12 @@ public class TimerLayer {
     private static int width2;
 
     public static void init() {
-        round=new Ticker(Configs.getTimerTimer());
+        round=new LoopedTicker(Configs.getTimerTimer(), new Runnable() {
+            @Override
+            public void run() {
+                UnitLayer.killEverybody();
+            }
+        });
         pBig=new Paint();
         pBig.setAntiAlias(true);
         pBig.setColor(Color.rgb(Configs.getGrayFontColor()[0], Configs.getGrayFontColor()[1], Configs.getGrayFontColor()[2]));
@@ -47,12 +52,10 @@ public class TimerLayer {
 
     public static void update(float dt) {
         round.tick(dt);
-        if (round.getIsNextRound())
-            UnitLayer.killEverybody();
     }
 
     private static String getTime() {
-        int seconds=(int)(round.getTime());
+        int seconds= Configs.getTimerTimer()-(int)(round.getValue());
         int minutes=seconds/60;
         seconds%=60;
         return minutes+":"+(seconds>9?seconds:"0"+seconds);

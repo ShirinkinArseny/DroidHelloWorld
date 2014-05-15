@@ -34,12 +34,12 @@ public class Configs {
         Configs.aiTheirUnitsCountToNotAttack = aiTheirUnitsCountToNotAttack;
     }
 
-    public static float getBloodHideCoef() {
-        return bloodHideCoef;
+    public static float getBloodVisibleTime() {
+        return bloodVisibleTime;
     }
 
-    public static void setBloodHideCoef(float bloodHideCoef) {
-        Configs.bloodHideCoef = bloodHideCoef;
+    public static void setBloodVisibleTime(float bloodVisibleTime) {
+        Configs.bloodVisibleTime = bloodVisibleTime;
     }
 
     public static int getBloodCount() {
@@ -58,12 +58,12 @@ public class Configs {
         Configs.bloodDraw = bloodDraw;
     }
 
-    public static float getMessageHideCoef() {
-        return messageHideCoef;
+    public static float getMessageShowTime() {
+        return messageShowTime;
     }
 
-    public static void setMessageHideCoef(float messageHideCoef) {
-        Configs.messageHideCoef = messageHideCoef;
+    public static void setMessageShowTime(float messageShowTime) {
+        Configs.messageShowTime = messageShowTime;
     }
 
     public static boolean isMessageDraw() {
@@ -210,17 +210,21 @@ public class Configs {
         Configs.displayHeight = displayHeight;
     }
 
+    public static float getBloodInterval() {
+        return bloodInterval;
+    }
 
     private static int       aiDeltaTarget=100;//Разброс толпы юнитов при атаке
     private static int       aiOurUnitsCountToAttack=40;//Кол-во юнитов, при котором можно начинать нападать на их башни
     private static int       aiOurUnitsWithGiantCountToAttack=20;//Кол-во юнитов (если есть гигант) для атаки башен
     private static int       aiTheirUnitsCountToNotAttack=50;//Кол-во вражеских юнитов, при котором игнорим предыдущие команды и начинаем выпиливать массово их
 
-    private static float     bloodHideCoef =5;//Скорость сокрытия крови (трещины - тоже кровь, только машинное масло)
+    private static float     bloodVisibleTime =0.1f;
+    private static float     bloodInterval =0.1f;
     private static int       bloodCount =10;//Количество крови
     private static boolean   bloodDraw =true;//Отрисовывать ли крось
 
-    private static float     messageHideCoef =1.5f;//Скорость сокрытия сообщений
+    private static float     messageShowTime =0.5f;//Скорость сокрытия сообщений
     private static boolean   messageDraw =true;//Отрисовывать ли сообщения
 
     private static float     spawnsHideCoef =1f; //Скорость сокрытия мест спавне

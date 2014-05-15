@@ -22,7 +22,7 @@ public class Bullet extends Unit{
         return 2f;
     }
 
-    public void move(Unit[] add, float dt) {
+    public void move(float dt) {
         changePosition(dx*dt, dy*dt);
         changeHealth(dHealth*dt);
     }

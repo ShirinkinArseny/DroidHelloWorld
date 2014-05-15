@@ -25,7 +25,7 @@ public class Unit extends ControlledUnit {
         if (health > 1f) health = 1f;
     }
 
-    public void move(Unit[] add, float dt) {
+    public void move(float dt) {
         float dx = getDX() * dt;
         float dy = getDY() * dt;
         changePosition(dx, dy);

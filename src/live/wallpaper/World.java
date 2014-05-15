@@ -5,7 +5,11 @@ import android.content.res.Resources;
 import android.graphics.*;
 import android.view.SurfaceHolder;
 import live.wallpaper.DrawLayers.*;
+import live.wallpaper.DrawLayers.BloodLayer.Blood;
+import live.wallpaper.DrawLayers.BloodLayer.BloodLayer;
+import live.wallpaper.DrawLayers.MessagesLayer.MessagesLayer;
 import live.wallpaper.Geometry.Point;
+import live.wallpaper.TimeFunctions.LoopedTicker;
 import live.wallpaper.Units.*;
 
 import java.util.*;
@@ -42,11 +46,12 @@ public class World {
 
         TimerLayer.init();
         UnitLayer.init();
+        BloodLayer.init();
+        MessagesLayer.init();
         WindLayer.init(getScaledResource(context.getResources(), R.drawable.noise, 512));
         TerritoryLayer.init(BitmapFactory.decodeResource(context.getResources(), R.drawable.background));
-        BloodLayer.init(new Bitmap[]{getScaledResource(context.getResources(), R.drawable.blood, 64),
+        Blood.init(new Bitmap[]{getScaledResource(context.getResources(), R.drawable.blood, 64),
                 getScaledResource(context.getResources(), R.drawable.coal, 64)});
-        MessagesLayer.init();
         SpawnsLayer.init(getScaledResource(context.getResources(), R.drawable.spawn, 74));
     }
 
@@ -65,7 +70,12 @@ public class World {
 
     public void run() {
         lastTime = System.currentTimeMillis();
-        final Ticker spawnTimer = new Ticker(0.2f);
+        final LoopedTicker spawnTimer = new LoopedTicker(0.2f, new Runnable() {
+            @Override
+            public void run() {
+                autoSpawn();
+            }
+        });
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
@@ -80,8 +90,6 @@ public class World {
                             draw(c);
                             holder.unlockCanvasAndPost(c);
                             spawnTimer.tick(delta);
-                            if (spawnTimer.getIsNextRound())
-                                autoSpawn();
                         }
                     } catch (IllegalArgumentException e) {
                         //Log.i("run", e.getMessage());

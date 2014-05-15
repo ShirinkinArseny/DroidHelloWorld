@@ -1,33 +1,26 @@
-package live.wallpaper.DrawLayers;
+package live.wallpaper.DrawLayers.BloodLayer;
 
-import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import live.wallpaper.Configs;
+import live.wallpaper.DrawLayers.Synchroniser;
 
 import java.util.LinkedList;
 
 public class BloodLayer{
 
-    private static LinkedList<float[]> dust;//blood coordinates
-    private static Bitmap dustTexture[];//blood texture
-    private static Paint p;
+    private static LinkedList<Blood> dust;//blood coordinates
     private static Synchroniser syncer;
 
-    public static void init(Bitmap[] pics) {
+    public static void init() {
         dust=new LinkedList<>();
-        dustTexture=pics;
-        p=new Paint();
-        p.setColor(Color.WHITE);
         syncer=new Synchroniser();
     }
 
-    public static void add(float x, float y, float val, float type) {
+    public static void add(float x, float y, float val, int type) {
         if (Configs.isBloodDraw()) {
         syncer.waitForUnlock();
         syncer.lock();
-            dust.add(new float[]{x, y, val, type});
+            dust.add(new Blood(x, y, val, type));
         syncer.unlock();
         }
     }
@@ -37,8 +30,8 @@ public class BloodLayer{
             syncer.waitForUnlock();
             syncer.lock();
             for (int i = 0; i < dust.size(); i++) {
-                dust.get(i)[2] -= Configs.getBloodHideCoef() * dt;
-                if (dust.get(i)[2] <= 0)
+                dust.get(i).update(dt);
+                if (dust.get(i).getUseless())
                     dust.remove(i);
             }
             syncer.unlock();
@@ -49,8 +42,8 @@ public class BloodLayer{
         if (Configs.isBloodDraw()) {
             syncer.waitForUnlock();
             syncer.lock();
-        for (float[] f: dust) {
-            canvas.drawBitmap(dustTexture[((int) f[3])], f[0], f[1], p);
+        for (Blood f: dust) {
+            f.draw(canvas);
         }
             syncer.unlock();
         }

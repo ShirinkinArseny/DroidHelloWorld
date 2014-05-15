@@ -1,9 +1,10 @@
-package live.wallpaper.DrawLayers;
+package live.wallpaper.DrawLayers.MessagesLayer;
 
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import live.wallpaper.Configs;
+import live.wallpaper.DrawLayers.Synchroniser;
 import live.wallpaper.Geometry.Point;
 
 import java.util.LinkedList;
@@ -53,7 +54,7 @@ public class MessagesLayer{
             syncer.lock();
             for (int i = 0; i < messages.size(); i++) {
                 messages.get(i).update(dt);
-                if (messages.get(i).getNeedToRemove())
+                if (messages.get(i).getUseless())
                     messages.remove(i);
             }
             while (!messagesAddBuffer.isEmpty()) {

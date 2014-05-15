@@ -5,9 +5,12 @@ import android.util.Log;
 import live.wallpaper.AI.AI;
 import live.wallpaper.AI.SimpleAI;
 import live.wallpaper.Configs;
-import live.wallpaper.Ticker;
+import live.wallpaper.DrawLayers.BloodLayer.BloodLayer;
+import live.wallpaper.DrawLayers.MessagesLayer.MessagesLayer;
+import live.wallpaper.TimeFunctions.LoopedTicker;
 import live.wallpaper.Units.ControlledUnit;
 import live.wallpaper.Units.NotControlledUnit;
+import live.wallpaper.Units.Tower;
 import live.wallpaper.Units.Unit;
 
 import java.util.LinkedList;
@@ -23,7 +26,7 @@ public class UnitLayer{
             new LinkedList[]{new LinkedList(), new LinkedList()}; //Lists of units to send in AI
     private static LinkedList<Unit>[] dividedUnits=
             new LinkedList[]{new LinkedList(), new LinkedList(), new LinkedList(), new LinkedList()}; //Lists of units to send in AI
-    private static Ticker reWayAndReIntersectTime = new Ticker(0.1f);
+    private static LoopedTicker reWayAndReIntersectTime;
     private static int[] kills=new int[]{0, 0};
     private static Synchroniser syncer;
 
@@ -33,6 +36,21 @@ public class UnitLayer{
 
     public static void init() {
         syncer=new Synchroniser();
+        reWayAndReIntersectTime=new LoopedTicker(0.2f, new Runnable() {
+            @Override
+            public void run() {
+                new Thread(new Runnable() {
+                    @Override
+                    public void run() {
+                        syncer.waitForUnlock();
+                        syncer.lock();
+                        updateAI();
+                        updateIntersections();
+                        syncer.unlock();
+                    }
+                }).start();
+            }
+        });
     }
 
     public static void resize(int width, int height) {
@@ -88,30 +106,16 @@ public class UnitLayer{
         }
     }
 
-    private static void updateIntersectionAndAI(float dt) {
-        reWayAndReIntersectTime.tick(dt);
-        if (reWayAndReIntersectTime.getIsNextRound()) {
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    syncer.waitForUnlock();
-                    syncer.lock();
-                    updateAI();
-                    updateIntersections();
-                    syncer.unlock();
-                }
-            }).start();
-        }
-    }
-
     private static void moveUnits(float dt) {
-        Unit[] add=new Unit[1];
         for (int i=0; i<4; i++)
             for (Unit aMen : dividedUnits[i]) {
-                aMen.move(add, dt);
-                if (add[0]!=null) {
-                    unlockedSpawn(add[0]);
-                    add[0]=null;
+                aMen.move(dt);
+                if (aMen.getType()== NotControlledUnit.Type.Tower) {
+                    Unit u = ((Tower) aMen).getAddition();
+                    if (u != null) {
+                        unlockedSpawn(u);
+                    }
+                    ((Tower) aMen).clearAddition();
                 }
             }
     }
@@ -191,7 +195,8 @@ public class UnitLayer{
                     tx=0;
                 else tx=1;
                 for (int j=0; j< Configs.getBloodCount(); j++)
-                    BloodLayer.add(units.get(i).getX() - 28 + rnd.nextInt(20), units.get(i).getY() - 28 + rnd.nextInt(20), 1f+j/5f, tx);
+                    BloodLayer.add(units.get(i).getX() - 28 + rnd.nextInt(20),
+                            units.get(i).getY() - 28 + rnd.nextInt(20),j*Configs.getBloodInterval(), tx);
 
                 if (tx==0)
                 kills[c.getTeam()]++;
@@ -206,9 +211,9 @@ public class UnitLayer{
         doRegeneration(dt);
         for (int i=0; i<4; i++)
             updateDeath(dividedUnits[i]);
-        updateIntersectionAndAI(dt);
         moveUnits(dt);
         syncer.unlock();
+        reWayAndReIntersectTime.tick(dt);
     }
 
 
