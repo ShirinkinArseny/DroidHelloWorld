@@ -11,7 +11,7 @@
     <string name="bloodDraw">Отрисовывать ли крось</string>
     <string name="messageShowTime">Скорость сокрытия сообщений</string>
     <string name="messageDraw">Отрисовывать ли сообщения</string>
-    <string name="spawnsHideCoef">Скорость сокрытия мест спавне</string>
+    <string name="spawnsShowTime">Скорость сокрытия мест спавне</string>
     <string name="spawnsDraw">Отрисовывать ли места спавне</string>
     <string name="timerTimer">Время раунда в сек</string>
     <string name="timerDraw">Отрисовывать ли таймер</string>

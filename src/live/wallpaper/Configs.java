@@ -91,12 +91,12 @@ public class Configs {
         Configs.messageDraw = messageDraw;
     }
 
-    public static float getSpawnsHideCoef() {
-        return spawnsHideCoef;
+    public static float getSpawnsShowTime() {
+        return spawnsShowTime;
     }
 
-    public static void setSpawnsHideCoef(float spawnsHideCoef) {
-        Configs.spawnsHideCoef = spawnsHideCoef;
+    public static void setSpawnsShowTime(float spawnsShowTime) {
+        Configs.spawnsShowTime = spawnsShowTime;
     }
 
     public static boolean isSpawnsDraw() {
@@ -244,7 +244,7 @@ public class Configs {
     private static float     messageShowTime =0.5f;//Скорость сокрытия сообщений
     private static boolean   messageDraw =true;//Отрисовывать ли сообщения
 
-    private static float     spawnsHideCoef =1f; //Скорость сокрытия мест спавне
+    private static float     spawnsShowTime =1f; //Скорость сокрытия мест спавне
     private static boolean   spawnsDraw=true; //Отрисовывать ли места спавне
 
     private static int       timerTimer =60*5; //Время раунда в сек

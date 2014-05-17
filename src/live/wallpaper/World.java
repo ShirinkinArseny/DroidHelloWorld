@@ -8,6 +8,7 @@ import live.wallpaper.DrawLayers.*;
 import live.wallpaper.DrawLayers.BloodLayer.Blood;
 import live.wallpaper.DrawLayers.BloodLayer.BloodLayer;
 import live.wallpaper.DrawLayers.MessagesLayer.MessagesLayer;
+import live.wallpaper.DrawLayers.SpawnLayer.SpawnsLayer;
 import live.wallpaper.Geometry.Point;
 import live.wallpaper.TimeFunctions.LoopedTicker;
 import live.wallpaper.Units.*;

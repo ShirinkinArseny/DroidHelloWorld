@@ -1,12 +1,12 @@
 package live.wallpaper.DrawLayers;
 
 import android.graphics.Canvas;
-import android.util.Log;
 import live.wallpaper.AI.AI;
 import live.wallpaper.AI.SimpleAI;
 import live.wallpaper.Configs;
 import live.wallpaper.DrawLayers.BloodLayer.BloodLayer;
 import live.wallpaper.DrawLayers.MessagesLayer.MessagesLayer;
+import live.wallpaper.DrawLayers.SpawnLayer.SpawnsLayer;
 import live.wallpaper.TimeFunctions.LoopedTicker;
 import live.wallpaper.Units.ControlledUnit;
 import live.wallpaper.Units.NotControlledUnit;

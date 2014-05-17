@@ -26,9 +26,9 @@
             android:defaultValue="50"
             />
     <EditTextPreference
-            android:key="bloodHideCoef"
+            android:key="bloodVisibleTime"
             android:inputType="number"
-            android:title="@string/bloodHideCoef"
+            android:title="@string/bloodVisibleTime"
             android:defaultValue="5"
             />
     <EditTextPreference
@@ -43,9 +43,9 @@
             android:defaultValue="true"
         />
     <EditTextPreference
-            android:key="messageHideCoef"
+            android:key="messageShowTime"
             android:inputType="number"
-            android:title="@string/messageHideCoef"
+            android:title="@string/messageShowTime"
             android:defaultValue="1.5f"
             />
     <CheckBoxPreference
@@ -54,9 +54,9 @@
             android:defaultValue="true"
             />
     <EditTextPreference
-            android:key="spawnsHideCoef"
+            android:key="spawnsShowTime"
             android:inputType="number"
-            android:title="@string/spawnsHideCoef"
+            android:title="@string/spawnsShowTime"
             android:defaultValue="1f"
             />
     <CheckBoxPreference
