@@ -4,20 +4,33 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import android.util.Log;
+import live.wallpaper.DrawLayers.MessagesLayer.MessagesLayer;
 import live.wallpaper.Geometry.Point;
+import live.wallpaper.TimeFunctions.FlappyTimeFunction;
 
 public class Unit extends ControlledUnit {
 
     private Paint p;
+    private FlappyTimeFunction kills;
 
     public Unit(float x, float y, int team, float health, float speed, Type t) {
         super(x, y, team, health, speed, t);
         p = new Paint();
+        kills=new FlappyTimeFunction(2f, new Runnable() {
+            @Override
+            public void run() {
+                if (kills.getValue()>5)
+                    MessagesLayer.showMessage(getX(), getY(), (int)kills.getValue()+"-kill!", getTeam());
+            }
+        });
     }
 
     public Unit(Point p2, int team, float health, float speed, Type t) {
-        super(p2, team, health, speed, t);
-        p = new Paint();
+        this(p2.getX(), p2.getY(), team, health, speed, t);
+    }
+
+    public void bumpKills() {
+        kills.flap();
     }
 
     public void changeHealth(float h) {
@@ -33,6 +46,7 @@ public class Unit extends ControlledUnit {
             Log.i("Unit.move", getX() + " " + getY());
             changeHealth(-10f);
         }
+        kills.tick(dt);
     }
 
     protected void drawBase(Canvas c) {

@@ -61,6 +61,8 @@ public class UnitLayer{
             float wNew = width - 2 * Configs.getWorldHorizontalBorders();
             float hNew = height - Configs.getWorldVerticalTopBorders() - Configs.getWorldVerticalBottomBorders();
 
+        syncer.waitForUnlock();
+        syncer.lock();
             for (int i = 0; i < 4; i++)
                 for (Unit u : dividedUnits[i]) {
 
@@ -68,6 +70,7 @@ public class UnitLayer{
                     float posY = (u.getY() - Configs.getWorldVerticalTopBorders()) / hOld * hNew + Configs.getWorldVerticalTopBorders();
                     u.setPosition(posX, posY);
                 }
+        syncer.unlock();
     }
 
     private static void updateAI() {
@@ -97,6 +100,7 @@ public class UnitLayer{
                     "CRITICAL x" + (att + 10000) + "!", enemy.getTeam());
         }
         enemy.changeHealth(attack1);
+        if (enemy.getHealth()<=0) unit.bumpKills();
     }
 
     private static void fightUnits(Unit unit, Unit enemy) {
