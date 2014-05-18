@@ -18,7 +18,7 @@ public class FlappyTimeFunction extends TimeFunction{
     public void tick(float delta) {
         if (time>0)
         time-=delta;
-        else value=0;
+        else if (value!=0) value=0;
     }
 
     public FlappyTimeFunction(float flap, Runnable onFlap) {
