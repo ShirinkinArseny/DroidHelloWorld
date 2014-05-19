@@ -6,6 +6,7 @@
     <string name="aiOurUnitsWithGiantCountToAttack">Кол-во юнитов (если есть гигант) для атаки башен</string>
     <string name="aiTheirUnitsCountToNotAttack">Кол-во вражеских юнитов, при котором игнорим предыдущие команды и начинаем выпиливать массово их</string>
     <string name="bloodVisibleTime">Скорость сокрытия крови (трещины - тоже кровь, только машинное масло)</string>
+    <string name="bloodInterval">bloodInterval</string>
     <string name="bloodCount">Количество крови</string>
     <string name="bloodDraw">Отрисовывать ли крось</string>
     <string name="messageShowTime">Скорость сокрытия сообщений</string>

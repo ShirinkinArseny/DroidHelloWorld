@@ -1,8 +1,11 @@
 package live.wallpaper;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.*;
+import android.preference.PreferenceManager;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import live.wallpaper.DrawLayers.*;
 import live.wallpaper.DrawLayers.BloodLayer.Blood;
@@ -21,6 +24,8 @@ public class World {
     private boolean active = true;//is working
     private long lastTime;
     private SurfaceHolder holder;
+
+    private SharedPreferences preferences;
 
     private static final float pictureSizeCoef=0.5f;
     private static Bitmap getScaledResource(Resources res, int id, int size) {
@@ -44,6 +49,8 @@ public class World {
         Unit.init(menTexture);
 
         //gcTime = new Ticker(5);
+
+        Configs.init(context);
 
         TimerLayer.init();
         UnitLayer.init();

@@ -9,20 +9,29 @@ import android.preference.PreferenceManager;
 import android.util.Log;
 
 public class Settings extends PreferenceActivity {
-    SharedPreferences sharedPreferences;
     @Override
     public void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
         Preference preference = new Preference();
         getFragmentManager().beginTransaction().replace(android.R.id.content, preference).commit();
-        sharedPreferences = PreferenceManager.getDefaultSharedPreferences(this);
+    }
+
+    @Override
+    public void onPause()
+    {
+        super.onPause();
+        //Configs.init(this);
+    }
+    @Override
+    public void onDestroy()
+    {
+        super.onDestroy();
+        //Configs.init(this);
     }
 
     private class Preference extends PreferenceFragment
     {
-        //Хранение настроек
-        SharedPreferences sharedPreferences;
         @Override
         public void onCreate(Bundle savedInstanceState)
         {

@@ -3,20 +3,101 @@ package live.wallpaper;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
+
+import java.util.prefs.PreferenceChangeEvent;
+import java.util.prefs.PreferenceChangeListener;
 
 public class Configs {
+
+    private static SharedPreferences settings;
+    private static SharedPreferences.OnSharedPreferenceChangeListener settingsListener = null;
+
+    private static int getInt(SharedPreferences preferences,String name)
+    {
+        Log.d("Configs", "Load " + name  + " value = " + preferences.getString(name, null));
+        return Integer.parseInt(preferences.getString(name, null));
+    }
+    private static String getString(SharedPreferences preferences, String name)
+    {
+        Log.d("Configs", "Load " + name  + " value = " + preferences.getString(name, null));
+        return preferences.getString(name, null);
+    }
+    private static boolean getBoolean(SharedPreferences preferences, String name)
+    {
+        Log.d("Configs", "Load " + name  + " value = " + preferences.getBoolean(name, false));
+        return preferences.getBoolean(name, false);
+    }
+    private static float getFloat(SharedPreferences preferences, String name)
+    {
+        Log.d("Configs", "Load " + name  + " value = " + preferences.getString(name, null));
+        return Float.parseFloat(preferences.getString(name, null));
+    }
+
+
+
 
     public static void init(Context context)
     {
         //Получаем настройки
         //Если пользователь не поменял переменную в настройках - будет передано значение
         //android;default_value из .xml файла
-        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(context);
-        //TODO: Здесь нужно присвоить всем значениям переменных значения из sharedPreferences
+        settings = PreferenceManager.getDefaultSharedPreferences(context);
+        settingsListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+            @Override
+            public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+                Log.d("settingsListener", "Go to switch(key)");
+                switch (key) {
+                    case "aiDeltaTarget": setAiDeltaTarget(getInt(sharedPreferences, key)); break;
+                    case "bloodDraw": setBloodDraw(getBoolean(sharedPreferences, key));     break;
+                    case "aiOurUnitsCountToAttack": setAiDeltaTarget(getInt(sharedPreferences, key)); break;
+                    case "aiOurUnitsWithGiantCountToAttack": setAiOurUnitsWithGiantCountToAttack(getInt(sharedPreferences, key)); break;
+                    case "aiTheirUnitsCountToNotAttack": setAiTheirUnitsCountToNotAttack(getInt(sharedPreferences, key)); break;
+                    case "bloodVisibleTime": setBloodVisibleTime(getFloat(sharedPreferences, key)); break;
+                    case "bloodCount": setBloodCount(getInt(sharedPreferences, key)); break;
+                    case "messageShowTime": setMessageShowTime(getFloat(sharedPreferences, key)); break;
+                    case "messageDraw": setMessageDraw(getBoolean(sharedPreferences,key)); break;
+                    case "spawnsShowTime": setSpawnsShowTime(getFloat(sharedPreferences, key)); break;
+                    case "spawnsDraw": setSpawnsDraw(getBoolean(sharedPreferences, key)); break;
+                    case "timerTimer": setTimerTimer(getInt(sharedPreferences, key)); break;
+                    case "timerDraw": setTimerDraw(getBoolean(sharedPreferences, key)); break;
+                    case "windDraw": setWindDraw(getBoolean(sharedPreferences, key)); break;
+                    case "worldGianSpawnProbability": setWorldGianSpawnProbability(getInt(sharedPreferences, key)); break;
+                    case "worldTowerSpawnProbability": setWorldTowerSpawnProbability(getInt(sharedPreferences, key)); break;
+                    case "worldHorizontalBorders": setWorldHorizontalBorders(getInt(sharedPreferences, key)); break;
+                    case "worldVerticalTopBorders": setWorldVerticalTopBorders(getInt(sharedPreferences, key)); break;
+                    case "worldVerticalBottomBorders": setWorldVerticalBottomBorders(getInt(sharedPreferences, key)); break;
+                    case "worldBoardersDraw": setWorldBoardersDraw(getBoolean(sharedPreferences, key)); break;
+                    case "bloodInterval": setBloodInterval(getFloat(sharedPreferences, key)); break;
+                }
+            }
+        };
+        settings.registerOnSharedPreferenceChangeListener(settingsListener);
+        //TODO: Здесь нужно присвоить всем значениям переменных значения из settings
         //Например вот так (для Integer)
-        aiDeltaTarget = sharedPreferences.getInt("aiDeltaTarget", Integer.MAX_VALUE);
+        aiDeltaTarget = getInt(settings, "aiDeltaTarget");
         //Или вот так (для Boolean)
-        bloodDraw = sharedPreferences.getBoolean("bloodDraw", false);
+        bloodDraw = getBoolean(settings, "bloodDraw");
+        aiOurUnitsCountToAttack = getInt(settings, "aiOurUnitsCountToAttack");
+        aiOurUnitsWithGiantCountToAttack = getInt(settings, "aiOurUnitsWithGiantCountToAttack");
+        aiTheirUnitsCountToNotAttack = getInt(settings, "aiTheirUnitsCountToNotAttack");
+        bloodVisibleTime = getFloat(settings, "bloodVisibleTime");
+        bloodCount = getInt(settings, "bloodCount");
+        messageShowTime = getFloat(settings, "messageShowTime");
+        messageDraw = getBoolean(settings, "messageDraw");
+        spawnsShowTime = getFloat(settings, "spawnsShowTime");
+        spawnsDraw = getBoolean(settings, "spawnsDraw");
+        timerTimer = getInt(settings, "timerTimer");
+        timerDraw = getBoolean(settings, "timerDraw");
+        windDraw = getBoolean(settings, "windDraw");
+        worldGianSpawnProbability = getInt(settings, "worldGianSpawnProbability");
+        worldTowerSpawnProbability = getInt(settings, "worldTowerSpawnProbability");
+        worldHorizontalBorders = getInt(settings, "worldHorizontalBorders");
+        worldVerticalTopBorders = getInt(settings, "worldVerticalTopBorders");
+        worldVerticalBottomBorders = getInt(settings, "worldVerticalBottomBorders");
+        worldBoardersDraw = getBoolean(settings, "worldBoardersDraw");
+        bloodInterval = getFloat(settings, "bloodInterval");
+
     }
 
     public static int getAiDeltaTarget() {
@@ -226,6 +307,8 @@ public class Configs {
     public static void setDisplayHeight(int displayHeight) {
         Configs.displayHeight = displayHeight;
     }
+
+    public static void setBloodInterval(float bloodInterval) {Configs.bloodInterval = bloodInterval; }
 
     public static float getBloodInterval() {
         return bloodInterval;

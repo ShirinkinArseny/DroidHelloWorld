@@ -16,6 +16,8 @@ public class LiveWallpaperService extends WallpaperService {
     @Override
     public void onCreate() {
         super.onCreate();
+        //Загружаем стандартные значения настроек, если пользователь ещё не зашел в настройки
+        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
 
     }
 
@@ -27,11 +29,9 @@ public class LiveWallpaperService extends WallpaperService {
     public class RBEngine extends Engine {
 
         private World world;
-        private Context context;
 
         public RBEngine(Context context) {
             world = new World(getApplicationContext());
-            this.context = context;
         }
 
         @Override

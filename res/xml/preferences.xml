@@ -32,6 +32,12 @@
             android:defaultValue="5"
             />
     <EditTextPreference
+            android:key="bloodInterval"
+            android:inputType="number"
+            android:title="@string/bloodInterval"
+            android:defaultValue="5"
+            />
+    <EditTextPreference
             android:key="bloodCount"
             android:inputType="number"
             android:title="@string/bloodCount"
@@ -68,7 +74,7 @@
             android:key="timerTimer"
             android:inputType="number"
             android:title="@string/timerTimer"
-            android:defaultValue="60*5"
+            android:defaultValue="300"
             />
     <CheckBoxPreference
             android:key="timerDraw"
