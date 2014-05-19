@@ -10,6 +10,7 @@ import java.util.ArrayList;
 public class Configs {
 
     private static ArrayList<ConfigField> fields;
+
     public static final int aiDeltaTarget=0;
     public static final int bloodDraw=1;
     public static final int aiOurUnitsCountToAttack=2;
@@ -32,22 +33,24 @@ public class Configs {
     public static final int worldBoardersDraw=19;
     public static final int bloodInterval=20;
 
+    private static SharedPreferences.OnSharedPreferenceChangeListener settingsListener;
+
     public static void init(Context context) {
-        final SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.OnSharedPreferenceChangeListener settingsListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        settingsListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
                 Log.d("settingsListener", "Go to switch(key)");
                 for (ConfigField f: fields) {
                     Log.i(f.getName(), String.valueOf(f.getType()));
                     switch (f.getType()) {
-                        case Float:    f.setValue(Float.valueOf(settings.getString(f.getName(), null)));
+                        case Float:    f.setValue(Float.valueOf(sharedPreferences.getString(f.getName(), null)));
                             break;
-                        case Integer:  f.setValue(Integer.valueOf(settings.getString(f.getName(), null)));
+                        case Integer:  f.setValue(Integer.valueOf(sharedPreferences.getString(f.getName(), null)));
                             break;
-                        case String:   f.setValue(settings.getString(f.getName(), null));
+                        case String:   f.setValue(sharedPreferences.getString(f.getName(), null));
                             break;
-                        case Boolean:  f.setValue(settings.getBoolean(f.getName(), false));
+                        case Boolean:  f.setValue(sharedPreferences.getBoolean(f.getName(), false));
                             break;
                     }
                     /*switch (f.getType()) {
@@ -61,6 +64,7 @@ public class Configs {
                             break;
                     }*/
                 }
+                Log.d("settingsListener", "Value of LAL = " + sharedPreferences.getInt("first", -1));
             }
         };
         settings.registerOnSharedPreferenceChangeListener(settingsListener);
