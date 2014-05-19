@@ -68,10 +68,10 @@ public class UnitLayer{
             for (int i = 0; i < 4; i++)
                 for (Unit u : dividedUnits[i]) {
 
-                    float posX = (u.getX() - Configs.getFloatValue(Configs.worldHorizontalBorders))
-                            / wOld * wNew + Configs.getFloatValue(Configs.worldHorizontalBorders);
-                    float posY = (u.getY() - Configs.getFloatValue(Configs.worldVerticalTopBorders))
-                            / hOld * hNew + Configs.getFloatValue(Configs.worldHorizontalBorders);
+                    float posX = (u.getX() - Configs.getIntValue(Configs.worldHorizontalBorders))
+                            / wOld * wNew + Configs.getIntValue(Configs.worldHorizontalBorders);
+                    float posY = (u.getY() - Configs.getIntValue(Configs.worldVerticalTopBorders))
+                            / hOld * hNew + Configs.getIntValue(Configs.worldHorizontalBorders);
                     u.setPosition(posX, posY);
                 }
         syncer.unlock();
@@ -204,7 +204,7 @@ public class UnitLayer{
                 else tx=1;
                 for (int j=0; j< Configs.getIntValue(Configs.bloodCount); j++)
                     BloodLayer.add(units.get(i).getX() - 28 + rnd.nextInt(20),
-                            units.get(i).getY() - 28 + rnd.nextInt(20),j*Configs.getFloatValue(Configs.bloodInterval), tx);
+                            units.get(i).getY() - 28 + rnd.nextInt(20), j*Configs.getFloatValue(Configs.bloodInterval), tx);
 
                 if (tx==0)
                 kills[c.getTeam()]++;

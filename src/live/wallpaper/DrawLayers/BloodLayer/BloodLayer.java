@@ -1,6 +1,7 @@
 package live.wallpaper.DrawLayers.BloodLayer;
 
 import android.graphics.Canvas;
+import android.util.Log;
 import live.wallpaper.Configs.Configs;
 import live.wallpaper.DrawLayers.Synchroniser;
 
@@ -20,7 +21,7 @@ public class BloodLayer{
         if (Configs.getBooleanValue(Configs.bloodDraw)) {
         syncer.waitForUnlock();
         syncer.lock();
-            dust.add(new Blood(x, y, val, type));
+        dust.add(new Blood(x, y, val, type));
         syncer.unlock();
         }
     }

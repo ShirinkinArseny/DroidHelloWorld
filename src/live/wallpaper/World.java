@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.*;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import live.wallpaper.Configs.Configs;
 import live.wallpaper.DrawLayers.*;

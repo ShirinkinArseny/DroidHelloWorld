@@ -29,13 +29,13 @@
             android:key="bloodVisibleTime"
             android:inputType="number"
             android:title="@string/bloodVisibleTime"
-            android:defaultValue="5"
+            android:defaultValue="0.1f"
             />
     <EditTextPreference
             android:key="bloodInterval"
             android:inputType="number"
             android:title="@string/bloodInterval"
-            android:defaultValue="5"
+            android:defaultValue="0.2f"
             />
     <EditTextPreference
             android:key="bloodCount"
@@ -63,7 +63,7 @@
             android:key="spawnsShowTime"
             android:inputType="number"
             android:title="@string/spawnsShowTime"
-            android:defaultValue="1f"
+            android:defaultValue="0.6f"
             />
     <CheckBoxPreference
             android:key="spawnsDraw"
