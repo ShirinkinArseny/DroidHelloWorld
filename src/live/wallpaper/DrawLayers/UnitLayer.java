@@ -54,14 +54,14 @@ public class UnitLayer{
     }
 
     public static void resize(int width, int height) {
-            float wOld = Configs.getDisplayWidth() - 2 * Configs.getFloatValue(Configs.worldHorizontalBorders);
+            float wOld = Configs.getDisplayWidth() - 2 * Configs.getIntValue(Configs.worldHorizontalBorders);
             float hOld = Configs.getDisplayHeight()
-                    - Configs.getFloatValue(Configs.worldVerticalTopBorders)
-                    - Configs.getFloatValue(Configs.worldHorizontalBorders);
+                    - Configs.getIntValue(Configs.worldVerticalTopBorders)
+                    - Configs.getIntValue(Configs.worldHorizontalBorders);
 
-            float wNew = width - 2 * Configs.getFloatValue(Configs.worldHorizontalBorders);
-            float hNew = height - Configs.getFloatValue(Configs.worldVerticalTopBorders)
-                    - Configs.getFloatValue(Configs.worldVerticalBottomBorders);
+            float wNew = width - 2 * Configs.getIntValue(Configs.worldHorizontalBorders);
+            float hNew = height - Configs.getIntValue(Configs.worldVerticalTopBorders)
+                    - Configs.getIntValue(Configs.worldVerticalBottomBorders);
 
         syncer.waitForUnlock();
         syncer.lock();

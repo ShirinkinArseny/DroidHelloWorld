@@ -5,7 +5,7 @@ public class StringField extends ConfigField{
     private String value;
 
     public Type getType() {
-        return Type.Float;
+        return Type.String;
     }
 
     public Object getValue() {

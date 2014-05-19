@@ -42,7 +42,7 @@ public class Blood {
         this.x=x;
         this.y=y;
         this.type=type;
-        timing=new OneTimeTicker(Configs.getIntValue(Configs.bloodVisibleTime)+startValue, new Runnable() {
+        timing=new OneTimeTicker(Configs.getFloatValue(Configs.bloodVisibleTime)+startValue, new Runnable() {
             @Override
             public void run() {
                 noNeedMore=true;

@@ -5,7 +5,7 @@ public class BooleanField extends ConfigField{
     private boolean value;
 
     public Type getType() {
-        return Type.Float;
+        return Type.Boolean;
     }
 
     public Object getValue() {

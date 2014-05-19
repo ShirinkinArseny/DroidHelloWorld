@@ -5,7 +5,7 @@ public class IntegerField extends ConfigField{
     private int value;
 
     public Type getType() {
-        return Type.Float;
+        return Type.Integer;
     }
 
     public Object getValue() {

@@ -35,9 +35,9 @@ public class TerritoryLayer{
     public static void draw(Canvas canvas) {
         canvas.drawBitmap(bg, 0, 0, p);
         if (Configs.getBooleanValue(Configs.worldBoardersDraw))
-        canvas.drawRect(Configs.getFloatValue(Configs.worldHorizontalBorders),
-                Configs.getFloatValue(Configs.worldVerticalTopBorders),
-                Configs.getDisplayWidth()-Configs.getFloatValue(Configs.worldHorizontalBorders),
-                Configs.getDisplayHeight()-Configs.getFloatValue(Configs.worldVerticalBottomBorders), border);
+        canvas.drawRect(Configs.getIntValue(Configs.worldHorizontalBorders),
+                Configs.getIntValue(Configs.worldVerticalTopBorders),
+                Configs.getDisplayWidth()-Configs.getIntValue(Configs.worldHorizontalBorders),
+                Configs.getDisplayHeight()-Configs.getIntValue(Configs.worldVerticalBottomBorders), border);
     }
 }

@@ -39,7 +39,18 @@ public class Configs {
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
                 Log.d("settingsListener", "Go to switch(key)");
                 for (ConfigField f: fields) {
+                    Log.i(f.getName(), String.valueOf(f.getType()));
                     switch (f.getType()) {
+                        case Float:    f.setValue(Float.valueOf(settings.getString(f.getName(), null)));
+                            break;
+                        case Integer:  f.setValue(Integer.valueOf(settings.getString(f.getName(), null)));
+                            break;
+                        case String:   f.setValue(settings.getString(f.getName(), null));
+                            break;
+                        case Boolean:  f.setValue(settings.getBoolean(f.getName(), false));
+                            break;
+                    }
+                    /*switch (f.getType()) {
                         case Float:    f.setValue(settings.getFloat(f.getName(), 0));
                             break;
                         case Integer:  f.setValue(settings.getInt(f.getName(), 0));
@@ -48,7 +59,7 @@ public class Configs {
                             break;
                         case Boolean:  f.setValue(settings.getBoolean(f.getName(), false));
                             break;
-                    }
+                    }*/
                 }
             }
         };

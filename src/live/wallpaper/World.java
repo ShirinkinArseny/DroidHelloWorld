@@ -124,8 +124,8 @@ public class World {
             return new Point(
 
                     ((team == 0) ?
-                            Configs.getFloatValue(Configs.worldHorizontalBorders) :
-                            Configs.getDisplayWidth() * 2 / 3 - Configs.getFloatValue(Configs.worldHorizontalBorders))
+                            Configs.getIntValue(Configs.worldHorizontalBorders) :
+                            Configs.getDisplayWidth() * 2 / 3 - Configs.getIntValue(Configs.worldHorizontalBorders))
                     + rnd.nextInt(Configs.getDisplayWidth() / 3),
 
                     rnd.nextInt(Configs.getDisplayHeight() - Configs.getIntValue(Configs.worldVerticalBottomBorders)
@@ -140,8 +140,8 @@ public class World {
                             + Configs.getIntValue(Configs.worldHorizontalBorders),
 
                     ((team == 0) ?
-                            Configs.getFloatValue(Configs.worldVerticalTopBorders) :
-                            Configs.getDisplayHeight() * 2 / 3 - Configs.getFloatValue(Configs.worldVerticalBottomBorders))
+                            Configs.getIntValue(Configs.worldVerticalTopBorders) :
+                            Configs.getDisplayHeight() * 2 / 3 - Configs.getIntValue(Configs.worldVerticalBottomBorders))
                             + rnd.nextInt(Configs.getDisplayWidth() / 3)
             );
         }
