@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import live.wallpaper.Configs;
+import live.wallpaper.Configs.Configs;
 import live.wallpaper.TimeFunctions.OneTimeTicker;
 
 public class Blood {
@@ -42,7 +42,7 @@ public class Blood {
         this.x=x;
         this.y=y;
         this.type=type;
-        timing=new OneTimeTicker(Configs.getBloodVisibleTime()+startValue, new Runnable() {
+        timing=new OneTimeTicker(Configs.getIntValue(Configs.bloodVisibleTime)+startValue, new Runnable() {
             @Override
             public void run() {
                 noNeedMore=true;

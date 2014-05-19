@@ -3,7 +3,7 @@ package live.wallpaper.DrawLayers;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import live.wallpaper.Configs;
+import live.wallpaper.Configs.Configs;
 import live.wallpaper.TimeFunctions.LoopedTicker;
 
 public class TimerLayer {
@@ -17,7 +17,7 @@ public class TimerLayer {
     private static int width2;
 
     public static void init() {
-        round=new LoopedTicker(Configs.getTimerTimer(), new Runnable() {
+        round=new LoopedTicker(Configs.getIntValue(Configs.timerTimer), new Runnable() {
             @Override
             public void run() {
                 UnitLayer.killEverybody();
@@ -55,14 +55,14 @@ public class TimerLayer {
     }
 
     private static String getTime() {
-        int seconds= Configs.getTimerTimer()-(int)(round.getValue());
+        int seconds= Configs.getIntValue(Configs.timerTimer)-(int)(round.getValue());
         int minutes=seconds/60;
         seconds%=60;
         return minutes+":"+(seconds>9?seconds:"0"+seconds);
     }
 
     public static void draw(Canvas canvas) {
-        if (Configs.isTimerDraw()) {
+        if (Configs.getBooleanValue(Configs.timerDraw)) {
             canvas.drawText(getTime(), width4, height2, pBig);
             int[] kills = UnitLayer.getTeamSizes();
             canvas.drawText(String.valueOf(kills[1]), width2 - 100, height2_3, pSmallRed);

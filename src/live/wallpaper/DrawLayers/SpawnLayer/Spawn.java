@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import live.wallpaper.Configs;
+import live.wallpaper.Configs.Configs;
 import live.wallpaper.TimeFunctions.LinearTimeFunction;
 
 public class Spawn {
@@ -40,7 +40,7 @@ public class Spawn {
     public Spawn(float x, float y) {
         this.x = x-spawnTexture.getWidth()/2;
         this.y = y-spawnTexture.getHeight()/2;
-        timing = new LinearTimeFunction(Configs.getSpawnsShowTime(), 255f, 0f,
+        timing = new LinearTimeFunction(Configs.getFloatValue(Configs.spawnsShowTime), 255f, 0f,
                 new Runnable() {
                     @Override
                     public void run() {

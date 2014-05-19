@@ -2,117 +2,117 @@
 <PreferenceScreen
         xmlns:android="http://schemas.android.com/apk/res/android">
     <EditTextPreference
-            android:key="aiDeltaTarget"
+            android:key="title_aiDeltaTarget"
             android:inputType="number"
             android:title="@string/aiDeltaTarget"
             android:defaultValue="100"
             />
     <EditTextPreference
-            android:key="aiOurUnitsCountToAttack"
+            android:key="title_aiOurUnitsCountToAttack"
             android:inputType="number"
             android:title="@string/aiOurUnitsCountToAttack"
             android:defaultValue="40"
             />
     <EditTextPreference
-            android:key="aiOurUnitsWithGiantCountToAttack"
+            android:key="title_aiOurUnitsWithGiantCountToAttack"
             android:inputType="number"
             android:title="@string/aiOurUnitsWithGiantCountToAttack"
             android:defaultValue="20"
             />
     <EditTextPreference
-            android:key="aiTheirUnitsCountToNotAttack"
+            android:key="title_aiTheirUnitsCountToNotAttack"
             android:inputType="number"
             android:title="@string/aiTheirUnitsCountToNotAttack"
             android:defaultValue="50"
             />
     <EditTextPreference
-            android:key="bloodVisibleTime"
+            android:key="title_bloodVisibleTime"
             android:inputType="number"
             android:title="@string/bloodVisibleTime"
             android:defaultValue="5"
             />
     <EditTextPreference
-            android:key="bloodInterval"
+            android:key="title_bloodInterval"
             android:inputType="number"
             android:title="@string/bloodInterval"
             android:defaultValue="5"
             />
     <EditTextPreference
-            android:key="bloodCount"
+            android:key="title_bloodCount"
             android:inputType="number"
             android:title="@string/bloodCount"
             android:defaultValue="10"
             />
     <CheckBoxPreference
-            android:key="bloodDraw"
+            android:key="title_bloodDraw"
             android:title="@string/bloodDraw"
             android:defaultValue="true"
         />
     <EditTextPreference
-            android:key="messageShowTime"
+            android:key="title_messageShowTime"
             android:inputType="number"
             android:title="@string/messageShowTime"
             android:defaultValue="1.5f"
             />
     <CheckBoxPreference
-            android:key="messageDraw"
+            android:key="title_messageDraw"
             android:title="@string/messageDraw"
             android:defaultValue="true"
             />
     <EditTextPreference
-            android:key="spawnsShowTime"
+            android:key="title_spawnsShowTime"
             android:inputType="number"
             android:title="@string/spawnsShowTime"
             android:defaultValue="1f"
             />
     <CheckBoxPreference
-            android:key="spawnsDraw"
+            android:key="title_spawnsDraw"
             android:title="@string/spawnsDraw"
             android:defaultValue="true"
             />
     <EditTextPreference
-            android:key="timerTimer"
+            android:key="title_timerTimer"
             android:inputType="number"
             android:title="@string/timerTimer"
             android:defaultValue="300"
             />
     <CheckBoxPreference
-            android:key="timerDraw"
+            android:key="title_timerDraw"
             android:title="@string/timerDraw"
             android:defaultValue="true"
             />
     <EditTextPreference
-            android:key="worldGianSpawnProbability"
+            android:key="title_worldGianSpawnProbability"
             android:inputType="number"
             android:title="@string/worldGianSpawnProbability"
             android:defaultValue="100"
             />
     <EditTextPreference
-            android:key="worldTowerSpawnProbability"
+            android:key="title_worldTowerSpawnProbability"
             android:inputType="number"
             android:title="@string/worldTowerSpawnProbability"
             android:defaultValue="80"
             />
     <EditTextPreference
-            android:key="worldHorizontalBorders"
+            android:key="title_worldHorizontalBorders"
             android:inputType="number"
             android:title="@string/worldHorizontalBorders"
             android:defaultValue="15"
             />
     <EditTextPreference
-            android:key="worldVerticalTopBorders"
+            android:key="title_worldVerticalTopBorders"
             android:inputType="number"
             android:title="@string/worldVerticalTopBorders"
             android:defaultValue="40"
             />
     <EditTextPreference
-            android:key="worldVerticalBottomBorders"
+            android:key="title_worldVerticalBottomBorders"
             android:inputType="number"
             android:title="@string/worldVerticalBottomBorders"
             android:defaultValue="15"
             />
     <CheckBoxPreference
-            android:key="worldBoardersDraw"
+            android:key="title_worldBoardersDraw"
             android:title="@string/worldBoardersDraw"
             android:defaultValue="true"
             />

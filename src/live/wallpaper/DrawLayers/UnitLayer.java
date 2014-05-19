@@ -3,7 +3,7 @@ package live.wallpaper.DrawLayers;
 import android.graphics.Canvas;
 import live.wallpaper.AI.AI;
 import live.wallpaper.AI.SimpleAI;
-import live.wallpaper.Configs;
+import live.wallpaper.Configs.Configs;
 import live.wallpaper.DrawLayers.BloodLayer.BloodLayer;
 import live.wallpaper.DrawLayers.MessagesLayer.MessagesLayer;
 import live.wallpaper.DrawLayers.SpawnLayer.SpawnsLayer;
@@ -54,20 +54,24 @@ public class UnitLayer{
     }
 
     public static void resize(int width, int height) {
-            float wOld = Configs.getDisplayWidth() - 2 * Configs.getWorldHorizontalBorders();
+            float wOld = Configs.getDisplayWidth() - 2 * Configs.getFloatValue(Configs.worldHorizontalBorders);
             float hOld = Configs.getDisplayHeight()
-                    - Configs.getWorldVerticalTopBorders() - Configs.getWorldVerticalBottomBorders();
+                    - Configs.getFloatValue(Configs.worldVerticalTopBorders)
+                    - Configs.getFloatValue(Configs.worldHorizontalBorders);
 
-            float wNew = width - 2 * Configs.getWorldHorizontalBorders();
-            float hNew = height - Configs.getWorldVerticalTopBorders() - Configs.getWorldVerticalBottomBorders();
+            float wNew = width - 2 * Configs.getFloatValue(Configs.worldHorizontalBorders);
+            float hNew = height - Configs.getFloatValue(Configs.worldVerticalTopBorders)
+                    - Configs.getFloatValue(Configs.worldVerticalBottomBorders);
 
         syncer.waitForUnlock();
         syncer.lock();
             for (int i = 0; i < 4; i++)
                 for (Unit u : dividedUnits[i]) {
 
-                    float posX = (u.getX() - Configs.getWorldHorizontalBorders()) / wOld * wNew + Configs.getWorldHorizontalBorders();
-                    float posY = (u.getY() - Configs.getWorldVerticalTopBorders()) / hOld * hNew + Configs.getWorldVerticalTopBorders();
+                    float posX = (u.getX() - Configs.getFloatValue(Configs.worldHorizontalBorders))
+                            / wOld * wNew + Configs.getFloatValue(Configs.worldHorizontalBorders);
+                    float posY = (u.getY() - Configs.getFloatValue(Configs.worldVerticalTopBorders))
+                            / hOld * hNew + Configs.getFloatValue(Configs.worldHorizontalBorders);
                     u.setPosition(posX, posY);
                 }
         syncer.unlock();
@@ -198,9 +202,9 @@ public class UnitLayer{
                 if (c.getType()!= NotControlledUnit.Type.Tower && c.getType()!= NotControlledUnit.Type.Bullet)
                     tx=0;
                 else tx=1;
-                for (int j=0; j< Configs.getBloodCount(); j++)
+                for (int j=0; j< Configs.getIntValue(Configs.bloodCount); j++)
                     BloodLayer.add(units.get(i).getX() - 28 + rnd.nextInt(20),
-                            units.get(i).getY() - 28 + rnd.nextInt(20),j*Configs.getBloodInterval(), tx);
+                            units.get(i).getY() - 28 + rnd.nextInt(20),j*Configs.getFloatValue(Configs.bloodInterval), tx);
 
                 if (tx==0)
                 kills[c.getTeam()]++;

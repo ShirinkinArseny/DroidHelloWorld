@@ -2,7 +2,7 @@ package live.wallpaper.DrawLayers.SpawnLayer;
 
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
-import live.wallpaper.Configs;
+import live.wallpaper.Configs.Configs;
 import live.wallpaper.DrawLayers.Synchroniser;
 
 import java.util.LinkedList;
@@ -19,7 +19,7 @@ public class SpawnsLayer{
     }
 
     public static void addSpawn(float x, float y) {
-        if (Configs.isSpawnsDraw()) {
+        if (Configs.getBooleanValue(Configs.spawnsDraw)) {
             syncer.waitForUnlock();
             syncer.lock();
             spawns.add(new Spawn(x, y));
@@ -28,7 +28,7 @@ public class SpawnsLayer{
     }
 
     public static void update(float dt) {
-        if (Configs.isSpawnsDraw()) {
+        if (Configs.getBooleanValue(Configs.spawnsDraw)) {
             syncer.waitForUnlock();
             syncer.lock();
         for (int i=0; i<spawns.size(); i++) {
@@ -41,7 +41,7 @@ public class SpawnsLayer{
     }
 
     public static void draw(Canvas canvas) {
-        if (Configs.isSpawnsDraw())
+        if (Configs.getBooleanValue(Configs.spawnsDraw))
         for (Spawn f: spawns) {
             f.draw(canvas);
         }

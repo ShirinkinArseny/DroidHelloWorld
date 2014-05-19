@@ -1,7 +1,7 @@
 package live.wallpaper.DrawLayers.BloodLayer;
 
 import android.graphics.Canvas;
-import live.wallpaper.Configs;
+import live.wallpaper.Configs.Configs;
 import live.wallpaper.DrawLayers.Synchroniser;
 
 import java.util.LinkedList;
@@ -17,7 +17,7 @@ public class BloodLayer{
     }
 
     public static void add(float x, float y, float val, int type) {
-        if (Configs.isBloodDraw()) {
+        if (Configs.getBooleanValue(Configs.bloodDraw)) {
         syncer.waitForUnlock();
         syncer.lock();
             dust.add(new Blood(x, y, val, type));
@@ -26,7 +26,7 @@ public class BloodLayer{
     }
 
     public static void update(float dt) {
-        if (Configs.isBloodDraw()) {
+        if (Configs.getBooleanValue(Configs.bloodDraw)) {
             syncer.waitForUnlock();
             syncer.lock();
             for (int i = 0; i < dust.size(); i++) {
@@ -39,7 +39,7 @@ public class BloodLayer{
     }
 
     public static void draw(Canvas canvas) {
-        if (Configs.isBloodDraw()) {
+        if (Configs.getBooleanValue(Configs.bloodDraw)) {
             syncer.waitForUnlock();
             syncer.lock();
         for (Blood f: dust) {

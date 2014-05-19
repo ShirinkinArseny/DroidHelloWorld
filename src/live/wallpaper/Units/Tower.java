@@ -1,7 +1,6 @@
 package live.wallpaper.Units;
 
-import android.util.Log;
-import live.wallpaper.Configs;
+import live.wallpaper.Configs.Configs;
 import live.wallpaper.Geometry.Point;
 import live.wallpaper.TimeFunctions.LoopedTicker;
 

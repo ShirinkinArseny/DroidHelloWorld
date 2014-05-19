@@ -3,7 +3,7 @@ package live.wallpaper.DrawLayers.MessagesLayer;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import live.wallpaper.Configs;
+import live.wallpaper.Configs.Configs;
 import live.wallpaper.DrawLayers.Synchroniser;
 import live.wallpaper.Geometry.Point;
 
@@ -34,7 +34,7 @@ public class MessagesLayer{
 
 
     public static void showMessage(float x, float y, String text, int color) {
-        if (Configs.isMessageDraw()) {
+        if (Configs.getBooleanValue(Configs.messageDraw)) {
         syncer.waitForUnlock();
         syncer.lock();
             messagesAddBuffer.add(
@@ -49,7 +49,7 @@ public class MessagesLayer{
     }
 
     public static void update(float dt) {
-        if (Configs.isMessageDraw()) {
+        if (Configs.getBooleanValue(Configs.messageDraw)) {
             syncer.waitForUnlock();
             syncer.lock();
             for (int i = 0; i < messages.size(); i++) {
@@ -66,7 +66,7 @@ public class MessagesLayer{
     }
 
     public static void draw(Canvas canvas) {
-        if (Configs.isMessageDraw()) {
+        if (Configs.getBooleanValue(Configs.messageDraw)) {
             syncer.waitForUnlock();
             syncer.lock();
         for (Message f : messages)

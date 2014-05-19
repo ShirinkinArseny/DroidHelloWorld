@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import live.wallpaper.Configs;
+import live.wallpaper.Configs.Configs;
 
 public class TerritoryLayer{
 
@@ -34,9 +34,10 @@ public class TerritoryLayer{
 
     public static void draw(Canvas canvas) {
         canvas.drawBitmap(bg, 0, 0, p);
-        if (Configs.isWorldBoardersDraw())
-        canvas.drawRect(Configs.getWorldHorizontalBorders(), Configs.getWorldVerticalTopBorders(),
-                Configs.getDisplayWidth()-Configs.getWorldHorizontalBorders(),
-                Configs.getDisplayHeight()-Configs.getWorldVerticalBottomBorders(), border);
+        if (Configs.getBooleanValue(Configs.worldBoardersDraw))
+        canvas.drawRect(Configs.getFloatValue(Configs.worldHorizontalBorders),
+                Configs.getFloatValue(Configs.worldVerticalTopBorders),
+                Configs.getDisplayWidth()-Configs.getFloatValue(Configs.worldHorizontalBorders),
+                Configs.getDisplayHeight()-Configs.getFloatValue(Configs.worldVerticalBottomBorders), border);
     }
 }

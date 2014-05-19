@@ -1,10 +1,9 @@
 package live.wallpaper.AI;
 
-import live.wallpaper.Configs;
+import live.wallpaper.Configs.Configs;
 import live.wallpaper.Units.ControlledUnit;
 import live.wallpaper.Units.NotControlledUnit;
 
-import java.util.HashSet;
 import java.util.LinkedList;
 import java.util.Random;
 
@@ -17,7 +16,7 @@ public class SimpleAI implements AI{
     }
 
     private float getDeltaPos() {
-        return rnd.nextInt(2* Configs.getAiDeltaTarget())-Configs.getAiDeltaTarget();
+        return rnd.nextInt(2* Configs.getIntValue(Configs.aiDeltaTarget))-Configs.getIntValue(Configs.aiDeltaTarget);
     }
 
     public void solve(LinkedList<ControlledUnit> yours,
@@ -58,9 +57,9 @@ public class SimpleAI implements AI{
                             y = theirGiants.get(i).getY();
                         }
                     }
-                } else if (theirTowers.size() > 0 && (yours.size()>Configs.getAiOurUnitsCountToAttack()
-                        || yours.size()>Configs.getAiOurUnitsWithGiantCountToAttack() && hasOurGiant)
-                        && theirMen.size()<Configs.getAiTheirUnitsCountToNotAttack()) {
+                } else if (theirTowers.size() > 0 && (yours.size()>Configs.getIntValue(Configs.aiOurUnitsCountToAttack)
+                        || yours.size()>Configs.getIntValue(Configs.aiOurUnitsWithGiantCountToAttack) && hasOurGiant)
+                        && theirMen.size()<Configs.getIntValue(Configs.aiTheirUnitsCountToNotAttack)) {
                     x = theirTowers.get(0).getX();
                     y = theirTowers.get(0).getY();
                     float lastHP=theirTowers.get(0).getHealth();

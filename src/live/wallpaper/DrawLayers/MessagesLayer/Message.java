@@ -2,7 +2,7 @@ package live.wallpaper.DrawLayers.MessagesLayer;
 
 import android.graphics.Canvas;
 import android.graphics.Paint;
-import live.wallpaper.Configs;
+import live.wallpaper.Configs.Configs;
 import live.wallpaper.TimeFunctions.LinearTimeFunction;
 
 public class Message {
@@ -25,13 +25,13 @@ public class Message {
 
     public Message(String text, float x, float y, Paint p) {
         this.x=x;
-        coordinates =new LinearTimeFunction(Configs.getMessageShowTime(), y, y-50, new Runnable() {
+        coordinates =new LinearTimeFunction(Configs.getFloatValue(Configs.messageShowTime), y, y-50, new Runnable() {
             @Override
             public void run() {
                 isUseless=true;
             }
         });
-        alpha= new LinearTimeFunction(Configs.getMessageShowTime(), 255, 0, new Runnable() {
+        alpha= new LinearTimeFunction(Configs.getFloatValue(Configs.messageShowTime), 255, 0, new Runnable() {
             @Override
             public void run() {
             }

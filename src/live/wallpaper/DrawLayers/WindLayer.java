@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import live.wallpaper.Configs;
+import live.wallpaper.Configs.Configs;
 
 public class WindLayer {
 
@@ -31,7 +31,7 @@ public class WindLayer {
     }
 
     public static void update(float dt) {
-        if (Configs.isWindDraw()) {
+        if (Configs.getBooleanValue(Configs.windDraw)) {
             dx += dt * 50;
             dy += dt * 50;
             if (dx > width) dx -= width;
@@ -40,7 +40,7 @@ public class WindLayer {
     }
 
     public static void draw(Canvas canvas) {
-        if (Configs.isWindDraw()) {
+        if (Configs.getBooleanValue(Configs.windDraw)) {
             int posX = (int) (dx - width);
             for (int i = -1; i < sx; i++) {
                 int posY = (int) (dy - height);

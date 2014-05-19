@@ -4,9 +4,8 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.content.res.Resources;
 import android.graphics.*;
-import android.preference.PreferenceManager;
-import android.util.Log;
 import android.view.SurfaceHolder;
+import live.wallpaper.Configs.Configs;
 import live.wallpaper.DrawLayers.*;
 import live.wallpaper.DrawLayers.BloodLayer.Blood;
 import live.wallpaper.DrawLayers.BloodLayer.BloodLayer;
@@ -125,23 +124,24 @@ public class World {
             return new Point(
 
                     ((team == 0) ?
-                            Configs.getWorldHorizontalBorders() :
-                            Configs.getDisplayWidth() * 2 / 3 - Configs.getWorldHorizontalBorders())
+                            Configs.getFloatValue(Configs.worldHorizontalBorders) :
+                            Configs.getDisplayWidth() * 2 / 3 - Configs.getFloatValue(Configs.worldHorizontalBorders))
                     + rnd.nextInt(Configs.getDisplayWidth() / 3),
 
-                    rnd.nextInt(Configs.getDisplayHeight() - Configs.getWorldVerticalBottomBorders()
-                            - Configs.getWorldVerticalTopBorders())
-                            + Configs.getWorldVerticalTopBorders()
+                    rnd.nextInt(Configs.getDisplayHeight() - Configs.getIntValue(Configs.worldVerticalBottomBorders)
+                            - Configs.getIntValue(Configs.worldHorizontalBorders))
+                            +  Configs.getIntValue(Configs.worldVerticalTopBorders)
             );
         } else {
             return new Point(
 
-                    rnd.nextInt(Configs.getDisplayWidth() - 2 * Configs.getWorldHorizontalBorders())
-                            + Configs.getWorldHorizontalBorders(),
+                    rnd.nextInt(Configs.getDisplayWidth()
+                            - 2 * Configs.getIntValue(Configs.worldHorizontalBorders))
+                            + Configs.getIntValue(Configs.worldHorizontalBorders),
 
                     ((team == 0) ?
-                            Configs.getWorldVerticalTopBorders() :
-                            Configs.getDisplayHeight() * 2 / 3 - Configs.getWorldVerticalBottomBorders())
+                            Configs.getFloatValue(Configs.worldVerticalTopBorders) :
+                            Configs.getDisplayHeight() * 2 / 3 - Configs.getFloatValue(Configs.worldVerticalBottomBorders))
                             + rnd.nextInt(Configs.getDisplayWidth() / 3)
             );
         }
@@ -151,13 +151,13 @@ public class World {
     private void autoSpawn() {
         for (int team = 0; team < 2; team++) {
             Point p = getSpawnPoint(team);
-            boolean gigant = 0 == rnd.nextInt(Configs.getWorldGianSpawnProbability());
+            boolean gigant = 0 == rnd.nextInt(Configs.getIntValue(Configs.worldGianSpawnProbability));
             if (gigant) {
                 UnitLayer.spawn(new Giant(p, team));
                 showMessage(p, "GIANT SPAWNED!", team);
                 return;
             }
-            boolean tower = 0 == rnd.nextInt(Configs.getWorldGianSpawnProbability());
+            boolean tower = 0 == rnd.nextInt(Configs.getIntValue(Configs.worldTowerSpawnProbability));
             if (tower) {
                 UnitLayer.spawn(new Tower(p, team));
                 showMessage(p, "TOWER BUILT!", team);
