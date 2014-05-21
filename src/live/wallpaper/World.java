@@ -34,29 +34,16 @@ public class World {
     }
 
     public World(Context context) {
-        res = context.getResources();
-        DisplayMetrics metrics = res.getDisplayMetrics();
-        pictureSizeCoef=Math.max(metrics.widthPixels, metrics.heightPixels)/1400f;
-        initTextures();
+        res=context.getResources();
+        init();
         Configs.init(context);
         reInit();
     }
 
-    public static void reInit() {
-        TimerLayer.init();
-        UnitLayer.init();
-        BloodLayer.init();
-        MessagesLayer.init();
-        Unit.reInit();
-        WindLayer.reInit();
-        Blood.reInit();
-        SpawnsLayer.reInit();
-        TerritoryLayer.reInit();
+    private static void init() {
         DisplayMetrics metrics = res.getDisplayMetrics();
-        UnitLayer.reInit(metrics.widthPixels, metrics.heightPixels);
-    }
+        pictureSizeCoef=Math.max(metrics.widthPixels, metrics.heightPixels)/1400f;
 
-    private static void initTextures() {
         Bitmap[][] menTexture = new Bitmap[2][4];
         menTexture[0][0] = getScaledResource(res, R.drawable.red, 32);
         menTexture[0][1] = getScaledResource(res, R.drawable.red, 96);
@@ -67,13 +54,25 @@ public class World {
         menTexture[1][2] = getScaledResource(res, R.drawable.bluetower, 32);
         menTexture[1][3] = menTexture[0][3];
         Unit.init(menTexture, pictureSizeCoef);
+
         WindLayer.init(getScaledResource(res, R.drawable.noise, 512));
         Blood.init(new Bitmap[]{getScaledResource(res, R.drawable.blood, 64),
                 getScaledResource(res, R.drawable.coal, 64)});
         SpawnsLayer.init(getScaledResource(res, R.drawable.spawn, 74));
-
         TerritoryLayer.init(BitmapFactory.decodeResource(res, R.drawable.background));
 
+        TimerLayer.init();
+        UnitLayer.init();
+        BloodLayer.init();
+        MessagesLayer.init();
+    }
+
+    public static void reInit() {
+        MessagesLayer.reInit();
+        TerritoryLayer.reInit();
+        DisplayMetrics metrics = res.getDisplayMetrics();
+        UnitLayer.reInit(metrics.widthPixels, metrics.heightPixels);
+        TimerLayer.reInit(metrics.widthPixels, metrics.heightPixels);
     }
 
     public void pausePainting() {

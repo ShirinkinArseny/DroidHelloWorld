@@ -18,9 +18,6 @@ public class SpawnsLayer{
         syncer=new Synchroniser();
     }
 
-    public static void reInit() {
-    }
-
     public static void addSpawn(float x, float y) {
         if (Configs.getBooleanValue(Configs.spawnsDraw)) {
             syncer.waitForUnlock();

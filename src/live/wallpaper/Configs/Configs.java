@@ -42,7 +42,6 @@ public class Configs {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
-                Log.i("OnSharedPreferenceChangeListener", "START");
                 for (ConfigField f : fields) {
                     switch (f.getType()) {
                         case Float:
@@ -85,7 +84,6 @@ public class Configs {
         fields.add(new IntegerField("worldVerticalBottomBorders"));
         fields.add(new BooleanField("worldBoardersDraw"));
         fields.add(new FloatField("bloodInterval"));
-
         settingsListener.onSharedPreferenceChanged(settings, null);
     }
 

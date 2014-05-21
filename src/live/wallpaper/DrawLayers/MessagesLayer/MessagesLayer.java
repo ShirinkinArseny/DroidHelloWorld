@@ -3,10 +3,12 @@ package live.wallpaper.DrawLayers.MessagesLayer;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import android.util.Log;
 import live.wallpaper.Configs.Configs;
 import live.wallpaper.DrawLayers.Synchroniser;
 import live.wallpaper.Geometry.Point;
 
+import java.util.Arrays;
 import java.util.LinkedList;
 
 public class MessagesLayer{
@@ -32,6 +34,11 @@ public class MessagesLayer{
         syncer=new Synchroniser();
     }
 
+    public static void reInit() {
+        Log.i("ARRAY", Arrays.toString(Configs.getBlueFontColor()));
+        pBlue.setColor(Color.rgb(Configs.getBlueFontColor()[0], Configs.getBlueFontColor()[1], Configs.getBlueFontColor()[2]));
+        pRed.setColor(Color.rgb(Configs.getRedFontColor()[0], Configs.getRedFontColor()[1], Configs.getRedFontColor()[2]));
+    }
 
     public static void showMessage(float x, float y, String text, int color) {
         if (Configs.getBooleanValue(Configs.messageDraw)) {

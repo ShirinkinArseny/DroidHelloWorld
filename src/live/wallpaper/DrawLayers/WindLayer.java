@@ -25,9 +25,6 @@ public class WindLayer {
         dy = 0;
     }
 
-    public static void reInit() {
-    }
-
     public static void resize(int w, int h) {
         sx = w / width + 1;
         sy = h / height + 1;

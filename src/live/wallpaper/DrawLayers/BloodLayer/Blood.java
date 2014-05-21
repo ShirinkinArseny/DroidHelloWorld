@@ -22,9 +22,6 @@ public class Blood {
         p.setColor(Color.WHITE);
     }
 
-    public static void reInit() {
-    }
-
     public boolean getUseless() {
         return noNeedMore;
     }
