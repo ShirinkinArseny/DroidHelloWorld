@@ -55,6 +55,11 @@ public class Unit extends ControlledUnit {
         kills.tick(dt);
     }
 
+    public void drawShadow(Canvas c) {
+        if (getType()!=Type.Bullet)
+        c.drawBitmap(getShadow(), getX() - getWidth(), getY() - getHeight(), p);
+    }
+
     protected void drawBase(Canvas c) {
         c.drawBitmap(getBitmap(), getX() - getHalfWidth(), getY() - getHalfHeight(), p);
     }

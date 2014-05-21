@@ -40,6 +40,17 @@ public class NotControlledUnit extends Rectangle {
         return null;
     }
 
+
+    protected Bitmap getShadow() {
+        switch (type) {
+            case Man:    return menTexture[team+2][0];
+            case Giant:  return menTexture[team+2][1];
+            case Tower:  return menTexture[team+2][2];
+            case Bullet: return menTexture[team+2][3];
+        }
+        return null;
+    }
+
     public NotControlledUnit(float x, float y, int team, float healthCoef, float speed, Type type) {
         super(x, y, getBitmap(team, type).getWidth(), getBitmap(team, type).getHeight());
         this.team=team;

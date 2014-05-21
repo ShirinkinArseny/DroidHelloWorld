@@ -58,7 +58,7 @@ public class UnitLayer{
             float wOld = Configs.getDisplayWidth() - 2 * Configs.getIntValue(Configs.worldHorizontalBorders);
             float hOld = Configs.getDisplayHeight()
                     - Configs.getIntValue(Configs.worldVerticalTopBorders)
-                    - Configs.getIntValue(Configs.worldHorizontalBorders);
+                    - Configs.getIntValue(Configs.worldVerticalBottomBorders);
 
             float wNew = width - 2 * Configs.getIntValue(Configs.worldHorizontalBorders);
             float hNew = height - Configs.getIntValue(Configs.worldVerticalTopBorders)
@@ -71,8 +71,9 @@ public class UnitLayer{
 
                     float posX = (u.getX() - Configs.getIntValue(Configs.worldHorizontalBorders))
                             / wOld * wNew + Configs.getIntValue(Configs.worldHorizontalBorders);
+
                     float posY = (u.getY() - Configs.getIntValue(Configs.worldVerticalTopBorders))
-                            / hOld * hNew + Configs.getIntValue(Configs.worldHorizontalBorders);
+                            / hOld * hNew + Configs.getIntValue(Configs.worldVerticalTopBorders);
                     u.setPosition(posX, posY);
                 }
         syncer.unlock();
@@ -281,6 +282,9 @@ public class UnitLayer{
     public static void draw(Canvas canvas) {
         syncer.waitForUnlock();
         syncer.lock();
+        for (int i=0; i<4; i++)
+            for (Unit m : dividedUnits[i])
+                m.drawShadow(canvas);
         for (int i=0; i<4; i++)
             for (Unit m : dividedUnits[i])
                 m.draw(canvas);

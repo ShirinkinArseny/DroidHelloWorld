@@ -41,7 +41,7 @@ public class World {
         DisplayMetrics metrics = res.getDisplayMetrics();
         pictureSizeCoef=Math.max(metrics.widthPixels, metrics.heightPixels)/1100f;
 
-        Bitmap[][] menTexture = new Bitmap[2][4];
+        Bitmap[][] menTexture = new Bitmap[4][4];
         menTexture[0][0] = getScaledResource(res, R.drawable.red, 32);
         menTexture[0][1] = getScaledResource(res, R.drawable.red, 96);
         menTexture[0][2] = getScaledResource(res, R.drawable.redtower, 32);
@@ -50,6 +50,12 @@ public class World {
         menTexture[1][1] = getScaledResource(res, R.drawable.blue, 96);
         menTexture[1][2] = getScaledResource(res, R.drawable.bluetower, 32);
         menTexture[1][3] = menTexture[0][3];
+        menTexture[2][0] = getScaledResource(res, R.drawable.shadow, 64);
+        menTexture[2][1] = getScaledResource(res, R.drawable.shadow, 192);
+        menTexture[2][2] = getScaledResource(res, R.drawable.towershadow, 64);
+        menTexture[3][0] = getScaledResource(res, R.drawable.shadow, 64);
+        menTexture[3][1] = getScaledResource(res, R.drawable.shadow, 192);
+        menTexture[3][2] = getScaledResource(res, R.drawable.towershadow, 64);
         Unit.init(menTexture, pictureSizeCoef);
 
         WindLayer.init(getScaledResource(res, R.drawable.grid, 512));

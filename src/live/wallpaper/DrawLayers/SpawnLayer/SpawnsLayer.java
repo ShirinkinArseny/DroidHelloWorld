@@ -41,9 +41,13 @@ public class SpawnsLayer{
     }
 
     public static void draw(Canvas canvas) {
-        if (Configs.getBooleanValue(Configs.spawnsDraw))
-        for (Spawn f: spawns) {
-            f.draw(canvas);
+        if (Configs.getBooleanValue(Configs.spawnsDraw)) {
+            syncer.waitForUnlock();
+            syncer.lock();
+            for (Spawn f : spawns) {
+                f.draw(canvas);
+            }
+            syncer.unlock();
         }
     }
 }

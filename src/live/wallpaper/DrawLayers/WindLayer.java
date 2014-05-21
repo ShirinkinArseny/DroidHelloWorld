@@ -35,9 +35,9 @@ public class WindLayer {
     }
 
     public static void draw(Canvas canvas) {
-            int posX = (int) (dx - width);
+            float posX = dx - width;
             for (int i = -1; i < sx; i++) {
-                int posY = - height;
+                float posY = - height;
                 for (int j = -1; j < sy; j++) {
                     canvas.drawBitmap(bg, posX, posY, p);
                     posY += height;
