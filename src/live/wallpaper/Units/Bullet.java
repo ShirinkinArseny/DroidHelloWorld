@@ -9,8 +9,17 @@ public class Bullet extends Unit{
     private static float speed=400f;
     private static float dHealth=-1f;
     private static float distance=Math.abs(speed/dHealth);
-    public static final float squareDistance=distance*distance;
+    private static float squareDistance=distance*distance;
     //todo: учесть спидкоеф
+
+    public static float getSquareDistance() {
+        return squareDistance;
+    }
+
+    public static void reInit(float speedCoef) {
+        distance=Math.abs(speed*speedCoef/dHealth);
+        squareDistance=distance*distance;
+    }
 
     public Bullet(float x, float y, double pX, float pY, int team) {
         super(x, y, team, 1.2f, speed, Type.Bullet);

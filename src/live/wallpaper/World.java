@@ -65,6 +65,7 @@ public class World {
         UnitLayer.init();
         BloodLayer.init();
         MessagesLayer.init();
+        Bullet.reInit(pictureSizeCoef);
     }
 
     public static void reInit() {

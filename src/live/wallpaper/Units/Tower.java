@@ -16,7 +16,7 @@ public class Tower extends Unit{
         shot=new LoopedTicker(0.2f, new Runnable() {
             @Override
             public void run() {
-                if (getSquaredLength(aimX, aimY) < Bullet.squareDistance)
+                if (getSquaredLength(aimX, aimY) < Bullet.getSquareDistance())
                     addBuffer=dropTheBomb();
             }
         });
