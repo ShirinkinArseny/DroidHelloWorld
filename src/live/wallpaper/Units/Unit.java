@@ -1,5 +1,6 @@
 package live.wallpaper.Units;
 
+import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
@@ -10,12 +11,16 @@ import live.wallpaper.TimeFunctions.FlappyTimeFunction;
 
 public class Unit extends ControlledUnit {
 
-    private Paint p;
+    private static Paint p;
     private FlappyTimeFunction kills;
+
+    public static void init(Bitmap[][] menTexture, float pictureSizeCoef) {
+        NotControlledUnit.init(menTexture, pictureSizeCoef);
+        p = new Paint();
+    }
 
     public Unit(float x, float y, int team, float health, float speed, Type t) {
         super(x, y, team, health, speed, t);
-        p = new Paint();
         kills=new FlappyTimeFunction(2f, new Runnable() {
             @Override
             public void run() {

@@ -33,24 +33,25 @@ public class Configs {
     public static final int worldBoardersDraw=19;
     public static final int bloodInterval=20;
 
-    private static SharedPreferences.OnSharedPreferenceChangeListener settingsListener;
-
     public static void init(Context context) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        settingsListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        SharedPreferences.OnSharedPreferenceChangeListener settingsListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-                Log.d("settingsListener", "Go to switch(key)");
-                for (ConfigField f: fields) {
+                for (ConfigField f : fields) {
                     Log.i(f.getName(), String.valueOf(f.getType()));
                     switch (f.getType()) {
-                        case Float:    f.setValue(Float.valueOf(sharedPreferences.getString(f.getName(), null)));
+                        case Float:
+                            f.setValue(Float.valueOf(sharedPreferences.getString(f.getName(), null)));
                             break;
-                        case Integer:  f.setValue(Integer.valueOf(sharedPreferences.getString(f.getName(), null)));
+                        case Integer:
+                            f.setValue(Integer.valueOf(sharedPreferences.getString(f.getName(), null)));
                             break;
-                        case String:   f.setValue(sharedPreferences.getString(f.getName(), null));
+                        case String:
+                            f.setValue(sharedPreferences.getString(f.getName(), null));
                             break;
-                        case Boolean:  f.setValue(sharedPreferences.getBoolean(f.getName(), false));
+                        case Boolean:
+                            f.setValue(sharedPreferences.getBoolean(f.getName(), false));
                             break;
                     }
                     /*switch (f.getType()) {
@@ -64,7 +65,6 @@ public class Configs {
                             break;
                     }*/
                 }
-                Log.d("settingsListener", "Value of LAL = " + sharedPreferences.getInt("first", -1));
             }
         };
         settings.registerOnSharedPreferenceChangeListener(settingsListener);
@@ -94,24 +94,12 @@ public class Configs {
         settingsListener.onSharedPreferenceChanged(settings, null);
     }
 
-    public static void setValue(String name, Object value) {
-        for (ConfigField f: fields)
-            if (f.getName().equals(name)){
-                f.setValue(value);
-                return;
-            }
-    }
-
     private static Object getValue(int num) {
         return fields.get(num).getValue();
     }
 
     public static Integer getIntValue(int num) {
         return (Integer)getValue(num);
-    }
-
-    public static String getStringValue(int num) {
-        return (String)getValue(num);
     }
 
     public static Float getFloatValue(int num) {

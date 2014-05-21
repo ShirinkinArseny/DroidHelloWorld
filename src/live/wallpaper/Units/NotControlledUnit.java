@@ -13,9 +13,11 @@ public class NotControlledUnit extends Rectangle {
     public enum Type {Man, Giant, Tower, Bullet}
     private Type type;
     private float speed;
+    private static float speedCoef;
 
-    public static void init(Bitmap[][] menTextures) {
+    public static void init(Bitmap[][] menTextures, float speedCoef) {
         menTexture=menTextures;
+        NotControlledUnit.speedCoef=speedCoef;
     }
 
     protected static Bitmap getBitmap(int team, Type type) {
@@ -42,20 +44,14 @@ public class NotControlledUnit extends Rectangle {
         super(x, y, getBitmap(team, type).getWidth(), getBitmap(team, type).getHeight());
         this.team=team;
         this.health=1f;
-        this.speed=speed;
+        this.speed=speed*speedCoef;
         this.type=type;
         this.healthCoef=healthCoef;
         power=1/healthCoef;
     }
 
     public NotControlledUnit(Point p, int team, float healthCoef, float speed, Type type) {
-        super(p, getBitmap(team, type).getWidth(), getBitmap(team, type).getHeight());
-        this.team=team;
-        this.health=1f;
-        this.speed=speed;
-        this.type=type;
-        this.healthCoef=healthCoef;
-        power=1/healthCoef;
+        this(p.getX(), p.getY(), team, healthCoef, speed, type);
     }
 
     public Type getType() {

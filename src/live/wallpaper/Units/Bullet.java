@@ -6,7 +6,7 @@ public class Bullet extends Unit{
 
     private float dx;
     private float dy;
-    private static final float speed=200f;
+    private static final float speed=400f;
     private static final float dHealth=-1f;
     private static final float distance=Math.abs(speed/dHealth);
     public static final float squareDistance=distance*distance;
