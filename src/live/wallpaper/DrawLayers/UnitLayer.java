@@ -7,11 +7,9 @@ import live.wallpaper.Configs.Configs;
 import live.wallpaper.DrawLayers.BloodLayer.BloodLayer;
 import live.wallpaper.DrawLayers.MessagesLayer.MessagesLayer;
 import live.wallpaper.DrawLayers.SpawnLayer.SpawnsLayer;
+import live.wallpaper.Geometry.Point;
 import live.wallpaper.TimeFunctions.LoopedTicker;
-import live.wallpaper.Units.ControlledUnit;
-import live.wallpaper.Units.NotControlledUnit;
-import live.wallpaper.Units.Tower;
-import live.wallpaper.Units.Unit;
+import live.wallpaper.Units.*;
 
 import java.util.LinkedList;
 import java.util.Random;
@@ -54,14 +52,6 @@ public class UnitLayer{
     }
 
     public static void reInit(int width, int height) {
-        float wOld = Configs.getDisplayWidth() - 2 * Configs.getIntValue(Configs.worldHorizontalBorders);
-        float hOld = Configs.getDisplayHeight()
-                - Configs.getIntValue(Configs.worldVerticalTopBorders)
-                - Configs.getIntValue(Configs.worldHorizontalBorders);
-
-        float wNew = width - 2 * Configs.getIntValue(Configs.worldHorizontalBorders);
-        float hNew = height - Configs.getIntValue(Configs.worldVerticalTopBorders)
-                - Configs.getIntValue(Configs.worldVerticalBottomBorders);
     }
 
     public static void resize(int width, int height) {
@@ -221,6 +211,58 @@ public class UnitLayer{
                 kills[c.getTeam()]++;
                 units.remove(i);
             }
+        }
+    }
+
+
+    private static void showMessage(Point p, String text, int color) {
+        MessagesLayer.showMessage(p, text, color);
+    }
+
+    public static void autoSpawn() {
+        for (int team = 0; team < 2; team++) {
+            Point p = getSpawnPoint(team);
+            boolean gigant = 0 == rnd.nextInt(Configs.getIntValue(Configs.worldGianSpawnProbability));
+            if (gigant) {
+                UnitLayer.spawn(new Giant(p, team));
+                showMessage(p, "GIANT SPAWNED!", team);
+                return;
+            }
+            boolean tower = 0 == rnd.nextInt(Configs.getIntValue(Configs.worldTowerSpawnProbability));
+            if (tower) {
+                UnitLayer.spawn(new Tower(p, team));
+                showMessage(p, "TOWER BUILT!", team);
+                return;
+            }
+            UnitLayer.spawn(new Man(p, team));
+        }
+    }
+
+    private static Point getSpawnPoint(int team) {
+        if (Configs.getDisplayWidth() > Configs.getDisplayHeight()) {
+            return new Point(
+
+                    ((team == 0) ?
+                            Configs.getIntValue(Configs.worldHorizontalBorders) :
+                            Configs.getDisplayWidth() * 2 / 3 - Configs.getIntValue(Configs.worldHorizontalBorders))
+                            + rnd.nextInt(Configs.getDisplayWidth() / 3),
+
+                    rnd.nextInt(Configs.getDisplayHeight() - Configs.getIntValue(Configs.worldVerticalBottomBorders)
+                            - Configs.getIntValue(Configs.worldVerticalTopBorders))
+                            +  Configs.getIntValue(Configs.worldVerticalTopBorders)
+            );
+        } else {
+            return new Point(
+
+                    rnd.nextInt(Configs.getDisplayWidth()
+                            - 2 * Configs.getIntValue(Configs.worldHorizontalBorders))
+                            + Configs.getIntValue(Configs.worldHorizontalBorders),
+
+                    ((team == 0) ?
+                            Configs.getIntValue(Configs.worldVerticalTopBorders) :
+                            Configs.getDisplayHeight() * 2 / 3 - Configs.getIntValue(Configs.worldVerticalBottomBorders))
+                            + rnd.nextInt(Configs.getDisplayWidth() / 3)
+            );
         }
     }
 

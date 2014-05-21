@@ -154,9 +154,9 @@ public class Configs {
 
     private static int[]     worldBoardersColor=new int[]{32, 32, 32, 128}; //Цвет границы
 
-    private static int[] redFontColor=new int[]{192, 64, 64, 128};   // Цвет красного шрифта
-    private static int[] blueFontColor=new int[]{64, 64, 192, 128};  // Цвет синего шрифта
-    private static int[] grayFontColor=new int[]{128, 128, 128, 128};// Цвет шрифта таймера
+    private static int[] redFontColor=new int[]{253, 105, 67, 255};   // Цвет красного шрифта
+    private static int[] blueFontColor=new int[]{176, 121, 182, 255};  // Цвет синего шрифта
+    private static int[] grayFontColor=new int[]{222, 222, 222, 255};// Цвет шрифта таймера
 
     private static int displayWidth;    // Ширина экрана !!НЕ ДОБАВЛЯТЬ В МЕНЮ just make getter/setter
     private static int displayHeight;   // Высота экрана !!НЕ ДОБАВЛЯТЬ В МЕНЮ

@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.*;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.SurfaceHolder;
 import live.wallpaper.Configs.Configs;
 import live.wallpaper.DrawLayers.*;
@@ -12,7 +11,6 @@ import live.wallpaper.DrawLayers.BloodLayer.Blood;
 import live.wallpaper.DrawLayers.BloodLayer.BloodLayer;
 import live.wallpaper.DrawLayers.MessagesLayer.MessagesLayer;
 import live.wallpaper.DrawLayers.SpawnLayer.SpawnsLayer;
-import live.wallpaper.Geometry.Point;
 import live.wallpaper.TimeFunctions.LoopedTicker;
 import live.wallpaper.Units.*;
 
@@ -20,7 +18,6 @@ import java.util.*;
 
 public class World {
 
-    private Random rnd = new Random();
     private boolean active = true;//is working
     private long lastTime;
     private SurfaceHolder holder;
@@ -42,7 +39,7 @@ public class World {
 
     private static void init() {
         DisplayMetrics metrics = res.getDisplayMetrics();
-        pictureSizeCoef=Math.max(metrics.widthPixels, metrics.heightPixels)/1400f;
+        pictureSizeCoef=Math.max(metrics.widthPixels, metrics.heightPixels)/1100f;
 
         Bitmap[][] menTexture = new Bitmap[2][4];
         menTexture[0][0] = getScaledResource(res, R.drawable.red, 32);
@@ -94,7 +91,7 @@ public class World {
         final LoopedTicker spawnTimer = new LoopedTicker(0.2f, new Runnable() {
             @Override
             public void run() {
-                autoSpawn();
+                UnitLayer.autoSpawn();
             }
         });
         new Timer().schedule(new TimerTask() {
@@ -131,58 +128,6 @@ public class World {
             Configs.setDisplayWidth(width);
             TerritoryLayer.resize(width, height);
         }
-    }
-
-    private live.wallpaper.Geometry.Point getSpawnPoint(int team) {
-        if (Configs.getDisplayWidth() > Configs.getDisplayHeight()) {
-            return new Point(
-
-                    ((team == 0) ?
-                            Configs.getIntValue(Configs.worldHorizontalBorders) :
-                            Configs.getDisplayWidth() * 2 / 3 - Configs.getIntValue(Configs.worldHorizontalBorders))
-                    + rnd.nextInt(Configs.getDisplayWidth() / 3),
-
-                    rnd.nextInt(Configs.getDisplayHeight() - Configs.getIntValue(Configs.worldVerticalBottomBorders)
-                            - Configs.getIntValue(Configs.worldHorizontalBorders))
-                            +  Configs.getIntValue(Configs.worldVerticalTopBorders)
-            );
-        } else {
-            return new Point(
-
-                    rnd.nextInt(Configs.getDisplayWidth()
-                            - 2 * Configs.getIntValue(Configs.worldHorizontalBorders))
-                            + Configs.getIntValue(Configs.worldHorizontalBorders),
-
-                    ((team == 0) ?
-                            Configs.getIntValue(Configs.worldVerticalTopBorders) :
-                            Configs.getDisplayHeight() * 2 / 3 - Configs.getIntValue(Configs.worldVerticalBottomBorders))
-                            + rnd.nextInt(Configs.getDisplayWidth() / 3)
-            );
-        }
-
-    }
-
-    private void autoSpawn() {
-        for (int team = 0; team < 2; team++) {
-            Point p = getSpawnPoint(team);
-            boolean gigant = 0 == rnd.nextInt(Configs.getIntValue(Configs.worldGianSpawnProbability));
-            if (gigant) {
-                UnitLayer.spawn(new Giant(p, team));
-                showMessage(p, "GIANT SPAWNED!", team);
-                return;
-            }
-            boolean tower = 0 == rnd.nextInt(Configs.getIntValue(Configs.worldTowerSpawnProbability));
-            if (tower) {
-                UnitLayer.spawn(new Tower(p, team));
-                showMessage(p, "TOWER BUILT!", team);
-                return;
-            }
-            UnitLayer.spawn(new Man(p, team));
-        }
-    }
-
-    private void showMessage(Point p, String text, int color) {
-        MessagesLayer.showMessage(p, text, color);
     }
 
     private void update(float dt) {

@@ -17,6 +17,7 @@ public class Unit extends ControlledUnit {
     public static void init(Bitmap[][] menTexture, float pictureSizeCoef) {
         NotControlledUnit.init(menTexture, pictureSizeCoef);
         p = new Paint();
+        p.setAntiAlias(true);
     }
 
     public Unit(float x, float y, int team, float health, float speed, Type t) {
@@ -55,7 +56,7 @@ public class Unit extends ControlledUnit {
     }
 
     protected void drawBase(Canvas c) {
-        c.drawBitmap(getBitmap(), getX() - getHalfWidth(), getY() - getHalfHeight(), null);
+        c.drawBitmap(getBitmap(), getX() - getHalfWidth(), getY() - getHalfHeight(), p);
     }
 
     protected void drawHealth(Canvas c) {

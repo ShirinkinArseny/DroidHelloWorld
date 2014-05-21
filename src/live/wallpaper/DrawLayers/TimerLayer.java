@@ -60,7 +60,7 @@ public class TimerLayer {
         height2_3=h*2/3;
         width4 =w/4;
         width2=w/2;
-        pBig.setTextSize(w/4);
+        pBig.setTextSize(w/7);
         pSmallRed.setTextSize(w/20);
         pSmallBlue.setTextSize(w/20);
     }
@@ -70,10 +70,12 @@ public class TimerLayer {
     }
 
     private static String getTime() {
+        int ms= 100*Configs.getIntValue(Configs.timerTimer)-(int)(100*round.getValue());
+        ms%=100;
         int seconds= Configs.getIntValue(Configs.timerTimer)-(int)(round.getValue());
         int minutes=seconds/60;
         seconds%=60;
-        return minutes+":"+(seconds>9?seconds:"0"+seconds);
+        return minutes+":"+(seconds>9?seconds:"0"+seconds)+":"+ms;
     }
 
     public static void draw(Canvas canvas) {
