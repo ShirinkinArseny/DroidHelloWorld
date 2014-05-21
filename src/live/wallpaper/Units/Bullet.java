@@ -6,10 +6,11 @@ public class Bullet extends Unit{
 
     private float dx;
     private float dy;
-    private static final float speed=400f;
-    private static final float dHealth=-1f;
-    private static final float distance=Math.abs(speed/dHealth);
+    private static float speed=400f;
+    private static float dHealth=-1f;
+    private static float distance=Math.abs(speed/dHealth);
     public static final float squareDistance=distance*distance;
+    //todo: учесть спидкоеф
 
     public Bullet(float x, float y, double pX, float pY, int team) {
         super(x, y, team, 1.2f, speed, Type.Bullet);

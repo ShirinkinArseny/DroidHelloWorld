@@ -19,6 +19,9 @@ public class Unit extends ControlledUnit {
         p = new Paint();
     }
 
+    public static void reInit() {
+    }
+
     public Unit(float x, float y, int team, float health, float speed, Type t) {
         super(x, y, team, health, speed, t);
         kills=new FlappyTimeFunction(2f, new Runnable() {

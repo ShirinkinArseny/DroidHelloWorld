@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.*;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import android.view.SurfaceHolder;
 import live.wallpaper.Configs.Configs;
 import live.wallpaper.DrawLayers.*;
@@ -38,10 +39,19 @@ public class World {
         pictureSizeCoef=Math.max(metrics.widthPixels, metrics.heightPixels)/1400f;
         initTextures();
         Configs.init(context);
+        reInit();
+    }
+
+    public static void reInit() {
         TimerLayer.init();
         UnitLayer.init();
         BloodLayer.init();
         MessagesLayer.init();
+        Unit.reInit();
+        WindLayer.reInit();
+        Blood.reInit();
+        SpawnsLayer.reInit();
+        TerritoryLayer.reInit();
     }
 
     private static void initTextures() {

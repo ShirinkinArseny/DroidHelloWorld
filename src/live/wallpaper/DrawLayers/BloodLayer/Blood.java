@@ -22,6 +22,9 @@ public class Blood {
         p.setColor(Color.WHITE);
     }
 
+    public static void reInit() {
+    }
+
     public boolean getUseless() {
         return noNeedMore;
     }
@@ -53,5 +56,4 @@ public class Blood {
     public void draw(Canvas canvas) {
         canvas.drawBitmap(dustTexture[type], x, y, p);
     }
-
 }

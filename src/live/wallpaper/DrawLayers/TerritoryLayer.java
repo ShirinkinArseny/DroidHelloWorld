@@ -17,6 +17,9 @@ public class TerritoryLayer{
         p = new Paint();
         p.setColor(Color.WHITE);
         border = new Paint();
+    }
+
+    public static void reInit() {
         border.setColor(Color.rgb(Configs.getWorldBoardersColor()[0], Configs.getWorldBoardersColor()[1],
                 Configs.getWorldBoardersColor()[2]));
         border.setAlpha(Configs.getWorldBoardersColor()[3]);

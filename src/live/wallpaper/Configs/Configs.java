@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import live.wallpaper.World;
 
 import java.util.ArrayList;
 
@@ -38,8 +39,9 @@ public class Configs {
         SharedPreferences.OnSharedPreferenceChangeListener settingsListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
+
+                Log.i("OnSharedPreferenceChangeListener", "START");
                 for (ConfigField f : fields) {
-                    Log.i(f.getName(), String.valueOf(f.getType()));
                     switch (f.getType()) {
                         case Float:
                             f.setValue(Float.valueOf(sharedPreferences.getString(f.getName(), null)));
@@ -54,17 +56,8 @@ public class Configs {
                             f.setValue(sharedPreferences.getBoolean(f.getName(), false));
                             break;
                     }
-                    /*switch (f.getType()) {
-                        case Float:    f.setValue(settings.getFloat(f.getName(), 0));
-                            break;
-                        case Integer:  f.setValue(settings.getInt(f.getName(), 0));
-                            break;
-                        case String:   f.setValue(settings.getString(f.getName(), null));
-                            break;
-                        case Boolean:  f.setValue(settings.getBoolean(f.getName(), false));
-                            break;
-                    }*/
                 }
+                World.reInit();
             }
         };
         settings.registerOnSharedPreferenceChangeListener(settingsListener);
