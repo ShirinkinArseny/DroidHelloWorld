@@ -70,8 +70,8 @@ public class TimerLayer {
     }
 
     private static String getTime() {
-        int ms= 100*Configs.getIntValue(Configs.timerTimer)-(int)(100*round.getValue());
-        ms%=100;
+        int ms= 10*Configs.getIntValue(Configs.timerTimer)-(int)(10*round.getValue());
+        ms%=10;
         int seconds= Configs.getIntValue(Configs.timerTimer)-(int)(round.getValue());
         int minutes=seconds/60;
         seconds%=60;

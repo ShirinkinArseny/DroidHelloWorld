@@ -52,7 +52,7 @@ public class World {
         menTexture[1][3] = menTexture[0][3];
         Unit.init(menTexture, pictureSizeCoef);
 
-        WindLayer.init(getScaledResource(res, R.drawable.noise, 512));
+        WindLayer.init(getScaledResource(res, R.drawable.grid, 512));
         Blood.init(new Bitmap[]{getScaledResource(res, R.drawable.blood, 64),
                 getScaledResource(res, R.drawable.coal, 64)});
         SpawnsLayer.init(getScaledResource(res, R.drawable.spawn, 74));
@@ -142,12 +142,12 @@ public class World {
 
     private void draw(Canvas canvas) {
         TerritoryLayer.draw(canvas);
+        WindLayer.draw(canvas);
         TimerLayer.draw(canvas);
         BloodLayer.draw(canvas);
         SpawnsLayer.draw(canvas);
         UnitLayer.draw(canvas);
         MessagesLayer.draw(canvas);
-        WindLayer.draw(canvas);
     }
 }
         
