@@ -26,4 +26,10 @@
     <string name="redFontColor">Цвет красного шрифта</string>
     <string name="blueFontColor">Цвет синего шрифта</string>
     <string name="grayFontColor">Цвет шрифта таймера</string>
+
+
+
+
+    <string name="applySettings">Apply</string>
+    <string name="cancelSettings">Cancel</string>
 </resources>
