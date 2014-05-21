@@ -52,6 +52,8 @@ public class World {
         Blood.reInit();
         SpawnsLayer.reInit();
         TerritoryLayer.reInit();
+        DisplayMetrics metrics = res.getDisplayMetrics();
+        UnitLayer.reInit(metrics.widthPixels, metrics.heightPixels);
     }
 
     private static void initTextures() {

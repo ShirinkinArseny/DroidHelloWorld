@@ -53,6 +53,17 @@ public class UnitLayer{
         });
     }
 
+    public static void reInit(int width, int height) {
+        float wOld = Configs.getDisplayWidth() - 2 * Configs.getIntValue(Configs.worldHorizontalBorders);
+        float hOld = Configs.getDisplayHeight()
+                - Configs.getIntValue(Configs.worldVerticalTopBorders)
+                - Configs.getIntValue(Configs.worldHorizontalBorders);
+
+        float wNew = width - 2 * Configs.getIntValue(Configs.worldHorizontalBorders);
+        float hNew = height - Configs.getIntValue(Configs.worldVerticalTopBorders)
+                - Configs.getIntValue(Configs.worldVerticalBottomBorders);
+    }
+
     public static void resize(int width, int height) {
             float wOld = Configs.getDisplayWidth() - 2 * Configs.getIntValue(Configs.worldHorizontalBorders);
             float hOld = Configs.getDisplayHeight()
