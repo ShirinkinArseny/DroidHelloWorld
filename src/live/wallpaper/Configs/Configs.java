@@ -34,9 +34,11 @@ public class Configs {
     public static final int worldBoardersDraw=19;
     public static final int bloodInterval=20;
 
+    private static SharedPreferences.OnSharedPreferenceChangeListener settingsListener;
+
     public static void init(Context context) {
         SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
-        SharedPreferences.OnSharedPreferenceChangeListener settingsListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
+        settingsListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
 
