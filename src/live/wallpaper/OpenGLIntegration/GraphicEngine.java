@@ -16,4 +16,5 @@ public interface GraphicEngine {
 
     public void drawText(float x, float y, float size, int color, int opacity, String text);
 
+    public void drawRect(float x, float y, float x2, float y2, int color, int opacity);
 }

@@ -109,6 +109,10 @@ public class Configs {
         return worldBoardersColor;
     }
 
+    public static int[] getWorldBGColor() {
+        return worldBGColor;
+    }
+
     public static void setWorldBoardersColor(int[] worldBoardersColor) {
         Configs.worldBoardersColor = worldBoardersColor;
     }
@@ -153,7 +157,8 @@ public class Configs {
         Configs.displayHeight = displayHeight;
     }
 
-    private static int[]     worldBoardersColor=new int[]{32, 32, 32, 128}; //Цвет границы
+    private static int[]     worldBoardersColor=new int[]{157, 168, 144, 255}; //Цвет границы
+    private static int[]     worldBGColor=new int[]{140, 148, 124, 255}; //Цвет фона
 
     private static int[] redFontColor=new int[]{253, 105, 67, 255};   // Цвет красного шрифта
     private static int[] blueFontColor=new int[]{176, 121, 182, 255};  // Цвет синего шрифта

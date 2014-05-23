@@ -63,8 +63,8 @@ public class World {
         Blood.init(new Bitmap[]{getScaledResource(res, R.drawable.blood, 64),
                 getScaledResource(res, R.drawable.coal, 64)});
         SpawnsLayer.init(getScaledResource(res, R.drawable.spawn, 74));
-        TerritoryLayer.init(BitmapFactory.decodeResource(res, R.drawable.background));
 
+        TerritoryLayer.init();
         TimerLayer.init();
         UnitLayer.init();
         BloodLayer.init();
@@ -118,7 +118,6 @@ public class World {
             WindLayer.resize(width, height);
             Configs.setDisplayHeight(height);
             Configs.setDisplayWidth(width);
-            TerritoryLayer.resize(width, height);
     }
 
     private void update(float dt) {

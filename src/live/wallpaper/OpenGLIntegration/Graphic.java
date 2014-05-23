@@ -23,6 +23,10 @@ public class Graphic {
 
     }
 
+    public static void drawRect(float x, float y, float x2, float y2, int color, int opacity) {
+        g.drawRect(x, y, x2, y2, color, opacity);
+    }
+
     public static void drawText(float x, float y, float size, int color, String text) {
         g.drawText(x, y, size, color, text);
     }

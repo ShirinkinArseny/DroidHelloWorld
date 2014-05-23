@@ -57,4 +57,11 @@ public class CanvasEngine implements GraphicEngine {
         p.setTextSize(size);
         c.drawText(text, x, y, p);
     }
+
+    @Override
+    public void drawRect(float x, float y, float x2, float y2, int color, int opacity) {
+        p.setColor(color);
+        p.setAlpha(opacity);
+        c.drawRect(x, y, x2, y2, p);
+    }
 }
