@@ -13,7 +13,7 @@ public class Tower extends Unit{
     public Tower(Point p, int team) {
         super(p, team, 10f, 3f, Type.Tower);
         setWay(Configs.getDisplayWidth()/2, Configs.getDisplayHeight()/2);
-        shot=new LoopedTicker(0.2f, new Runnable() {
+        shot=new LoopedTicker(1f, new Runnable() {
             @Override
             public void run() {
                 if (getSquaredLength(aimX, aimY) < Bullet.getSquareDistance())

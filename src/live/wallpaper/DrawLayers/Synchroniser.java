@@ -3,23 +3,23 @@ package live.wallpaper.DrawLayers;
 public class Synchroniser {
 
     private boolean lock =false;
+    private String name;
 
-    public void lock() {
-        lock =true;
-        //Log.i("LOCK", "Locked: "+name);
+    public Synchroniser(String name) {
+        this.name=name;
     }
 
-    public void unlock() {
+    public synchronized void unlock() {
         lock =false;
-        //Log.i("LOCK", "Unlocked: "+name);
     }
 
-    public void waitForUnlock() {
+    public synchronized void waitForUnlockAndLock() {
         try {
             while (lock)
                 Thread.sleep(5);
         } catch (InterruptedException e) {
             System.exit(0);
         }
+        lock =true;
     }
 }

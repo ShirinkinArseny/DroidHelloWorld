@@ -91,7 +91,7 @@
             android:key="worldTowerSpawnProbability"
             android:inputType="number"
             android:title="@string/worldTowerSpawnProbability"
-            android:defaultValue="80"
+            android:defaultValue="40"
             />
     <EditTextPreference
             android:key="worldHorizontalBorders"

@@ -4,8 +4,6 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import live.wallpaper.Configs.Configs;
-
 public class WindLayer {
 
     private static Bitmap bg;
@@ -25,8 +23,8 @@ public class WindLayer {
     }
 
     public static void resize(int w, int h) {
-        sx = w / width + 1;
-        sy = h / height + 1;
+        sx = w;
+        sy = h;
     }
 
     public static void update(float dt) {
@@ -35,14 +33,10 @@ public class WindLayer {
     }
 
     public static void draw(Canvas canvas) {
-            float posX = dx - width;
-            for (int i = -1; i < sx; i++) {
-                float posY = - height;
-                for (int j = -1; j < sy; j++) {
-                    canvas.drawBitmap(bg, posX, posY, p);
-                    posY += height;
+            for (float i = dx - width; i < sx; i+=width) {
+                for (float j = 0; j < sy; j+=height) {
+                    canvas.drawBitmap(bg, i, j, p);
                 }
-                posX += width;
             }
     }
 }

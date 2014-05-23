@@ -15,13 +15,12 @@ public class SpawnsLayer{
     public static void init(Bitmap b) {
         Spawn.init(b);
         spawns=new LinkedList<>();
-        syncer=new Synchroniser();
+        syncer=new Synchroniser("SpawnsLayerSync");
     }
 
     public static void addSpawn(float x, float y) {
         if (Configs.getBooleanValue(Configs.spawnsDraw)) {
-            syncer.waitForUnlock();
-            syncer.lock();
+            syncer.waitForUnlockAndLock();
             spawns.add(new Spawn(x, y));
             syncer.unlock();
         }
@@ -29,8 +28,7 @@ public class SpawnsLayer{
 
     public static void update(float dt) {
         if (Configs.getBooleanValue(Configs.spawnsDraw)) {
-            syncer.waitForUnlock();
-            syncer.lock();
+            syncer.waitForUnlockAndLock();
         for (int i=0; i<spawns.size(); i++) {
             spawns.get(i).update(dt);
             if (spawns.get(i).getUseless())
@@ -42,8 +40,7 @@ public class SpawnsLayer{
 
     public static void draw(Canvas canvas) {
         if (Configs.getBooleanValue(Configs.spawnsDraw)) {
-            syncer.waitForUnlock();
-            syncer.lock();
+            syncer.waitForUnlockAndLock();
             for (Spawn f : spawns) {
                 f.draw(canvas);
             }

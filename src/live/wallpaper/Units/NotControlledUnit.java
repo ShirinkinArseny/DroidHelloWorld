@@ -1,7 +1,5 @@
 package live.wallpaper.Units;
 
-import android.graphics.Bitmap;
-import live.wallpaper.Geometry.Point;
 import live.wallpaper.Geometry.Rectangle;
 
 public class NotControlledUnit extends Rectangle {
@@ -9,60 +7,43 @@ public class NotControlledUnit extends Rectangle {
     protected float health;
     private float healthCoef;
     private float power;
-    private static Bitmap[][] menTexture;
     public enum Type {Man, Giant, Tower, Bullet}
     private Type type;
     private float speed;
     private static float speedCoef;
 
-    public static void init(Bitmap[][] menTextures, float speedCoef) {
-        menTexture=menTextures;
+    public static void init(float speedCoef) {
         NotControlledUnit.speedCoef=speedCoef;
     }
 
-    protected static Bitmap getBitmap(int team, Type type) {
+    public static int getTypeNumber(Type type) {
         switch (type) {
-            case Man:    return menTexture[team][0];
-            case Giant:  return menTexture[team][1];
-            case Tower:  return menTexture[team][2];
-            case Bullet: return menTexture[team][3];
+            case Man: return 0;
+            case Giant:return 1;
+            case Tower:return 2;
+            case Bullet:return 3;
         }
-        return null;
+        return -1;
     }
 
-    protected Bitmap getBitmap() {
+    public int getTypeNumber() {
         switch (type) {
-            case Man:    return menTexture[team][0];
-            case Giant:  return menTexture[team][1];
-            case Tower:  return menTexture[team][2];
-            case Bullet: return menTexture[team][3];
+            case Man: return 0;
+            case Giant:return 1;
+            case Tower:return 2;
+            case Bullet:return 3;
         }
-        return null;
+        return -1;
     }
 
-
-    protected Bitmap getShadow() {
-        switch (type) {
-            case Man:    return menTexture[team+2][0];
-            case Giant:  return menTexture[team+2][1];
-            case Tower:  return menTexture[team+2][2];
-            case Bullet: return menTexture[team+2][3];
-        }
-        return null;
-    }
-
-    public NotControlledUnit(float x, float y, int team, float healthCoef, float speed, Type type) {
-        super(x, y, getBitmap(team, type).getWidth(), getBitmap(team, type).getHeight());
+    public NotControlledUnit(float x, float y, float w, float h, int team, float healthCoef, float speed, Type type) {
+        super(x, y, w, h);
         this.team=team;
         this.health=1f;
         this.speed=speed*speedCoef;
         this.type=type;
         this.healthCoef=healthCoef;
         power=1/healthCoef;
-    }
-
-    public NotControlledUnit(Point p, int team, float healthCoef, float speed, Type type) {
-        this(p.getX(), p.getY(), team, healthCoef, speed, type);
     }
 
     public Type getType() {

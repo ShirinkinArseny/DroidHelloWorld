@@ -1,7 +1,6 @@
 package live.wallpaper.DrawLayers.BloodLayer;
 
 import android.graphics.Canvas;
-import android.util.Log;
 import live.wallpaper.Configs.Configs;
 import live.wallpaper.DrawLayers.Synchroniser;
 
@@ -14,13 +13,12 @@ public class BloodLayer{
 
     public static void init() {
         dust=new LinkedList<>();
-        syncer=new Synchroniser();
+        syncer=new Synchroniser("BloodLayerSync");
     }
 
     public static void add(float x, float y, float val, int type) {
         if (Configs.getBooleanValue(Configs.bloodDraw)) {
-        syncer.waitForUnlock();
-        syncer.lock();
+        syncer.waitForUnlockAndLock();
         dust.add(new Blood(x, y, val, type));
         syncer.unlock();
         }
@@ -28,8 +26,7 @@ public class BloodLayer{
 
     public static void update(float dt) {
         if (Configs.getBooleanValue(Configs.bloodDraw)) {
-            syncer.waitForUnlock();
-            syncer.lock();
+            syncer.waitForUnlockAndLock();
             for (int i = 0; i < dust.size(); i++) {
                 dust.get(i).update(dt);
                 if (dust.get(i).getUseless())
@@ -41,8 +38,7 @@ public class BloodLayer{
 
     public static void draw(Canvas canvas) {
         if (Configs.getBooleanValue(Configs.bloodDraw)) {
-            syncer.waitForUnlock();
-            syncer.lock();
+            syncer.waitForUnlockAndLock();
         for (Blood f: dust) {
             f.draw(canvas);
         }

@@ -1,5 +1,6 @@
 package live.wallpaper.AI;
 
+import android.util.Log;
 import live.wallpaper.Configs.Configs;
 import live.wallpaper.Units.ControlledUnit;
 import live.wallpaper.Units.NotControlledUnit;
@@ -10,9 +11,15 @@ import java.util.Random;
 public class SimpleAI implements AI{
 
     private Random rnd;
+    private LinkedList<NotControlledUnit> theirGiants = new LinkedList<>();
+    private LinkedList<NotControlledUnit> theirTowers = new LinkedList<>();
+    private LinkedList<NotControlledUnit> theirMen = new LinkedList<>();
 
     public SimpleAI() {
         rnd=new Random();
+        theirGiants = new LinkedList<>();
+        theirTowers = new LinkedList<>();
+        theirMen = new LinkedList<>();
     }
 
     private float getDeltaPos() {
@@ -23,9 +30,10 @@ public class SimpleAI implements AI{
                       LinkedList<NotControlledUnit> enemies){
 
             if (enemies.size()>0) {
-                LinkedList<NotControlledUnit> theirGiants = new LinkedList<>();
-                LinkedList<NotControlledUnit> theirTowers = new LinkedList<>();
-                LinkedList<NotControlledUnit> theirMen = new LinkedList<>();
+
+                theirGiants.clear();
+                theirTowers.clear();
+                theirMen.clear();
 
                 for (NotControlledUnit u : enemies) {
                     if (u.getType() == NotControlledUnit.Type.Giant)
@@ -50,24 +58,26 @@ public class SimpleAI implements AI{
                     float lastHP=theirGiants.get(0).getHealth();
                     x = theirGiants.get(0).getX();
                     y = theirGiants.get(0).getY();
-                    for (int i=1; i<theirGiants.size(); i++) {
-                        if (theirGiants.get(i).getHealth()<lastHP) {
-                            lastHP=theirGiants.get(i).getHealth();
-                            x = theirGiants.get(i).getX();
-                            y = theirGiants.get(i).getY();
+
+                    for (NotControlledUnit n: theirGiants) {
+                        if (n.getHealth()<lastHP) {
+                            lastHP=n.getHealth();
+                            x = n.getX();
+                            y = n.getY();
                         }
                     }
+
                 } else if (theirTowers.size() > 0 && (yours.size()>Configs.getIntValue(Configs.aiOurUnitsCountToAttack)
                         || yours.size()>Configs.getIntValue(Configs.aiOurUnitsWithGiantCountToAttack) && hasOurGiant)
                         && theirMen.size()<Configs.getIntValue(Configs.aiTheirUnitsCountToNotAttack)) {
                     x = theirTowers.get(0).getX();
                     y = theirTowers.get(0).getY();
                     float lastHP=theirTowers.get(0).getHealth();
-                    for (int i=1; i<theirTowers.size(); i++) {
-                        if (theirTowers.get(i).getHealth()<lastHP) {
-                            lastHP=theirTowers.get(i).getHealth();
-                            x = theirTowers.get(i).getX();
-                            y = theirTowers.get(i).getY();
+                    for (NotControlledUnit t: theirTowers) {
+                        if (t.getHealth()<lastHP) {
+                            lastHP=t.getHealth();
+                            x = t.getX();
+                            y = t.getY();
                         }
                     }
                 } else if (theirMen.size()>0) {
@@ -86,24 +96,15 @@ public class SimpleAI implements AI{
                         else
                         c.setWay(x, y);
                     } else {
-                        boolean isFirst = true;
-                        float smallest = 0;
-                        NotControlledUnit nearest = null;
-
+                        NotControlledUnit nearest=null;
                         for (NotControlledUnit n : enemies) {
-                            if (isFirst) {
-                                nearest = n;
-                                smallest = n.getSquaredLength(c);
-                                isFirst = false;
-                            } else {
-                                float l = n.getSquaredLength(c);
-                                if (l < smallest) {
-                                    smallest = l;
-                                    nearest = n;
-                                }
+                            if (n.getType()!= NotControlledUnit.Type.Tower)
+                            {
+                                nearest=n;
+                                break;
                             }
                         }
-                        //nearest CAN'T be null, cuz enemies.size>0 and nearest enemy become nearest
+                        if (nearest!=null)
                         c.setWay(nearest.getX(), nearest.getY());
                     }
                 }

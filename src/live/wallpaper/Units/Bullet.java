@@ -6,7 +6,7 @@ public class Bullet extends Unit{
 
     private float dx;
     private float dy;
-    private static float speed=400f;
+    private static float speed=300f;
     private static float dHealth=-1f;
     private static float distance=Math.abs(speed/dHealth);
     private static float squareDistance=distance*distance;
@@ -22,7 +22,7 @@ public class Bullet extends Unit{
     }
 
     public Bullet(float x, float y, double pX, float pY, int team) {
-        super(x, y, team, 1.2f, speed, Type.Bullet);
+        super(x, y, team, 1.5f, speed, Type.Bullet);
         double length=Math.sqrt((pX-x)*(pX-x)+(pY-y)*(pY-y))/getSpeed();
         dx= (float) ((pX-x)/length);
         dy= (float) ((pY-y)/length);

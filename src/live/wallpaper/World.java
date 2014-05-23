@@ -11,7 +11,6 @@ import live.wallpaper.DrawLayers.BloodLayer.Blood;
 import live.wallpaper.DrawLayers.BloodLayer.BloodLayer;
 import live.wallpaper.DrawLayers.MessagesLayer.MessagesLayer;
 import live.wallpaper.DrawLayers.SpawnLayer.SpawnsLayer;
-import live.wallpaper.TimeFunctions.LoopedTicker;
 import live.wallpaper.Units.*;
 
 import java.util.*;
@@ -22,8 +21,8 @@ public class World {
     private long lastTime;
     private SurfaceHolder holder;
     private static Resources res;
-
     private static float pictureSizeCoef=1f;
+
     private static Bitmap getScaledResource(Resources res, int id, int size) {
         return
         Bitmap.createScaledBitmap(
@@ -45,7 +44,7 @@ public class World {
         menTexture[0][0] = getScaledResource(res, R.drawable.red, 32);
         menTexture[0][1] = getScaledResource(res, R.drawable.red, 96);
         menTexture[0][2] = getScaledResource(res, R.drawable.redtower, 32);
-        menTexture[0][3] = getScaledResource(res, R.drawable.bullet, 32);
+        menTexture[0][3] = getScaledResource(res, R.drawable.bullet, 28);
         menTexture[1][0] = getScaledResource(res, R.drawable.blue, 32);
         menTexture[1][1] = getScaledResource(res, R.drawable.blue, 96);
         menTexture[1][2] = getScaledResource(res, R.drawable.bluetower, 32);
@@ -75,7 +74,6 @@ public class World {
         MessagesLayer.reInit();
         TerritoryLayer.reInit();
         DisplayMetrics metrics = res.getDisplayMetrics();
-        UnitLayer.reInit(metrics.widthPixels, metrics.heightPixels);
         TimerLayer.reInit(metrics.widthPixels, metrics.heightPixels);
     }
 
@@ -94,38 +92,23 @@ public class World {
 
     public void run() {
         lastTime = System.currentTimeMillis();
-        final LoopedTicker spawnTimer = new LoopedTicker(0.2f, new Runnable() {
-            @Override
-            public void run() {
-                UnitLayer.autoSpawn();
-            }
-        });
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
                 if (active) {
-                    try {
                         long cTime = System.currentTimeMillis();
                         float delta = (cTime - lastTime) / 1000f;
                         lastTime = cTime;
                         update(delta);
                         Canvas c = holder.lockCanvas();
-                        if (c != null) {
-                            draw(c);
-                            holder.unlockCanvasAndPost(c);
-                            spawnTimer.tick(delta);
-                        }
-                    } catch (IllegalArgumentException e) {
-                        //Log.i("run", e.getMessage());
-                    }
+                        draw(c);
+                        holder.unlockCanvasAndPost(c);
                 }
             }
-
         }, 0, 10);
     }
 
     public void setSurface(SurfaceHolder s, int width, int height) {
-        synchronized (this) {
             holder = s;
             UnitLayer.resize(width, height);
             TimerLayer.resize(width, height);
@@ -133,7 +116,6 @@ public class World {
             Configs.setDisplayHeight(height);
             Configs.setDisplayWidth(width);
             TerritoryLayer.resize(width, height);
-        }
     }
 
     private void update(float dt) {

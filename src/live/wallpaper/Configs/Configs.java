@@ -85,6 +85,7 @@ public class Configs {
         fields.add(new BooleanField("worldBoardersDraw"));
         fields.add(new FloatField("bloodInterval"));
         settingsListener.onSharedPreferenceChanged(settings, null);
+        Log.i("Configs", "Loaded");
     }
 
     private static Object getValue(int num) {

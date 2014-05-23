@@ -24,34 +24,26 @@ public class UnitLayer{
             new LinkedList[]{new LinkedList(), new LinkedList()}; //Lists of units to send in AI
     private static LinkedList<Unit>[] dividedUnits=
             new LinkedList[]{new LinkedList(), new LinkedList(), new LinkedList(), new LinkedList()}; //Lists of units to send in AI
-    private static LoopedTicker reWayAndReIntersectTime;
     private static int[] kills=new int[]{0, 0};
     private static Synchroniser syncer;
+    private static LoopedTicker updateSpawnAndIntersection;
 
     public static int[] getTeamSizes() {
         return kills;
     }
 
     public static void init() {
-        syncer=new Synchroniser();
-        reWayAndReIntersectTime=new LoopedTicker(0.2f, new Runnable() {
+        syncer=new Synchroniser("UnitLayerSync");
+        updateSpawnAndIntersection=new LoopedTicker(0.2f, new Runnable() {
             @Override
             public void run() {
-                new Thread(new Runnable() {
-                    @Override
-                    public void run() {
-                        syncer.waitForUnlock();
-                        syncer.lock();
-                        updateAI();
-                        updateIntersections();
-                        syncer.unlock();
-                    }
-                }).start();
+                syncer.waitForUnlockAndLock();
+                updateIntersections();
+                updateAI();
+                autoSpawn();
+                syncer.unlock();
             }
         });
-    }
-
-    public static void reInit(int width, int height) {
     }
 
     public static void resize(int width, int height) {
@@ -64,8 +56,7 @@ public class UnitLayer{
             float hNew = height - Configs.getIntValue(Configs.worldVerticalTopBorders)
                     - Configs.getIntValue(Configs.worldVerticalBottomBorders);
 
-        syncer.waitForUnlock();
-        syncer.lock();
+        syncer.waitForUnlockAndLock();
             for (int i = 0; i < 4; i++)
                 for (Unit u : dividedUnits[i]) {
 
@@ -138,15 +129,12 @@ public class UnitLayer{
             dividedUnits[m.getTeam()].add(m);
     }
 
-    public static void spawn(Unit m) {
-        syncer.waitForUnlock();
-        syncer.lock();
+    private static void spawn(Unit m) {
         SpawnsLayer.addSpawn(m.getX(), m.getY());
         if (m.getType()== NotControlledUnit.Type.Bullet)
             dividedUnits[m.getTeam()+2].add(m);
         else
             dividedUnits[m.getTeam()].add(m);
-        syncer.unlock();
     }
 
 
@@ -173,17 +161,16 @@ public class UnitLayer{
     }
 
     public static void killEverybody() {
-        syncer.waitForUnlock();
-        syncer.lock();
+        syncer.waitForUnlockAndLock();
         for (int i=0; i<2; i++) {
             for (Unit u: dividedUnits[i])
                 u.changeHealth(-10f);
         }
         for (int i=0; i<2; i++)
         updateDeath(dividedUnits[i]);
+        syncer.unlock();
         kills[0]=0;
         kills[1]=0;
-        syncer.unlock();
     }
 
     private static void updateDeath(LinkedList<Unit> units) {
@@ -220,7 +207,7 @@ public class UnitLayer{
         MessagesLayer.showMessage(p, text, color);
     }
 
-    public static void autoSpawn() {
+    private static void autoSpawn() {
         for (int team = 0; team < 2; team++) {
             Point p = getSpawnPoint(team);
             boolean gigant = 0 == rnd.nextInt(Configs.getIntValue(Configs.worldGianSpawnProbability));
@@ -268,21 +255,19 @@ public class UnitLayer{
     }
 
     public static void update(float dt) {
-        syncer.waitForUnlock();
-        syncer.lock();
+        syncer.waitForUnlockAndLock();
         doRegeneration(dt);
         for (int i=0; i<4; i++)
             updateDeath(dividedUnits[i]);
         moveUnits(dt);
         syncer.unlock();
-        reWayAndReIntersectTime.tick(dt);
+        updateSpawnAndIntersection.tick(dt);
     }
 
 
     public static void draw(Canvas canvas) {
-        syncer.waitForUnlock();
-        syncer.lock();
-        for (int i=0; i<4; i++)
+        syncer.waitForUnlockAndLock();
+        for (int i=0; i<2; i++)
             for (Unit m : dividedUnits[i])
                 m.drawShadow(canvas);
         for (int i=0; i<4; i++)

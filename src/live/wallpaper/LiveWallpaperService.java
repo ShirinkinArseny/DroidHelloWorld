@@ -3,7 +3,7 @@ package live.wallpaper;
 import android.content.Context;
 import android.preference.PreferenceManager;
 import android.service.wallpaper.WallpaperService;
-import android.util.Log;
+import android.util.DisplayMetrics;
 import android.view.SurfaceHolder;
 
 public class LiveWallpaperService extends WallpaperService {
@@ -31,7 +31,7 @@ public class LiveWallpaperService extends WallpaperService {
         private World world;
 
         public RBEngine(Context context) {
-            world = new World(getApplicationContext());
+            world = new World(context);
         }
 
         @Override
@@ -55,6 +55,8 @@ public class LiveWallpaperService extends WallpaperService {
         @Override
         public void onSurfaceCreated(SurfaceHolder holder) {
             super.onSurfaceCreated(holder);
+            DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
+            world.setSurface(holder, metrics.widthPixels, metrics.heightPixels);
             world.run();
         }
 

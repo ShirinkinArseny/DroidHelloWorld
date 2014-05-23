@@ -3,12 +3,10 @@ package live.wallpaper.DrawLayers.MessagesLayer;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
-import android.util.Log;
 import live.wallpaper.Configs.Configs;
 import live.wallpaper.DrawLayers.Synchroniser;
 import live.wallpaper.Geometry.Point;
 
-import java.util.Arrays;
 import java.util.LinkedList;
 
 public class MessagesLayer{
@@ -31,19 +29,17 @@ public class MessagesLayer{
         pRed.setColor(Color.rgb(Configs.getRedFontColor()[0], Configs.getRedFontColor()[1], Configs.getRedFontColor()[2]));
         pRed.setTextSize(20f);
 
-        syncer=new Synchroniser();
+        syncer=new Synchroniser("MessagesLayerSync");
     }
 
     public static void reInit() {
-        Log.i("ARRAY", Arrays.toString(Configs.getBlueFontColor()));
         pBlue.setColor(Color.rgb(Configs.getBlueFontColor()[0], Configs.getBlueFontColor()[1], Configs.getBlueFontColor()[2]));
         pRed.setColor(Color.rgb(Configs.getRedFontColor()[0], Configs.getRedFontColor()[1], Configs.getRedFontColor()[2]));
     }
 
     public static void showMessage(float x, float y, String text, int color) {
         if (Configs.getBooleanValue(Configs.messageDraw)) {
-        syncer.waitForUnlock();
-        syncer.lock();
+        syncer.waitForUnlockAndLock();
             messagesAddBuffer.add(
                     new Message(text, x, y, color == 0 ? pRed : pBlue)
             );
@@ -57,8 +53,7 @@ public class MessagesLayer{
 
     public static void update(float dt) {
         if (Configs.getBooleanValue(Configs.messageDraw)) {
-            syncer.waitForUnlock();
-            syncer.lock();
+            syncer.waitForUnlockAndLock();
             for (int i = 0; i < messages.size(); i++) {
                 messages.get(i).update(dt);
                 if (messages.get(i).getUseless())
@@ -74,8 +69,7 @@ public class MessagesLayer{
 
     public static void draw(Canvas canvas) {
         if (Configs.getBooleanValue(Configs.messageDraw)) {
-            syncer.waitForUnlock();
-            syncer.lock();
+            syncer.waitForUnlockAndLock();
         for (Message f : messages)
             f.draw(canvas);
         syncer.unlock();

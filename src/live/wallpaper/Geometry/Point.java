@@ -5,16 +5,12 @@ public class Point {
     private float x;
     private float y;
 
-    public Float getX() {
+    public float getX() {
         return x;
     }
 
-    public Float getY() {
+    public float getY() {
         return y;
-    }
-
-    public float getSquaredLength(Point p) {
-        return getSquaredLength(p.x, p.y);
     }
 
     public float getSquaredLength(float x2, float y2) {
