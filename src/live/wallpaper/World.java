@@ -11,6 +11,8 @@ import live.wallpaper.DrawLayers.BloodLayer.Blood;
 import live.wallpaper.DrawLayers.BloodLayer.BloodLayer;
 import live.wallpaper.DrawLayers.MessagesLayer.MessagesLayer;
 import live.wallpaper.DrawLayers.SpawnLayer.SpawnsLayer;
+import live.wallpaper.OpenGLIntegration.CanvasEngine;
+import live.wallpaper.OpenGLIntegration.Graphic;
 import live.wallpaper.Units.*;
 
 import java.util.*;
@@ -100,15 +102,16 @@ public class World {
                         float delta = (cTime - lastTime) / 1000f;
                         lastTime = cTime;
                         update(delta);
-                        Canvas c = holder.lockCanvas();
-                        draw(c);
-                        holder.unlockCanvasAndPost(c);
+                        Graphic.startDraw();
+                        draw();
+                        Graphic.finishDraw();
                 }
             }
         }, 0, 10);
     }
 
     public void setSurface(SurfaceHolder s, int width, int height) {
+            CanvasEngine.setHolder(s);
             holder = s;
             UnitLayer.resize(width, height);
             TimerLayer.resize(width, height);
@@ -128,14 +131,14 @@ public class World {
         WindLayer.update(dt);
     }
 
-    private void draw(Canvas canvas) {
-        TerritoryLayer.draw(canvas);
-        WindLayer.draw(canvas);
-        TimerLayer.draw(canvas);
-        BloodLayer.draw(canvas);
-        SpawnsLayer.draw(canvas);
-        UnitLayer.draw(canvas);
-        MessagesLayer.draw(canvas);
+    private void draw() {
+        TerritoryLayer.draw();
+        WindLayer.draw();
+        TimerLayer.draw();
+        BloodLayer.draw();
+        SpawnsLayer.draw();
+        UnitLayer.draw();
+        MessagesLayer.draw();
     }
 }
         

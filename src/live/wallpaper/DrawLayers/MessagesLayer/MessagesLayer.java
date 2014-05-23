@@ -1,6 +1,5 @@
 package live.wallpaper.DrawLayers.MessagesLayer;
 
-import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import live.wallpaper.Configs.Configs;
@@ -13,28 +12,22 @@ public class MessagesLayer{
 
     private static final LinkedList<Message> messages=new LinkedList<>();//coordinates of messages
     private static final LinkedList<Message> messagesAddBuffer=new LinkedList<>();//coordinates of messages
-    private static Paint pBlue; //Blue paint
-    private static Paint pRed; //Red paint
+    private static int pBlue; //Blue paint
+    private static int pRed; //Red paint
     private static Synchroniser syncer;
 
     public static void init() {
 
-        pBlue=new Paint();
-        pBlue.setAntiAlias(true);
-        pBlue.setColor(Color.rgb(Configs.getBlueFontColor()[0], Configs.getBlueFontColor()[1], Configs.getBlueFontColor()[2]));
-        pBlue.setTextSize(20f);
+        pBlue=Color.rgb(Configs.getBlueFontColor()[0], Configs.getBlueFontColor()[1], Configs.getBlueFontColor()[2]);
 
-        pRed=new Paint();
-        pRed.setAntiAlias(true);
-        pRed.setColor(Color.rgb(Configs.getRedFontColor()[0], Configs.getRedFontColor()[1], Configs.getRedFontColor()[2]));
-        pRed.setTextSize(20f);
+        pRed=Color.rgb(Configs.getRedFontColor()[0], Configs.getRedFontColor()[1], Configs.getRedFontColor()[2]);
 
         syncer=new Synchroniser("MessagesLayerSync");
     }
 
     public static void reInit() {
-        pBlue.setColor(Color.rgb(Configs.getBlueFontColor()[0], Configs.getBlueFontColor()[1], Configs.getBlueFontColor()[2]));
-        pRed.setColor(Color.rgb(Configs.getRedFontColor()[0], Configs.getRedFontColor()[1], Configs.getRedFontColor()[2]));
+        pBlue=Color.rgb(Configs.getBlueFontColor()[0], Configs.getBlueFontColor()[1], Configs.getBlueFontColor()[2]);
+        pRed=Color.rgb(Configs.getRedFontColor()[0], Configs.getRedFontColor()[1], Configs.getRedFontColor()[2]);
     }
 
     public static void showMessage(float x, float y, String text, int color) {
@@ -67,11 +60,11 @@ public class MessagesLayer{
         }
     }
 
-    public static void draw(Canvas canvas) {
+    public static void draw() {
         if (Configs.getBooleanValue(Configs.messageDraw)) {
             syncer.waitForUnlockAndLock();
         for (Message f : messages)
-            f.draw(canvas);
+            f.draw();
         syncer.unlock();
         }
     }

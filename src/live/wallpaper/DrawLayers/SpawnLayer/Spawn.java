@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import live.wallpaper.Configs.Configs;
+import live.wallpaper.OpenGLIntegration.Graphic;
 import live.wallpaper.TimeFunctions.LinearTimeFunction;
 
 public class Spawn {
@@ -13,12 +14,9 @@ public class Spawn {
     private LinearTimeFunction timing;
     private boolean noNeedMore=false;
     private static Bitmap spawnTexture;//spawn texture
-    private static Paint p;
 
     public static void init(Bitmap pic) {
         spawnTexture=pic;
-        p=new Paint();
-        p.setColor(Color.WHITE);
     }
 
     public boolean getUseless() {
@@ -50,9 +48,8 @@ public class Spawn {
         );
     }
 
-    public void draw(Canvas canvas) {
-        p.setAlpha((int) (timing.getValue()));
-        canvas.drawBitmap(spawnTexture, x, y, p);
+    public void draw() {
+        Graphic.drawBitmap(spawnTexture, x, y, (int) (timing.getValue()));
     }
 
 }

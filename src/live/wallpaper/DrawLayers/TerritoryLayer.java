@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import live.wallpaper.Configs.Configs;
+import live.wallpaper.OpenGLIntegration.Graphic;
 
 public class TerritoryLayer{
 
@@ -35,12 +36,12 @@ public class TerritoryLayer{
 
     }
 
-    public static void draw(Canvas canvas) {
-        canvas.drawBitmap(bg, 0, 0, p);
-        if (Configs.getBooleanValue(Configs.worldBoardersDraw))
+    public static void draw() {
+        Graphic.drawBitmap(bg, 0, 0);
+        /*if (Configs.getBooleanValue(Configs.worldBoardersDraw))
         canvas.drawRect(Configs.getIntValue(Configs.worldHorizontalBorders),
                 Configs.getIntValue(Configs.worldVerticalTopBorders),
                 Configs.getDisplayWidth()-Configs.getIntValue(Configs.worldHorizontalBorders),
-                Configs.getDisplayHeight()-Configs.getIntValue(Configs.worldVerticalBottomBorders), border);
+                Configs.getDisplayHeight()-Configs.getIntValue(Configs.worldVerticalBottomBorders), border);*/
     }
 }
