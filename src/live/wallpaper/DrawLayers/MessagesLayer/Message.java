@@ -41,7 +41,7 @@ public class Message {
     }
 
     public void draw() {
-            Graphic.drawText(x, coordinates.getValue(), 10f, color, (int) alpha.getValue(), text);
+            Graphic.drawText(x, coordinates.getValue(), 20f, color, (int) alpha.getValue(), text);
     }
 
 }

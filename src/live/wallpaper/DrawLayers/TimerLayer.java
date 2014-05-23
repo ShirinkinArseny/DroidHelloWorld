@@ -65,10 +65,12 @@ public class TimerLayer {
 
     public static void draw() {
         if (Configs.getBooleanValue(Configs.timerDraw)) {
-            Graphic.drawText(width4, height2, bigSize, pBig, getTime());
+            Graphic.drawText(width4, height2, bigSize, pBig, Configs.getGrayFontColor()[3], getTime());
             int[] kills = UnitLayer.getTeamSizes();
-            Graphic.drawText(width2 - 100, height2_3, smallSize, pSmallRed, String.valueOf(kills[1]));
-            Graphic.drawText(width2, height2_3, smallSize, pSmallBlue, String.valueOf(kills[0]));
+            Graphic.drawText(width2 - 100, height2_3, smallSize, pSmallRed,
+                    Configs.getRedFontColor()[3], String.valueOf(kills[1]));
+            Graphic.drawText(width2, height2_3, smallSize, pSmallBlue,
+                    Configs.getBlueFontColor()[3], String.valueOf(kills[0]));
         }
     }
 }
