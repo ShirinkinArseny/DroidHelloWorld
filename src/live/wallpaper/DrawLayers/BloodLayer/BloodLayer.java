@@ -36,11 +36,11 @@ public class BloodLayer{
         }
     }
 
-    public static void draw(Canvas canvas) {
+    public static void draw() {
         if (Configs.getBooleanValue(Configs.bloodDraw)) {
             syncer.waitForUnlockAndLock();
         for (Blood f: dust) {
-            f.draw(canvas);
+            f.draw();
         }
             syncer.unlock();
         }

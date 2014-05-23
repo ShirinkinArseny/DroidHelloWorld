@@ -265,14 +265,14 @@ public class UnitLayer{
     }
 
 
-    public static void draw(Canvas canvas) {
+    public static void draw() {
         syncer.waitForUnlockAndLock();
         for (int i=0; i<2; i++)
             for (Unit m : dividedUnits[i])
-                m.drawShadow(canvas);
+                m.drawShadow();
         for (int i=0; i<4; i++)
             for (Unit m : dividedUnits[i])
-                m.draw(canvas);
+                m.draw();
         syncer.unlock();
     }
 }

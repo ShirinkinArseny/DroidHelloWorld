@@ -4,10 +4,11 @@ import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
+import live.wallpaper.OpenGLIntegration.Graphic;
+
 public class WindLayer {
 
     private static Bitmap bg;
-    private static Paint p;
     private static float dx;
     private static int width;
     private static int height;
@@ -17,8 +18,6 @@ public class WindLayer {
         bg = b;
         width = b.getWidth();
         height = b.getHeight();
-        p = new Paint();
-        p.setColor(Color.WHITE);
         dx = 0;
     }
 
@@ -32,10 +31,10 @@ public class WindLayer {
             if (dx > width) dx -= width;
     }
 
-    public static void draw(Canvas canvas) {
+    public static void draw() {
             for (float i = dx - width; i < sx; i+=width) {
                 for (float j = 0; j < sy; j+=height) {
-                    canvas.drawBitmap(bg, i, j, p);
+                    Graphic.drawBitmap(bg, i, j);
                 }
             }
     }

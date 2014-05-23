@@ -5,6 +5,7 @@ import android.graphics.Canvas;
 import android.graphics.Color;
 import android.graphics.Paint;
 import live.wallpaper.Configs.Configs;
+import live.wallpaper.OpenGLIntegration.Graphic;
 import live.wallpaper.TimeFunctions.OneTimeTicker;
 
 public class Blood {
@@ -14,12 +15,9 @@ public class Blood {
     private OneTimeTicker timing;
     private boolean noNeedMore=false;
     private static Bitmap dustTexture[];//blood texture
-    private static Paint p;
 
     public static void init(Bitmap[] pics) {
         dustTexture=pics;
-        p=new Paint();
-        p.setColor(Color.WHITE);
     }
 
     public boolean getUseless() {
@@ -50,7 +48,7 @@ public class Blood {
         });
     }
 
-    public void draw(Canvas canvas) {
-        canvas.drawBitmap(dustTexture[type], x, y, p);
+    public void draw() {
+        Graphic.drawBitmap(dustTexture[type], x, y);
     }
 }

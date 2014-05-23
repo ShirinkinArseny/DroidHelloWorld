@@ -37,7 +37,7 @@ public class Bullet extends Unit{
         changeHealth(dHealth*dt);
     }
 
-    public void draw(Canvas c) {
-        drawBase(c);
+    public void draw() {
+        drawBase();
     }
 }

@@ -1,31 +1,22 @@
 package live.wallpaper.DrawLayers;
 
-import android.graphics.Canvas;
 import android.graphics.Color;
-import android.graphics.Paint;
 import live.wallpaper.Configs.Configs;
+import live.wallpaper.OpenGLIntegration.Graphic;
 import live.wallpaper.TimeFunctions.LoopedTicker;
 
 public class TimerLayer {
 
     private static LoopedTicker round;
-    private static Paint pBig;
-    private static Paint pSmallRed, pSmallBlue;
+    private static int pBig;
+    private static int pSmallRed, pSmallBlue;
     private static int height2;
     private static int height2_3;
     private static int width4;
     private static int width2;
+    private static float bigSize, smallSize;
 
     public static void init() {
-        pBig=new Paint();
-        pBig.setAntiAlias(true);
-        pBig.setTextSize(300f);
-        pSmallRed=new Paint();
-        pSmallRed.setAntiAlias(true);
-        pSmallRed.setTextSize(20f);
-        pSmallBlue=new Paint();
-        pSmallBlue.setAntiAlias(true);
-        pSmallBlue.setTextSize(20f);
     }
 
     public static void reInit(int w, int h) {
@@ -40,19 +31,14 @@ public class TimerLayer {
         width4 =w/4;
         width2=w/2;
 
-        pBig.setTextSize(w/4);
-        pBig.setColor(Color.rgb(Configs.getGrayFontColor()[0], Configs.getGrayFontColor()[1],
-                Configs.getGrayFontColor()[2]));
-        pBig.setAlpha(Configs.getGrayFontColor()[3]);
+        pBig=Color.rgb(Configs.getGrayFontColor()[0], Configs.getGrayFontColor()[1],
+                Configs.getGrayFontColor()[2]);
 
-        pSmallRed.setTextSize(w/20);
-        pSmallBlue.setTextSize(w/20);
-        pSmallRed.setColor(Color.rgb(Configs.getRedFontColor()[0], Configs.getRedFontColor()[1],
-                Configs.getRedFontColor()[2]));
-        pSmallRed.setAlpha(Configs.getRedFontColor()[3]);
-        pSmallBlue.setColor(Color.rgb(Configs.getBlueFontColor()[0], Configs.getBlueFontColor()[1],
-                Configs.getBlueFontColor()[2]));
-        pSmallBlue.setAlpha(Configs.getBlueFontColor()[3]);
+        pSmallRed=Color.rgb(Configs.getRedFontColor()[0], Configs.getRedFontColor()[1],
+                Configs.getRedFontColor()[2]);
+
+        pSmallBlue=Color.rgb(Configs.getBlueFontColor()[0], Configs.getBlueFontColor()[1],
+                Configs.getBlueFontColor()[2]);
     }
 
     public static void resize(int w, int h) {
@@ -60,9 +46,8 @@ public class TimerLayer {
         height2_3=h*2/3;
         width4 =w/4;
         width2=w/2;
-        pBig.setTextSize(w/7);
-        pSmallRed.setTextSize(w/20);
-        pSmallBlue.setTextSize(w/20);
+        bigSize=w/7;
+        smallSize=w/20;
     }
 
     public static void update(float dt) {
@@ -78,12 +63,12 @@ public class TimerLayer {
         return minutes+":"+(seconds>9?seconds:"0"+seconds)+":"+ms;
     }
 
-    public static void draw(Canvas canvas) {
+    public static void draw() {
         if (Configs.getBooleanValue(Configs.timerDraw)) {
-            canvas.drawText(getTime(), width4, height2, pBig);
+            Graphic.drawText(width4, height2, bigSize, pBig, getTime());
             int[] kills = UnitLayer.getTeamSizes();
-            canvas.drawText(String.valueOf(kills[1]), width2 - 100, height2_3, pSmallRed);
-            canvas.drawText(String.valueOf(kills[0]), width2, height2_3, pSmallBlue);
+            Graphic.drawText(width2 - 100, height2_3, smallSize, pSmallRed, String.valueOf(kills[1]));
+            Graphic.drawText(width2, height2_3, smallSize, pSmallBlue, String.valueOf(kills[0]));
         }
     }
 }

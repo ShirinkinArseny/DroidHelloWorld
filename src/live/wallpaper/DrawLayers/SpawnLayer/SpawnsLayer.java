@@ -38,11 +38,11 @@ public class SpawnsLayer{
         }
     }
 
-    public static void draw(Canvas canvas) {
+    public static void draw() {
         if (Configs.getBooleanValue(Configs.spawnsDraw)) {
             syncer.waitForUnlockAndLock();
             for (Spawn f : spawns) {
-                f.draw(canvas);
+                f.draw();
             }
             syncer.unlock();
         }

@@ -7,11 +7,11 @@ import android.graphics.Paint;
 import android.util.Log;
 import live.wallpaper.DrawLayers.MessagesLayer.MessagesLayer;
 import live.wallpaper.Geometry.Point;
+import live.wallpaper.OpenGLIntegration.Graphic;
 import live.wallpaper.TimeFunctions.FlappyTimeFunction;
 
 public class Unit extends ControlledUnit {
 
-    private static Paint p;
     private FlappyTimeFunction kills;
     private static Bitmap[][] menTexture;
     private static Point[] sizes;
@@ -30,8 +30,6 @@ public class Unit extends ControlledUnit {
         sizes=new Point[menTexture.length];
         for (int i=0; i<4; i++)
             sizes[i]=new Point(menTexture[0][i].getWidth(), menTexture[0][i].getHeight());
-        p = new Paint();
-        p.setAntiAlias(true);
     }
 
     public Unit(float x, float y, int team, float health, float speed, Type t) {
@@ -69,23 +67,23 @@ public class Unit extends ControlledUnit {
         kills.tick(dt);
     }
 
-    public void drawShadow(Canvas c) {
-        c.drawBitmap(getShadow(), getX() - getWidth(), getY() - getHeight(), p);
+    public void drawShadow() {
+        Graphic.drawBitmap(getShadow(), getX() - getWidth(), getY() - getHeight());
     }
 
-    protected void drawBase(Canvas c) {
-        c.drawBitmap(getBitmap(), getX() - getHalfWidth(), getY() - getHalfHeight(), p);
+    protected void drawBase() {
+        Graphic.drawBitmap(getBitmap(), getX() - getHalfWidth(), getY() - getHalfHeight());
     }
 
-    protected void drawHealth(Canvas c) {
-        float health=Math.max(0, this.health);
+    protected void drawHealth() {
+        /*float health=Math.max(0, this.health);
         p.setColor(Color.rgb((int) (255 * (1 - health)), (int) (192 * health), 0));
         c.drawRect(getX() - getHalfWidth(), getY() - 2 - getHalfHeight(),
-                getX() + getWidth() * health - getHalfWidth(), getY() - getHalfHeight(), p);
+                getX() + getWidth() * health - getHalfWidth(), getY() - getHalfHeight(), p);*/
     }
 
-    public void draw(Canvas c) {
-        drawBase(c);
-        drawHealth(c);
+    public void draw() {
+        drawBase();
+        drawHealth();
     }
 }
