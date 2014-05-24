@@ -1,9 +1,17 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
         xmlns:android="http://schemas.android.com/apk/res/android">
+    <live.wallpaper.Configs.Preference.IntegerValuePreference
+            android:key="first"
+            android:title="LAL"
+            android:defaultValue="5"
+            min="1"
+            max="10"
+            />
     <EditTextPreference
             android:key="aiDeltaTarget"
             android:inputType="number"
+            android:numeric="integer"
             android:title="@string/aiDeltaTarget"
             android:defaultValue="100"
             />
@@ -28,6 +36,7 @@
     <EditTextPreference
             android:key="bloodVisibleTime"
             android:inputType="number"
+            android:numeric=""
             android:title="@string/bloodVisibleTime"
             android:defaultValue="0.1f"
             />
