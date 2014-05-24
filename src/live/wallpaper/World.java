@@ -21,7 +21,6 @@ public class World {
 
     private boolean active = true;//is working
     private long lastTime;
-    private SurfaceHolder holder;
     private static Resources res;
     private static float pictureSizeCoef=1f;
 
@@ -92,32 +91,39 @@ public class World {
         active = false;
     }
 
+    public void updateAndDraw() {
+        if (active) {
+            long cTime = System.currentTimeMillis();
+            float delta = (cTime - lastTime) / 1000f;
+            lastTime = cTime;
+            update(delta);
+            Graphic.startDraw();
+            draw();
+            Graphic.finishDraw();
+        }
+    }
+
     public void run() {
         lastTime = System.currentTimeMillis();
         new Timer().schedule(new TimerTask() {
             @Override
             public void run() {
-                if (active) {
-                        long cTime = System.currentTimeMillis();
-                        float delta = (cTime - lastTime) / 1000f;
-                        lastTime = cTime;
-                        update(delta);
-                        Graphic.startDraw();
-                        draw();
-                        Graphic.finishDraw();
-                }
+                updateAndDraw();
             }
         }, 0, 10);
     }
 
     public void setSurface(SurfaceHolder s, int width, int height) {
-            CanvasEngine.setHolder(s);
-            holder = s;
-            UnitLayer.resize(width, height);
-            TimerLayer.resize(width, height);
-            WindLayer.resize(width, height);
-            Configs.setDisplayHeight(height);
-            Configs.setDisplayWidth(width);
+           CanvasEngine.setHolder(s);
+           setSurface(width,height);
+    }
+
+    public void setSurface(int width, int height) {
+        UnitLayer.resize(width, height);
+        TimerLayer.resize(width, height);
+        WindLayer.resize(width, height);
+        Configs.setDisplayHeight(height);
+        Configs.setDisplayWidth(width);
     }
 
     private void update(float dt) {
