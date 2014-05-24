@@ -54,14 +54,12 @@ public class _LiveWallpaperService extends OpenGLES20LiveWallpaperService {
 
         @Override
         public void onSurfaceChanged(GL10 gl, int width, int height) {
-            GLES20.glViewport(0,0,width,height);
+            OpenGLES20Engine.updateScreen(width,height);
             world.setSurface(width, height);
         }
 
         @Override
         public void onDrawFrame(GL10 gl) {
-            //Очищаем экран белым цветом
-            GLES20.glClearColor(1.0f,1.0f,1.0f,0.0f);
             //Рисуем
             world.updateAndDraw();
         }

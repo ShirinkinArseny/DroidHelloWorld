@@ -8,9 +8,17 @@ public interface GraphicEngine {
 
     public void finishDraw();
 
-    public void drawBitmap(Bitmap b, float x, float y);
+    /**
+     * Генерирует текстуру и возвращает её итентификатор для последующей отрисовки
+     * @param b Битмап, из которого создается текстура (величина сторон должна быть степенью двойки!)
+     * @return Итентификатор для последующей отрисовки
+     */
+    public int genTexture(Bitmap b);
 
-    public void drawBitmap(Bitmap b, float x, float y, int opacity);
+    //Здесь и далее текстура задается итентификатором
+    public void drawBitmap(int b, float x, float y);
+
+    public void drawBitmap(int b, float x, float y, int opacity);
 
     public void drawText(float x, float y, float size, float r, float g, float b, String text);
 
