@@ -1,22 +1,22 @@
 package live.wallpaper.DrawLayers.SpawnLayer;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import live.wallpaper.Configs.Configs;
 import live.wallpaper.OpenGLIntegration.Graphic;
 import live.wallpaper.TimeFunctions.LinearTimeFunction;
 
 public class Spawn {
 
-    private float x, y;
-    private LinearTimeFunction timing;
+    private final float x;
+    private final float y;
+    private static float w2, h2;
+    private final LinearTimeFunction timing;
     private boolean noNeedMore=false;
-    private static Bitmap spawnTexture;//spawn texture
+    private static int spawnTexture;//spawn texture
 
-    public static void init(Bitmap pic) {
+    public static void init(int pic, float w2, float h2) {
         spawnTexture=pic;
+        Spawn.w2=w2;
+        Spawn.h2=h2;
     }
 
     public boolean getUseless() {
@@ -36,8 +36,8 @@ public class Spawn {
     }
 
     public Spawn(float x, float y) {
-        this.x = x-spawnTexture.getWidth()/2;
-        this.y = y-spawnTexture.getHeight()/2;
+        this.x = x-w2;
+        this.y = y-h2;
         timing = new LinearTimeFunction(Configs.getFloatValue(Configs.spawnsShowTime), 255f, 0f,
                 new Runnable() {
                     @Override

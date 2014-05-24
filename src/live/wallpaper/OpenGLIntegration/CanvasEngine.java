@@ -6,18 +6,22 @@ import android.graphics.Color;
 import android.graphics.Paint;
 import android.view.SurfaceHolder;
 
+import java.util.ArrayList;
+
 public class CanvasEngine implements GraphicEngine {
 
-    private Paint p;
+    private final Paint p;
     private static SurfaceHolder holder;
     private static Canvas c;
+    private ArrayList<Bitmap> bitmaps;
 
     public static void setHolder(SurfaceHolder h) {
           holder=h;
     }
 
     public CanvasEngine() {
-         p=new Paint();
+        p=new Paint();
+        bitmaps=new ArrayList<>();
     }
 
     @Override
@@ -32,15 +36,21 @@ public class CanvasEngine implements GraphicEngine {
     }
 
     @Override
-    public void drawBitmap(Bitmap b, float x, float y) {
-        c.drawBitmap(b, x, y, null);
+    public int genTexture(Bitmap b) {
+        bitmaps.add(b);
+        return bitmaps.size()-1;
     }
 
     @Override
-    public void drawBitmap(Bitmap b, float x, float y, int opacity) {
+    public void drawBitmap(int b, float x, float y) {
+        c.drawBitmap(bitmaps.get(b), x, y, null);
+    }
+
+    @Override
+    public void drawBitmap(int b, float x, float y, int opacity) {
         p.setColor(Color.WHITE);
         p.setAlpha(opacity);
-        c.drawBitmap(b, x, y, p);
+        c.drawBitmap(bitmaps.get(b), x, y, p);
     }
 
     @Override

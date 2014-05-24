@@ -1,13 +1,11 @@
 package live.wallpaper.Units;
 
-import android.graphics.Canvas;
-
 public class Bullet extends Unit{
 
-    private float dx;
-    private float dy;
-    private static float speed=300f;
-    private static float dHealth=-1f;
+    private final float dx;
+    private final float dy;
+    private static final float speed=300f;
+    private static final float dHealth=-1f;
     private static float distance=Math.abs(speed/dHealth);
     private static float squareDistance=distance*distance;
     //todo: учесть спидкоеф

@@ -9,7 +9,7 @@ import java.util.Random;
 
 public class SimpleAI implements AI{
 
-    private Random rnd;
+    private final Random rnd;
     private LinkedList<NotControlledUnit> theirGiants = new LinkedList<>();
     private LinkedList<NotControlledUnit> theirTowers = new LinkedList<>();
     private LinkedList<NotControlledUnit> theirMen = new LinkedList<>();

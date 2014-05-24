@@ -12,7 +12,7 @@ public class ControlledUnit extends NotControlledUnit {
         return dy;
     }
 
-    public ControlledUnit(float x, float y, float w, float h, int team, float health, float speed, Type t) {
+    public ControlledUnit(float x, float y, int w, int h, int team, float health, float speed, Type t) {
         super(x, y, w, h, team, health, speed, t);
     }
 

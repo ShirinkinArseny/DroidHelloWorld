@@ -3,7 +3,7 @@ package live.wallpaper.DrawLayers;
 public class Synchroniser {
 
     private boolean lock =false;
-    private String name;
+    private final String name; //for debug
 
     public Synchroniser(String name) {
         this.name=name;

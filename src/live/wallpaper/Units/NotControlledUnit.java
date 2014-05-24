@@ -3,13 +3,13 @@ package live.wallpaper.Units;
 import live.wallpaper.Geometry.Rectangle;
 
 public class NotControlledUnit extends Rectangle {
-    private int team;
+    private final int team;
     protected float health;
-    private float healthCoef;
-    private float power;
+    private final float healthCoef;
+    private final float power;
     public enum Type {Man, Giant, Tower, Bullet}
-    private Type type;
-    private float speed;
+    private final Type type;
+    private final float speed;
     private static float speedCoef;
 
     public static void init(float speedCoef) {
@@ -36,7 +36,7 @@ public class NotControlledUnit extends Rectangle {
         return -1;
     }
 
-    public NotControlledUnit(float x, float y, float w, float h, int team, float healthCoef, float speed, Type type) {
+    public NotControlledUnit(float x, float y, int w, int h, int team, float healthCoef, float speed, Type type) {
         super(x, y, w, h);
         this.team=team;
         this.health=1f;

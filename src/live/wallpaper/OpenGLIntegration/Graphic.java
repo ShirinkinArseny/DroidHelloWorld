@@ -4,7 +4,11 @@ import android.graphics.Bitmap;
 
 public class Graphic {
 
-    private static GraphicEngine graphicEngine =new CanvasEngine();
+    private static final GraphicEngine graphicEngine =new CanvasEngine();
+
+    public static int genTexture(Bitmap b) {
+        return graphicEngine.genTexture(b);
+    }
 
     public static void startDraw() {
         graphicEngine.startDraw();
@@ -14,11 +18,11 @@ public class Graphic {
         graphicEngine.finishDraw();
     }
 
-    public static void drawBitmap(Bitmap b, float x, float y) {
+    public static void drawBitmap(int b, float x, float y) {
         graphicEngine.drawBitmap(b, x, y);
     }
 
-    public static void drawBitmap(Bitmap b, float x, float y, int opacity) {
+    public static void drawBitmap(int b, float x, float y, int opacity) {
         graphicEngine.drawBitmap(b, x, y, opacity);
 
     }

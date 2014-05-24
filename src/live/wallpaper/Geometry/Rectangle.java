@@ -1,10 +1,11 @@
 package live.wallpaper.Geometry;
 
 public class Rectangle extends Point{
-    private float w;
-    private float h;
-    private float w2;
-    private float h2;
+    private final int w;
+    private final int h;
+    private final int w2;
+    private final int h2;
+    private float x0, y0, x1, y1;
 
     public float getHalfHeight() {
         return h2;
@@ -22,15 +23,50 @@ public class Rectangle extends Point{
         return w2;
     }
 
-    public Rectangle(float x, float y, float w, float h) {
+    public Rectangle(float x, float y, int w, int h) {
         super(x, y);
         this.w=w;
         this.h=h;
         w2=w/2;
         h2=h/2;
+        setPosition(x, y);
     }
 
-    public Rectangle(Point p, float w, float h) {
+
+    public void setPosition(float dx, float dy) {
+        super.setPosition(dx, dy);
+        x0=dx-w2;
+        y0=dy-h2;
+        x1=dx+w2;
+        y1=dy+h2;
+    }
+
+    public void changePosition(float dx, float dy) {
+        super.changePosition(dx, dy);
+        x0+=dx;
+        y0+=dy;
+        x1+=dx;
+        y1+=dy;
+    }
+
+    public float getX0() {
+        return x0;
+    }
+
+    public float getY0() {
+        return y0;
+    }
+
+
+    public float getX1() {
+        return x1;
+    }
+
+    public float getY1() {
+        return y1;
+    }
+
+    public Rectangle(Point p, int w, int h) {
         this(p.getX(), p.getY(), w, h);
     }
 

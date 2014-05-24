@@ -7,7 +7,7 @@ import live.wallpaper.TimeFunctions.LoopedTicker;
 public class Tower extends Unit{
 
     private float aimX, aimY;
-    private LoopedTicker shot;
+    private final LoopedTicker shot;
     private Unit addBuffer;
 
     public Tower(Point p, int team) {

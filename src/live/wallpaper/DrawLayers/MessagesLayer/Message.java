@@ -6,12 +6,14 @@ import live.wallpaper.TimeFunctions.LinearTimeFunction;
 
 public class Message {
 
-    private String text;
-    private LinearTimeFunction coordinates;
-    private LinearTimeFunction alpha;
-    private float x;
+    private final String text;
+    private final LinearTimeFunction coordinates;
+    private final LinearTimeFunction alpha;
+    private final float x;
     private boolean isUseless=false;
-    private float r, g, b;
+    private final float r;
+    private final float g;
+    private final float b;
 
     public boolean getUseless() {
         return isUseless;

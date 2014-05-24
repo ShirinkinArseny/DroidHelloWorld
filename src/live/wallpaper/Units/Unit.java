@@ -1,9 +1,5 @@
 package live.wallpaper.Units;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import android.util.Log;
 import live.wallpaper.DrawLayers.MessagesLayer.MessagesLayer;
 import live.wallpaper.Geometry.Point;
@@ -13,27 +9,25 @@ import live.wallpaper.TimeFunctions.FlappyTimeFunction;
 public class Unit extends ControlledUnit {
 
     private FlappyTimeFunction kills;
-    private static Bitmap[][] menTexture;
-    private static Point[] sizes;
+    private static int[][] menTexture;
+    private static int[][] sizes;
 
-    private Bitmap getShadow() {
+    private int getShadow() {
         return menTexture[getTeam()+2][getTypeNumber()];
     }
 
-    private Bitmap getBitmap() {
+    private int getBitmap() {
         return menTexture[getTeam()][getTypeNumber()];
     }
 
-    public static void init(Bitmap[][] menTexture, float pictureSizeCoef) {
+    public static void init(int[][] menTexture, int[][] sizes, float pictureSizeCoef) {
         NotControlledUnit.init(pictureSizeCoef);
         Unit.menTexture=menTexture;
-        sizes=new Point[menTexture.length];
-        for (int i=0; i<4; i++)
-            sizes[i]=new Point(menTexture[0][i].getWidth(), menTexture[0][i].getHeight());
+        Unit.sizes=sizes;
     }
 
     public Unit(float x, float y, int team, float health, float speed, Type t) {
-        super(x, y, sizes[getTypeNumber(t)].getX(), sizes[getTypeNumber(t)].getY(), team, health, speed, t);
+        super(x, y, sizes[getTypeNumber(t)][0], sizes[getTypeNumber(t)][1], team, health, speed, t);
         kills=new FlappyTimeFunction(2f, new Runnable() {
             @Override
             public void run() {
@@ -72,13 +66,13 @@ public class Unit extends ControlledUnit {
     }
 
     protected void drawBase() {
-        Graphic.drawBitmap(getBitmap(), getX() - getHalfWidth(), getY() - getHalfHeight());
+        Graphic.drawBitmap(getBitmap(), getX0(), getY0());
     }
 
     protected void drawHealth() {
         float health=Math.max(0, this.health);
-        Graphic.drawRect(getX() - getHalfWidth(), getY() - 2 - getHalfHeight(),
-                getX() + getWidth() * health - getHalfWidth(), getY() - getHalfHeight(),
+        Graphic.drawRect(getX0(), getY0()-2,
+                getX0() + getWidth() * health, getY0(),
                 1 - health, 0.75f *health, 0, 1);
     }
 

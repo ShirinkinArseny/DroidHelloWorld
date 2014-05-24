@@ -1,7 +1,5 @@
 package live.wallpaper;
 
-import android.app.Activity;
-import android.content.Context;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
@@ -9,9 +7,6 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.LinearLayout;
-import com.google.android.gms.ads.AdRequest;
-import com.google.android.gms.ads.AdSize;
-import com.google.android.gms.ads.AdView;
 import live.wallpaper.Ads.AdBuilder;
 
 public class Settings extends PreferenceActivity {

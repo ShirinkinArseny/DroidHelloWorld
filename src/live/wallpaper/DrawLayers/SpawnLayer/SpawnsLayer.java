@@ -1,7 +1,5 @@
 package live.wallpaper.DrawLayers.SpawnLayer;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
 import live.wallpaper.Configs.Configs;
 import live.wallpaper.DrawLayers.Synchroniser;
 
@@ -10,41 +8,41 @@ import java.util.LinkedList;
 public class SpawnsLayer{
 
     private static LinkedList<Spawn> spawns;//spawn coordinates
-    private static Synchroniser syncer;
+    private static Synchroniser synchroniser;
 
-    public static void init(Bitmap b) {
-        Spawn.init(b);
+    public static void init(int b, float w2, float h2) {
+        Spawn.init(b, w2, h2);
         spawns=new LinkedList<>();
-        syncer=new Synchroniser("SpawnsLayerSync");
+        synchroniser =new Synchroniser("SpawnsLayerSync");
     }
 
     public static void addSpawn(float x, float y) {
         if (Configs.getBooleanValue(Configs.spawnsDraw)) {
-            syncer.waitForUnlockAndLock();
+            synchroniser.waitForUnlockAndLock();
             spawns.add(new Spawn(x, y));
-            syncer.unlock();
+            synchroniser.unlock();
         }
     }
 
     public static void update(float dt) {
         if (Configs.getBooleanValue(Configs.spawnsDraw)) {
-            syncer.waitForUnlockAndLock();
+            synchroniser.waitForUnlockAndLock();
         for (int i=0; i<spawns.size(); i++) {
             spawns.get(i).update(dt);
             if (spawns.get(i).getUseless())
                 spawns.remove(i);
         }
-            syncer.unlock();
+            synchroniser.unlock();
         }
     }
 
     public static void draw() {
         if (Configs.getBooleanValue(Configs.spawnsDraw)) {
-            syncer.waitForUnlockAndLock();
+            synchroniser.waitForUnlockAndLock();
             for (Spawn f : spawns) {
                 f.draw();
             }
-            syncer.unlock();
+            synchroniser.unlock();
         }
     }
 }

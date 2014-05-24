@@ -15,16 +15,17 @@ import java.util.Random;
 
 public class UnitLayer{
 
-    private static Random rnd = new Random();
-    private static AI ai=new SimpleAI();
-    private static LinkedList<ControlledUnit>[] controlledUnits=
+    private static final Random rnd = new Random();
+    private static final AI ai=new SimpleAI();
+    //TODO: нужно с этим что=то решить
+    private static final LinkedList<ControlledUnit>[] controlledUnits=
             new LinkedList[]{new LinkedList<ControlledUnit>(), new LinkedList<ControlledUnit>()}; //Lists of units to send in AI
-    private static LinkedList<NotControlledUnit>[] uncontrolledUnits=
+    private static final LinkedList<NotControlledUnit>[] uncontrolledUnits=
             new LinkedList[]{new LinkedList(), new LinkedList()}; //Lists of units to send in AI
-    private static LinkedList<Unit>[] dividedUnits=
+    private static final LinkedList<Unit>[] dividedUnits=
             new LinkedList[]{new LinkedList(), new LinkedList(), new LinkedList(), new LinkedList(), new LinkedList(), new LinkedList()}; //Lists of units to send in AI
-    private static int[] kills=new int[]{0, 0};
-    private static Synchroniser syncer;
+    private static final int[] kills=new int[]{0, 0};
+    private static Synchroniser synchroniser;
     private static LoopedTicker updateSpawnAndIntersection;
 
     public static int[] getTeamSizes() {
@@ -32,15 +33,15 @@ public class UnitLayer{
     }
 
     public static void init() {
-        syncer=new Synchroniser("UnitLayerSync");
+        synchroniser =new Synchroniser("UnitLayerSync");
         updateSpawnAndIntersection=new LoopedTicker(0.2f, new Runnable() {
             @Override
             public void run() {
-                syncer.waitForUnlockAndLock();
+                synchroniser.waitForUnlockAndLock();
                 updateIntersections();
                 updateAI();
                 autoSpawn();
-                syncer.unlock();
+                synchroniser.unlock();
             }
         });
     }
@@ -55,7 +56,7 @@ public class UnitLayer{
             float hNew = height - Configs.getIntValue(Configs.worldVerticalTopBorders)
                     - Configs.getIntValue(Configs.worldVerticalBottomBorders);
 
-        syncer.waitForUnlockAndLock();
+        synchroniser.waitForUnlockAndLock();
             for (int i = 0; i < 6; i++)
                 for (Unit u : dividedUnits[i]) {
 
@@ -66,7 +67,7 @@ public class UnitLayer{
                             / hOld * hNew + Configs.getIntValue(Configs.worldVerticalTopBorders);
                     u.setPosition(posX, posY);
                 }
-        syncer.unlock();
+        synchroniser.unlock();
     }
 
     private static void updateAI() {
@@ -165,14 +166,14 @@ public class UnitLayer{
     }
 
     public static void killEverybody() {
-        syncer.waitForUnlockAndLock();
+        synchroniser.waitForUnlockAndLock();
         for (int i=0; i<4; i++) {
             for (Unit u: dividedUnits[i])
                 u.changeHealth(-10f);
         }
         for (int i=0; i<4; i++)
         updateDeath(dividedUnits[i]);
-        syncer.unlock();
+        synchroniser.unlock();
         kills[0]=0;
         kills[1]=0;
     }
@@ -259,24 +260,24 @@ public class UnitLayer{
     }
 
     public static void update(float dt) {
-        syncer.waitForUnlockAndLock();
+        synchroniser.waitForUnlockAndLock();
         doRegeneration(dt);
         for (LinkedList l: dividedUnits )
             updateDeath(l);
         moveUnits(dt);
-        syncer.unlock();
+        synchroniser.unlock();
         updateSpawnAndIntersection.tick(dt);
     }
 
 
     public static void draw() {
-        syncer.waitForUnlockAndLock();
+        synchroniser.waitForUnlockAndLock();
         for (int i=0; i<4; i++)
             for (Unit m : dividedUnits[i])
                 m.drawShadow();
         for (int i=0; i<6; i++)
             for (Unit m : dividedUnits[i])
                 m.draw();
-        syncer.unlock();
+        synchroniser.unlock();
     }
 }

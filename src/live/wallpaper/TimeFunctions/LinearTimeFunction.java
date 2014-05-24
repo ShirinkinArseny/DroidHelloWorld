@@ -2,7 +2,8 @@ package live.wallpaper.TimeFunctions;
 
 public class LinearTimeFunction extends TimeFunction{
 
-    private float delta, from;
+    private final float delta;
+    private final float from;
 
     public float getValue() {
         return from+delta*time/length;

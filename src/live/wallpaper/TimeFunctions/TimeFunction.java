@@ -2,9 +2,9 @@ package live.wallpaper.TimeFunctions;
 
 public abstract class TimeFunction {
 
-    protected float length;
+    protected final float length;
     protected float time;
-    protected Runnable action;
+    protected final Runnable action;
 
     public float getValue() {
         return time;

@@ -1,22 +1,19 @@
 package live.wallpaper.DrawLayers.BloodLayer;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import live.wallpaper.Configs.Configs;
 import live.wallpaper.OpenGLIntegration.Graphic;
 import live.wallpaper.TimeFunctions.OneTimeTicker;
 
 public class Blood {
 
-    private float x, y;
-    private int type;
-    private OneTimeTicker timing;
+    private final float x;
+    private final float y;
+    private final int type;
+    private final OneTimeTicker timing;
     private boolean noNeedMore=false;
-    private static Bitmap dustTexture[];//blood texture
+    private static int dustTexture[];//blood texture
 
-    public static void init(Bitmap[] pics) {
+    public static void init(int[] pics) {
         dustTexture=pics;
     }
 

@@ -57,15 +57,30 @@ public class World {
         menTexture[3][0] = getScaledResource(res, R.drawable.shadow, 64);
         menTexture[3][1] = getScaledResource(res, R.drawable.shadow, 192);
         menTexture[3][2] = getScaledResource(res, R.drawable.towershadow, 64);
-        Unit.init(menTexture, pictureSizeCoef);
 
-        WindLayer.init(getScaledResource(res, R.drawable.grid, 512));
-        Blood.init(new Bitmap[]{getScaledResource(res, R.drawable.blood, 64),
-                getScaledResource(res, R.drawable.coal, 64)});
-        SpawnsLayer.init(getScaledResource(res, R.drawable.spawn, 74));
+        int[][] sizes=new int[4][2];
+        for (int i=0; i<4; i++) {
+            sizes[i][0] = menTexture[0][i].getWidth();
+            sizes[i][1] = menTexture[0][i].getHeight();
+        }
 
-        TerritoryLayer.init();
-        TimerLayer.init();
+        int[][] menTextureIDs=new int[4][4];
+        for (int i=0; i<4; i++)
+            for (int j=0; j<4;j++)
+                menTextureIDs[i][j]=Graphic.genTexture(menTexture[i][j]);
+
+        Unit.init(menTextureIDs, sizes, pictureSizeCoef);
+
+        Bitmap canva=getScaledResource(res, R.drawable.grid, 512);
+        CanvaLayer.init(Graphic.genTexture(canva), canva.getWidth(), canva.getHeight());
+
+        Bitmap blood1=getScaledResource(res, R.drawable.blood, 64);
+        Bitmap blood2=getScaledResource(res, R.drawable.coal, 64);
+        Blood.init(new int[]{Graphic.genTexture(blood1), Graphic.genTexture(blood2)});
+
+        Bitmap spawn=getScaledResource(res, R.drawable.spawn, 74);
+        SpawnsLayer.init(Graphic.genTexture(spawn), spawn.getWidth()/2, spawn.getHeight()/2);
+
         UnitLayer.init();
         BloodLayer.init();
         MessagesLayer.init();
@@ -121,27 +136,26 @@ public class World {
     }
 
     public void setSurface(int width, int height) {
-        TerritoryLayer.resize();
+        TerritoryLayer.resize(width, height);
         UnitLayer.resize(width, height);
         TimerLayer.resize(width, height);
-        WindLayer.resize(width, height);
+        CanvaLayer.resize(width, height);
         Configs.setDisplayHeight(height);
         Configs.setDisplayWidth(width);
     }
 
     private void update(float dt) {
-        TerritoryLayer.update(dt);
         TimerLayer.update(dt);
         UnitLayer.update(dt);
         SpawnsLayer.update(dt);
         BloodLayer.update(dt);
         MessagesLayer.update(dt);
-        WindLayer.update(dt);
+        CanvaLayer.update(dt);
     }
 
     private void draw() {
         TerritoryLayer.draw();
-        WindLayer.draw();
+        CanvaLayer.draw();
         TimerLayer.draw();
         BloodLayer.draw();
         SpawnsLayer.draw();

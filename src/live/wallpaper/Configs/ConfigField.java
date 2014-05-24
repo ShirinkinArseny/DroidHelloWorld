@@ -3,7 +3,7 @@ package live.wallpaper.Configs;
 public abstract class ConfigField {
 
     public enum Type {Float, Integer, String, Boolean}
-    private String name;
+    private final String name;
 
     public abstract Type getType();
 

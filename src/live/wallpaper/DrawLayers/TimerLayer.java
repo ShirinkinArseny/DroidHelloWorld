@@ -1,6 +1,5 @@
 package live.wallpaper.DrawLayers;
 
-import android.graphics.Color;
 import live.wallpaper.Configs.Configs;
 import live.wallpaper.OpenGLIntegration.Graphic;
 import live.wallpaper.TimeFunctions.LoopedTicker;
@@ -15,9 +14,6 @@ public class TimerLayer {
     private static int width4;
     private static int width2;
     private static float bigSize, smallSize;
-
-    public static void init() {
-    }
 
     public static void reInit(int w, int h) {
         round=new LoopedTicker(Configs.getIntValue(Configs.timerTimer), new Runnable() {

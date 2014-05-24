@@ -1,23 +1,19 @@
 package live.wallpaper.DrawLayers;
 
-import android.graphics.Bitmap;
-import android.graphics.Canvas;
-import android.graphics.Color;
-import android.graphics.Paint;
 import live.wallpaper.OpenGLIntegration.Graphic;
 
-public class WindLayer {
+public class CanvaLayer {
 
-    private static Bitmap bg;
+    private static int bg;
     private static float dx;
     private static int width;
     private static int height;
     private static int sx, sy;
 
-    public static void init(Bitmap b) {
+    public static void init(int b, int w, int h) {
         bg = b;
-        width = b.getWidth();
-        height = b.getHeight();
+        width = w;
+        height = h;
         dx = 0;
     }
 

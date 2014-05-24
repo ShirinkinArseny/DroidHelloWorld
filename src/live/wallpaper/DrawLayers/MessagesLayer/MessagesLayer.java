@@ -12,7 +12,7 @@ public class MessagesLayer{
     private static final LinkedList<Message> messagesAddBuffer=new LinkedList<>();//coordinates of messages
     private static float[] pBlue; //Blue paint
     private static float[] pRed; //Red paint
-    private static Synchroniser syncer;
+    private static Synchroniser synchroniser;
 
     public static void init() {
 
@@ -20,7 +20,7 @@ public class MessagesLayer{
 
         pRed=Configs.getRedFontColor();
 
-        syncer=new Synchroniser("MessagesLayerSync");
+        synchroniser =new Synchroniser("MessagesLayerSync");
     }
 
     public static void reInit() {
@@ -30,11 +30,11 @@ public class MessagesLayer{
 
     public static void showMessage(float x, float y, String text, int color) {
         if (Configs.getBooleanValue(Configs.messageDraw)) {
-        syncer.waitForUnlockAndLock();
+        synchroniser.waitForUnlockAndLock();
             messagesAddBuffer.add(
                     new Message(text, x, y, color == 0 ? pRed : pBlue)
             );
-        syncer.unlock();
+        synchroniser.unlock();
         }
     }
 
@@ -44,7 +44,7 @@ public class MessagesLayer{
 
     public static void update(float dt) {
         if (Configs.getBooleanValue(Configs.messageDraw)) {
-            syncer.waitForUnlockAndLock();
+            synchroniser.waitForUnlockAndLock();
             for (int i = 0; i < messages.size(); i++) {
                 messages.get(i).update(dt);
                 if (messages.get(i).getUseless())
@@ -54,16 +54,16 @@ public class MessagesLayer{
                 messages.add(messagesAddBuffer.get(0));
                 messagesAddBuffer.remove(0);
             }
-            syncer.unlock();
+            synchroniser.unlock();
         }
     }
 
     public static void draw() {
         if (Configs.getBooleanValue(Configs.messageDraw)) {
-            syncer.waitForUnlockAndLock();
+            synchroniser.waitForUnlockAndLock();
         for (Message f : messages)
             f.draw();
-        syncer.unlock();
+        synchroniser.unlock();
         }
     }
 }

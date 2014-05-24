@@ -21,14 +21,9 @@ public class LiveWallpaperService extends WallpaperService {
 
     }
 
-    @Override
-    public void onDestroy() {
-        super.onDestroy();
-    }
-
     public class RBEngine extends Engine {
 
-        private World world;
+        private final World world;
 
         public RBEngine(Context context) {
             world = new World(context);

@@ -2,7 +2,7 @@ package live.wallpaper.TimeFunctions;
 
 public class FlappyTimeFunction extends TimeFunction{
 
-    private float flapValue;
+    private final float flapValue;
     private int value=0;
 
     public float getValue() {
