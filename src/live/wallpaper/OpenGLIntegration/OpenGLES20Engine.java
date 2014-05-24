@@ -62,17 +62,18 @@ public class OpenGLES20Engine implements GraphicEngine {
     }
 
     @Override
-    public void drawText(float x, float y, float size, int color, String text) {
+    public void drawText(float x, float y, float size, float r, float g, float b, String text) {
 
     }
 
     @Override
-    public void drawText(float x, float y, float size, int color, int opacity, String text) {
+    public void drawText(float x, float y, float size, float r, float g, float b, float a, String text) {
 
     }
 
     @Override
-    public void drawRect(float x, float y, float x2, float y2, int color, int opacity) {
+    public void drawRect(float x, float y, float x2, float y2, float r, float g, float b, float a) {
 
     }
+
 }

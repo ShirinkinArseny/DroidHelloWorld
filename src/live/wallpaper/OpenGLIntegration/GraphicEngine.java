@@ -12,9 +12,9 @@ public interface GraphicEngine {
 
     public void drawBitmap(Bitmap b, float x, float y, int opacity);
 
-    public void drawText(float x, float y, float size, int color, String text);
+    public void drawText(float x, float y, float size, float r, float g, float b, String text);
 
-    public void drawText(float x, float y, float size, int color, int opacity, String text);
+    public void drawText(float x, float y, float size, float r, float g, float b, float a, String text);
 
-    public void drawRect(float x, float y, float x2, float y2, int color, int opacity);
+    public void drawRect(float x, float y, float x2, float y2, float r, float g, float b, float a);
 }
