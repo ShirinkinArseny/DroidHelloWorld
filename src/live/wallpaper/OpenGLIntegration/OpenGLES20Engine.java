@@ -4,6 +4,7 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.opengl.Matrix;
 import live.wallpaper.OpenGLIntegration.Shaders.ShaderGenerator;
+import live.wallpaper.OpenGLIntegration.Shaders.TextureGenerator;
 import live.wallpaper.R;
 
 import java.nio.ByteBuffer;
@@ -83,12 +84,17 @@ public class OpenGLES20Engine implements GraphicEngine {
     }
 
     @Override
-    public void drawBitmap(Bitmap b, float x, float y) {
+    public int genTexture(Bitmap b) {
+        return TextureGenerator.loadTexture(b);
+    }
+
+    @Override
+    public void drawBitmap(int b, float x, float y) {
 
     }
 
     @Override
-    public void drawBitmap(Bitmap b, float x, float y, int opacity) {
+    public void drawBitmap(int b, float x, float y, int opacity) {
 
     }
 
