@@ -79,7 +79,7 @@ public class Unit extends ControlledUnit {
         float health=Math.max(0, this.health);
         Graphic.drawRect(getX() - getHalfWidth(), getY() - 2 - getHalfHeight(),
                 getX() + getWidth() * health - getHalfWidth(), getY() - getHalfHeight(),
-                Color.rgb((int) (255 * (1 - health)), (int) (192 * health), 0), 255);
+                1 - health, 0.75f *health, 0, 1);
     }
 
     public void draw() {

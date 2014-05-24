@@ -1,7 +1,5 @@
 package live.wallpaper.DrawLayers.MessagesLayer;
 
-import android.graphics.Color;
-import android.graphics.Paint;
 import live.wallpaper.Configs.Configs;
 import live.wallpaper.DrawLayers.Synchroniser;
 import live.wallpaper.Geometry.Point;
@@ -12,22 +10,22 @@ public class MessagesLayer{
 
     private static final LinkedList<Message> messages=new LinkedList<>();//coordinates of messages
     private static final LinkedList<Message> messagesAddBuffer=new LinkedList<>();//coordinates of messages
-    private static int pBlue; //Blue paint
-    private static int pRed; //Red paint
+    private static float[] pBlue; //Blue paint
+    private static float[] pRed; //Red paint
     private static Synchroniser syncer;
 
     public static void init() {
 
-        pBlue=Color.rgb(Configs.getBlueFontColor()[0], Configs.getBlueFontColor()[1], Configs.getBlueFontColor()[2]);
+        pBlue=Configs.getBlueFontColor();
 
-        pRed=Color.rgb(Configs.getRedFontColor()[0], Configs.getRedFontColor()[1], Configs.getRedFontColor()[2]);
+        pRed=Configs.getRedFontColor();
 
         syncer=new Synchroniser("MessagesLayerSync");
     }
 
     public static void reInit() {
-        pBlue=Color.rgb(Configs.getBlueFontColor()[0], Configs.getBlueFontColor()[1], Configs.getBlueFontColor()[2]);
-        pRed=Color.rgb(Configs.getRedFontColor()[0], Configs.getRedFontColor()[1], Configs.getRedFontColor()[2]);
+        pBlue=Configs.getBlueFontColor();
+        pRed=Configs.getRedFontColor();
     }
 
     public static void showMessage(float x, float y, String text, int color) {

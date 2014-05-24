@@ -8,8 +8,8 @@ import live.wallpaper.TimeFunctions.LoopedTicker;
 public class TimerLayer {
 
     private static LoopedTicker round;
-    private static int pBig;
-    private static int pSmallRed, pSmallBlue;
+    private static float[] pBig;
+    private static float[] pSmallRed, pSmallBlue;
     private static int height2;
     private static int height2_3;
     private static int width4;
@@ -31,14 +31,9 @@ public class TimerLayer {
         width4 =w/4;
         width2=w/2;
 
-        pBig=Color.rgb(Configs.getGrayFontColor()[0], Configs.getGrayFontColor()[1],
-                Configs.getGrayFontColor()[2]);
-
-        pSmallRed=Color.rgb(Configs.getRedFontColor()[0], Configs.getRedFontColor()[1],
-                Configs.getRedFontColor()[2]);
-
-        pSmallBlue=Color.rgb(Configs.getBlueFontColor()[0], Configs.getBlueFontColor()[1],
-                Configs.getBlueFontColor()[2]);
+        pBig=Configs.getGrayFontColor();
+        pSmallRed=Configs.getRedFontColor();
+        pSmallBlue=Configs.getBlueFontColor();
     }
 
     public static void resize(int w, int h) {
@@ -65,12 +60,12 @@ public class TimerLayer {
 
     public static void draw() {
         if (Configs.getBooleanValue(Configs.timerDraw)) {
-            Graphic.drawText(width4, height2, bigSize, pBig, Configs.getGrayFontColor()[3], getTime());
+            Graphic.drawText(width4, height2, bigSize, pBig[0], pBig[1], pBig[2], pBig[3], getTime());
             int[] kills = UnitLayer.getTeamSizes();
-            Graphic.drawText(width2 - 100, height2_3, smallSize, pSmallRed,
-                    Configs.getRedFontColor()[3], String.valueOf(kills[1]));
-            Graphic.drawText(width2, height2_3, smallSize, pSmallBlue,
-                    Configs.getBlueFontColor()[3], String.valueOf(kills[0]));
+            Graphic.drawText(width2 - 100, height2_3, smallSize,
+                    pSmallRed[0], pSmallRed[1], pSmallRed[2], pSmallRed[3], String.valueOf(kills[1]));
+            Graphic.drawText(width2, height2_3, smallSize,
+                    pSmallBlue[0], pSmallBlue[1], pSmallBlue[2], pSmallBlue[3], String.valueOf(kills[0]));
         }
     }
 }

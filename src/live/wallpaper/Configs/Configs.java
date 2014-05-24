@@ -105,39 +105,39 @@ public class Configs {
     }
 
     //TODO: убрать эту устаревшую парашу, ввести класс ColorField
-    public static int[] getWorldBoardersColor() {
+    public static float[] getWorldBoardersColor() {
         return worldBoardersColor;
     }
 
-    public static int[] getWorldBGColor() {
+    public static float[] getWorldBGColor() {
         return worldBGColor;
     }
 
-    public static void setWorldBoardersColor(int[] worldBoardersColor) {
+    public static void setWorldBoardersColor(float [] worldBoardersColor) {
         Configs.worldBoardersColor = worldBoardersColor;
     }
 
-    public static int[] getRedFontColor() {
+    public static float[] getRedFontColor() {
         return redFontColor;
     }
 
-    public static void setRedFontColor(int[] redFontColor) {
+    public static void setRedFontColor(float[] redFontColor) {
         Configs.redFontColor = redFontColor;
     }
 
-    public static int[] getBlueFontColor() {
+    public static float[] getBlueFontColor() {
         return blueFontColor;
     }
 
-    public static void setBlueFontColor(int[] blueFontColor) {
+    public static void setBlueFontColor(float[] blueFontColor) {
         Configs.blueFontColor = blueFontColor;
     }
 
-    public static int[] getGrayFontColor() {
+    public static float[] getGrayFontColor() {
         return grayFontColor;
     }
 
-    public static void setGrayFontColor(int[] grayFontColor) {
+    public static void setGrayFontColor(float [] grayFontColor) {
         Configs.grayFontColor = grayFontColor;
     }
 
@@ -157,12 +157,12 @@ public class Configs {
         Configs.displayHeight = displayHeight;
     }
 
-    private static int[]     worldBoardersColor=new int[]{157, 168, 144, 255}; //Цвет границы
-    private static int[]     worldBGColor=new int[]{140, 148, 124, 255}; //Цвет фона
+    private static float[]     worldBoardersColor=new float[]{0.6156863f, 0.65882355f, 0.5647059f, 1}; //Цвет границы
+    private static float[]     worldBGColor=new float[]{0.54901963f, 0.5803922f, 0.4862745f, 1}; //Цвет фона
 
-    private static int[] redFontColor=new int[]{253, 105, 67, 255};   // Цвет красного шрифта
-    private static int[] blueFontColor=new int[]{176, 121, 182, 255};  // Цвет синего шрифта
-    private static int[] grayFontColor=new int[]{222, 222, 222, 255};// Цвет шрифта таймера
+    private static float[] redFontColor=new float[]{0.99215686f, 0.4117647f, 0.2627451f, 1.0f};   // Цвет красного шрифта
+    private static float[] blueFontColor=new float[]{0.6901961f, 0.4745098f, 0.7137255f, 1.0f};  // Цвет синего шрифта
+    private static float[] grayFontColor=new float[]{0.87058824f, 0.87058824f, 0.87058824f, 1.0f};// Цвет шрифта таймера
 
     private static int displayWidth;    // Ширина экрана !!НЕ ДОБАВЛЯТЬ В МЕНЮ just make getter/setter
     private static int displayHeight;   // Высота экрана !!НЕ ДОБАВЛЯТЬ В МЕНЮ

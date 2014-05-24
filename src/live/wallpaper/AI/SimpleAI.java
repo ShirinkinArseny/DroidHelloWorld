@@ -1,6 +1,5 @@
 package live.wallpaper.AI;
 
-import android.util.Log;
 import live.wallpaper.Configs.Configs;
 import live.wallpaper.Units.ControlledUnit;
 import live.wallpaper.Units.NotControlledUnit;
@@ -14,6 +13,13 @@ public class SimpleAI implements AI{
     private LinkedList<NotControlledUnit> theirGiants = new LinkedList<>();
     private LinkedList<NotControlledUnit> theirTowers = new LinkedList<>();
     private LinkedList<NotControlledUnit> theirMen = new LinkedList<>();
+    private static int aiDeltaTarget;
+    private static int aiDeltaTarget2;
+
+    public static void reInit() {
+        aiDeltaTarget=Configs.getIntValue(Configs.aiDeltaTarget);
+        aiDeltaTarget2=2*aiDeltaTarget;
+    }
 
     public SimpleAI() {
         rnd=new Random();
@@ -23,7 +29,7 @@ public class SimpleAI implements AI{
     }
 
     private float getDeltaPos() {
-        return rnd.nextInt(2* Configs.getIntValue(Configs.aiDeltaTarget))-Configs.getIntValue(Configs.aiDeltaTarget);
+        return rnd.nextInt(aiDeltaTarget2)-aiDeltaTarget;
     }
 
     public void solve(LinkedList<ControlledUnit> yours,

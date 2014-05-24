@@ -5,6 +5,7 @@ import android.content.res.Resources;
 import android.graphics.*;
 import android.util.DisplayMetrics;
 import android.view.SurfaceHolder;
+import live.wallpaper.AI.SimpleAI;
 import live.wallpaper.Configs.Configs;
 import live.wallpaper.DrawLayers.*;
 import live.wallpaper.DrawLayers.BloodLayer.Blood;
@@ -72,6 +73,7 @@ public class World {
     }
 
     public static void reInit() {
+        SimpleAI.reInit();
         MessagesLayer.reInit();
         TerritoryLayer.reInit();
         DisplayMetrics metrics = res.getDisplayMetrics();
@@ -119,6 +121,7 @@ public class World {
     }
 
     public void setSurface(int width, int height) {
+        TerritoryLayer.resize();
         UnitLayer.resize(width, height);
         TimerLayer.resize(width, height);
         WindLayer.resize(width, height);

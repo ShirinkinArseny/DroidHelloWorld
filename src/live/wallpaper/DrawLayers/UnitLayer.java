@@ -1,6 +1,5 @@
 package live.wallpaper.DrawLayers;
 
-import android.graphics.Canvas;
 import live.wallpaper.AI.AI;
 import live.wallpaper.AI.SimpleAI;
 import live.wallpaper.Configs.Configs;
@@ -19,11 +18,11 @@ public class UnitLayer{
     private static Random rnd = new Random();
     private static AI ai=new SimpleAI();
     private static LinkedList<ControlledUnit>[] controlledUnits=
-            new LinkedList[]{new LinkedList(), new LinkedList()}; //Lists of units to send in AI
+            new LinkedList[]{new LinkedList<ControlledUnit>(), new LinkedList<ControlledUnit>()}; //Lists of units to send in AI
     private static LinkedList<NotControlledUnit>[] uncontrolledUnits=
             new LinkedList[]{new LinkedList(), new LinkedList()}; //Lists of units to send in AI
     private static LinkedList<Unit>[] dividedUnits=
-            new LinkedList[]{new LinkedList(), new LinkedList(), new LinkedList(), new LinkedList()}; //Lists of units to send in AI
+            new LinkedList[]{new LinkedList(), new LinkedList(), new LinkedList(), new LinkedList(), new LinkedList(), new LinkedList()}; //Lists of units to send in AI
     private static int[] kills=new int[]{0, 0};
     private static Synchroniser syncer;
     private static LoopedTicker updateSpawnAndIntersection;
@@ -57,7 +56,7 @@ public class UnitLayer{
                     - Configs.getIntValue(Configs.worldVerticalBottomBorders);
 
         syncer.waitForUnlockAndLock();
-            for (int i = 0; i < 4; i++)
+            for (int i = 0; i < 6; i++)
                 for (Unit u : dividedUnits[i]) {
 
                     float posX = (u.getX() - Configs.getIntValue(Configs.worldHorizontalBorders))
@@ -77,11 +76,16 @@ public class UnitLayer{
         uncontrolledUnits[1].clear();
 
 
-        for (int i=0; i<2; i++)
-            for (Unit u: dividedUnits[i]) {
+        for (int i=0; i<2; i++) {
+            for (Unit u : dividedUnits[i]) {
                 controlledUnits[i].add(u);
                 uncontrolledUnits[i].add(u);
             }
+            for (Unit u : dividedUnits[i+2]) {
+                controlledUnits[i].add(u);
+                uncontrolledUnits[i].add(u);
+            }
+        }
 
         ai.solve(controlledUnits[0], uncontrolledUnits[1]);
         ai.solve(controlledUnits[1], uncontrolledUnits[0]);
@@ -108,30 +112,25 @@ public class UnitLayer{
     }
 
     private static void moveUnits(float dt) {
-        for (int i=0; i<4; i++)
+        for (int i=0; i<6; i++)
             for (Unit aMen : dividedUnits[i]) {
                 aMen.move(dt);
                 if (aMen.getType()== NotControlledUnit.Type.Tower) {
                     Unit u = ((Tower) aMen).getAddition();
                     if (u != null) {
-                        unlockedSpawn(u);
+                        spawn(u);
                     }
                     ((Tower) aMen).clearAddition();
                 }
             }
     }
 
-    private static void unlockedSpawn(Unit m) {
-        SpawnsLayer.addSpawn(m.getX(), m.getY());
-        if (m.getType()== NotControlledUnit.Type.Bullet)
-            dividedUnits[m.getTeam()+2].add(m);
-        else
-            dividedUnits[m.getTeam()].add(m);
-    }
-
     private static void spawn(Unit m) {
         SpawnsLayer.addSpawn(m.getX(), m.getY());
         if (m.getType()== NotControlledUnit.Type.Bullet)
+            dividedUnits[m.getTeam()+4].add(m);
+        else
+        if (m.getType()== NotControlledUnit.Type.Tower)
             dividedUnits[m.getTeam()+2].add(m);
         else
             dividedUnits[m.getTeam()].add(m);
@@ -139,7 +138,7 @@ public class UnitLayer{
 
 
     private static void doRegeneration(float dt) {
-        for (int i=0; i<2; i++)
+        for (int i=0; i<4; i++)
             for (Unit unit : dividedUnits[i]) {
                 unit.changeHealth(0.1f*dt);
             }
@@ -153,7 +152,12 @@ public class UnitLayer{
         for (int i=0; i<2; i++) {
             int enemyTeam=Math.abs(i-1);
             for (Unit unit: dividedUnits[i]) {
+                //check for intersection with towers
                 for (Unit enemy : dividedUnits[enemyTeam + 2]) {
+                    fightUnits(enemy, unit);
+                }
+                //check for intersection with bullets
+                for (Unit enemy : dividedUnits[enemyTeam + 4]) {
                     fightUnits(enemy, unit);
                 }
             }
@@ -162,11 +166,11 @@ public class UnitLayer{
 
     public static void killEverybody() {
         syncer.waitForUnlockAndLock();
-        for (int i=0; i<2; i++) {
+        for (int i=0; i<4; i++) {
             for (Unit u: dividedUnits[i])
                 u.changeHealth(-10f);
         }
-        for (int i=0; i<2; i++)
+        for (int i=0; i<4; i++)
         updateDeath(dividedUnits[i]);
         syncer.unlock();
         kills[0]=0;
@@ -257,8 +261,8 @@ public class UnitLayer{
     public static void update(float dt) {
         syncer.waitForUnlockAndLock();
         doRegeneration(dt);
-        for (int i=0; i<4; i++)
-            updateDeath(dividedUnits[i]);
+        for (LinkedList l: dividedUnits )
+            updateDeath(l);
         moveUnits(dt);
         syncer.unlock();
         updateSpawnAndIntersection.tick(dt);
@@ -267,10 +271,10 @@ public class UnitLayer{
 
     public static void draw() {
         syncer.waitForUnlockAndLock();
-        for (int i=0; i<2; i++)
+        for (int i=0; i<4; i++)
             for (Unit m : dividedUnits[i])
                 m.drawShadow();
-        for (int i=0; i<4; i++)
+        for (int i=0; i<6; i++)
             for (Unit m : dividedUnits[i])
                 m.draw();
         syncer.unlock();

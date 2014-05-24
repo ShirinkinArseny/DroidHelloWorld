@@ -1,6 +1,5 @@
 package live.wallpaper.DrawLayers.MessagesLayer;
 
-import android.graphics.Paint;
 import live.wallpaper.Configs.Configs;
 import live.wallpaper.OpenGLIntegration.Graphic;
 import live.wallpaper.TimeFunctions.LinearTimeFunction;
@@ -12,7 +11,7 @@ public class Message {
     private LinearTimeFunction alpha;
     private float x;
     private boolean isUseless=false;
-    private int color;
+    private float r, g, b;
 
     public boolean getUseless() {
         return isUseless;
@@ -23,7 +22,7 @@ public class Message {
         alpha.tick(dt);
     }
 
-    public Message(String text, float x, float y, int color) {
+    public Message(String text, float x, float y, float[] rgb) {
         this.x=x;
         coordinates =new LinearTimeFunction(Configs.getFloatValue(Configs.messageShowTime), y, y-50, new Runnable() {
             @Override
@@ -31,17 +30,19 @@ public class Message {
                 isUseless=true;
             }
         });
-        alpha= new LinearTimeFunction(Configs.getFloatValue(Configs.messageShowTime), 255, 0, new Runnable() {
+        alpha= new LinearTimeFunction(Configs.getFloatValue(Configs.messageShowTime), 1, 0, new Runnable() {
             @Override
             public void run() {
             }
         });
         this.text=text;
-        this.color=color;
+        this.r=rgb[0];
+        this.g=rgb[1];
+        this.b=rgb[2];
     }
 
     public void draw() {
-            Graphic.drawText(x, coordinates.getValue(), 20f, color, (int) alpha.getValue(), text);
+            Graphic.drawText(x, coordinates.getValue(), 20f, r, g, b, alpha.getValue(), text);
     }
 
 }

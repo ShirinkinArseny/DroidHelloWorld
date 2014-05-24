@@ -44,24 +44,22 @@ public class CanvasEngine implements GraphicEngine {
     }
 
     @Override
-    public void drawText(float x, float y, float size, int color, String text) {
-        p.setColor(color);
+    public void drawText(float x, float y, float size, float r, float g, float b, String text) {
+        p.setColor(Color.rgb((int)(r*255), (int)(g*255), (int)(b*255)));
         p.setTextSize(size);
         c.drawText(text, x, y, p);
     }
 
     @Override
-    public void drawText(float x, float y, float size, int color, int opacity, String text) {
-        p.setColor(color);
-        p.setAlpha(opacity);
+    public void drawText(float x, float y, float size, float r, float g, float b, float a, String text) {
+        p.setColor(Color.argb((int)(a*255), (int)(r*255), (int)(g*255), (int)(b*255)));
         p.setTextSize(size);
         c.drawText(text, x, y, p);
     }
 
     @Override
-    public void drawRect(float x, float y, float x2, float y2, int color, int opacity) {
-        p.setColor(color);
-        p.setAlpha(opacity);
+    public void drawRect(float x, float y, float x2, float y2, float r, float g, float b, float a) {
+        p.setColor(Color.argb((int)(a*255), (int)(r*255), (int)(g*255), (int)(b*255)));
         c.drawRect(x, y, x2, y2, p);
     }
 }
