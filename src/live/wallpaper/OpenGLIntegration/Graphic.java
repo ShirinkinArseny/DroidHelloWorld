@@ -22,9 +22,8 @@ public class Graphic {
         graphicEngine.drawBitmap(b, x, y);
     }
 
-    public static void drawBitmap(int b, float x, float y, int opacity) {
+    public static void drawBitmap(int b, float x, float y, float opacity) {
         graphicEngine.drawBitmap(b, x, y, opacity);
-
     }
 
     public static void drawRect(float x, float y, float x2, float y2, float r, float g, float b, float a) {

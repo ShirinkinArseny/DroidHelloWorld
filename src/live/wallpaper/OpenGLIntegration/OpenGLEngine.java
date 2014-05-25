@@ -26,7 +26,7 @@ public class OpenGLEngine implements GraphicEngine {
     }
 
     @Override
-    public void drawBitmap(int b, float x, float y, int opacity) {
+    public void drawBitmap(int b, float x, float y, float opacity) {
 
     }
 

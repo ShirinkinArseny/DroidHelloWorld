@@ -38,7 +38,7 @@ public class Spawn {
     public Spawn(float x, float y) {
         this.x = x-w2;
         this.y = y-h2;
-        timing = new LinearTimeFunction(Configs.getFloatValue(Configs.spawnsShowTime), 255f, 0f,
+        timing = new LinearTimeFunction(Configs.getFloatValue(Configs.spawnsShowTime), 1f, 0f,
                 new Runnable() {
                     @Override
                     public void run() {
@@ -49,7 +49,7 @@ public class Spawn {
     }
 
     public void draw() {
-        Graphic.drawBitmap(spawnTexture, x, y, (int) (timing.getValue()));
+        Graphic.drawBitmap(spawnTexture, x, y, timing.getValue());
     }
 
 }

@@ -47,9 +47,9 @@ public class CanvasEngine implements GraphicEngine {
     }
 
     @Override
-    public void drawBitmap(int b, float x, float y, int opacity) {
+    public void drawBitmap(int b, float x, float y, float opacity) {
         p.setColor(Color.WHITE);
-        p.setAlpha(opacity);
+        p.setAlpha((int) (opacity*255));
         c.drawBitmap(bitmaps.get(b), x, y, p);
     }
 
