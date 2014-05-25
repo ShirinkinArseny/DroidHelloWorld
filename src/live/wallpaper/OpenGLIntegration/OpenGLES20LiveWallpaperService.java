@@ -57,6 +57,7 @@ public abstract class OpenGLES20LiveWallpaperService extends WallpaperService {
 
             setEGLContextClientVersion(2);
             setPreserveEGLContextOnPause(true);
+            setEGLConfigChooser(new MultisampleConfigChooser());
             setRenderer(getRenderer());
         }
 
@@ -87,6 +88,9 @@ public abstract class OpenGLES20LiveWallpaperService extends WallpaperService {
         }
         protected void setPreserveEGLContextOnPause(boolean preserve) {
             glSurfaceView.setPreserveEGLContextOnPause(preserve);
+        }
+        protected void setEGLConfigChooser(GLSurfaceView.EGLConfigChooser configChooser) {
+            glSurfaceView.setEGLConfigChooser(configChooser);
         }
     }
 
