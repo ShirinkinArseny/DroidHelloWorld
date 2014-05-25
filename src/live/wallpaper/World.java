@@ -42,6 +42,15 @@ public class World {
         DisplayMetrics metrics = res.getDisplayMetrics();
         pictureSizeCoef=Math.max(metrics.widthPixels, metrics.heightPixels)/1100f;
 
+        loadTextures();
+
+        UnitLayer.init();
+        BloodLayer.init();
+        MessagesLayer.init();
+        Bullet.reInit(pictureSizeCoef);
+    }
+
+    private static void loadTextures() {
         Bitmap[][] menTexture = new Bitmap[4][4];
         menTexture[0][0] = getScaledResource(res, R.drawable.red, 32);
         menTexture[0][1] = getScaledResource(res, R.drawable.red, 96);
@@ -80,11 +89,6 @@ public class World {
 
         Bitmap spawn=getScaledResource(res, R.drawable.spawn, 74);
         SpawnsLayer.init(Graphic.genTexture(spawn), spawn.getWidth()/2, spawn.getHeight()/2);
-
-        UnitLayer.init();
-        BloodLayer.init();
-        MessagesLayer.init();
-        Bullet.reInit(pictureSizeCoef);
     }
 
     public static void reInit() {
