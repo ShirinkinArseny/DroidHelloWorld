@@ -43,7 +43,7 @@ public class ShaderGenerator {
         return shaderObjectId;
     }
 
-    public static int linkProgram(int vertexShaderId, int fragmentShaderId) {
+    public static int linkProgram(int vertexShaderId, int fragmentShaderId, boolean deleteShaders) {
         final int programObjectId = glCreateProgram();
 
         if (programObjectId==0) {
@@ -64,15 +64,20 @@ public class ShaderGenerator {
             return 0;
         }
 
+        if (deleteShaders) {
+            glDeleteShader(vertexShaderId);
+            glDeleteShader(fragmentShaderId);
+        }
+
         return programObjectId;
     }
 
     public static int createProgram(String vertexShader, String fragmentShader)
     {
-        return linkProgram(compileVertexShader(vertexShader), compileFragmentShader(fragmentShader));
+        return linkProgram(compileVertexShader(vertexShader), compileFragmentShader(fragmentShader), true);
     }
     public static int createProgram(Context context, int vertexShaderResourceId, int fragmentShaderResourceId) {
-        return linkProgram(compileVertexShader(context, vertexShaderResourceId), compileFragmentShader(context, fragmentShaderResourceId));
+        return linkProgram(compileVertexShader(context, vertexShaderResourceId), compileFragmentShader(context, fragmentShaderResourceId), true);
     }
 
     public static boolean validateProgram(int programObjectId) {

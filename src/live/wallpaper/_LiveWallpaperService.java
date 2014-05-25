@@ -41,6 +41,7 @@ public class _LiveWallpaperService extends OpenGLES20LiveWallpaperService {
         @Override
         public void onDestroy() {
             world.stopPainting();
+            OpenGLES20Engine.destroy();
         }
 
         @Override

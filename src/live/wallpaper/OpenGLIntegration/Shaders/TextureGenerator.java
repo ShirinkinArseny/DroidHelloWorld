@@ -18,21 +18,23 @@ public class TextureGenerator {
             return 0;
         }
 
+        //Загружаем текстуру
         glBindTexture(GL_TEXTURE_2D, textureObjectIds[0]);
 
+        //Настраиваем стандартные параметры отрисовки
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MIN_FILTER, GL_LINEAR_MIPMAP_LINEAR);
         glTexParameteri(GL_TEXTURE_2D, GL_TEXTURE_MAG_FILTER, GL_LINEAR);
 
+        //Загружаем Bitmap
         texImage2D(GL_TEXTURE_2D, 0, bitmap, 0);
 
-
-
+        //Генерирем Mipmap
         glGenerateMipmap(GL_TEXTURE_2D);
 
-
+        //Битмап не нужен больше ни кому
         bitmap.recycle();
 
-
+        //Сбрасываем текстуру так как действия с ней пока закончились
         glBindTexture(GL_TEXTURE_2D, 0);
 
         return textureObjectIds[0];

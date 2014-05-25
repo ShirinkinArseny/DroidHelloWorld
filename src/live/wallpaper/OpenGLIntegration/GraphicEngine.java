@@ -18,7 +18,7 @@ public interface GraphicEngine {
     //Здесь и далее текстура задается итентификатором
     public void drawBitmap(int b, float x, float y);
 
-    public void drawBitmap(int b, float x, float y, int opacity);
+    public void drawBitmap(int b, float x, float y, float opacity);
 
     public void drawText(float x, float y, float size, float r, float g, float b, String text);
 

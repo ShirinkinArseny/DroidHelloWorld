@@ -10,15 +10,28 @@ import live.wallpaper.R;
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
 import java.nio.FloatBuffer;
+import java.util.*;
 
 
 import static android.opengl.GLES20.*;
 
 public class OpenGLES20Engine implements GraphicEngine {
 
+    //Хранение размеров Bitmap по его ключу-итентификатору
+    //TODO: выпилить нафиг
+    private static Map textureDimensions;
+
     //Создание матрицы преобразования для вывода на экран с использованием абсолютной системы координат
     //Собственно матрица (матрица проекции)
     private static FloatBuffer projectionMatrix;
+    private static void useMatrix(int programId) {
+
+        //Задаем матрицу для того чтобы отойти от экранной СК
+        final int uMatrix = glGetUniformLocation(programId, "u_Matrix");
+        projectionMatrix.position(0);
+        glUniformMatrix4fv(uMatrix, 1, false, projectionMatrix);
+
+    }
     public static void updateScreen(int width, int height) {
         //Задаем режим вывода для OpenGL
         glViewport(0, 0, width, height);
@@ -44,6 +57,8 @@ public class OpenGLES20Engine implements GraphicEngine {
     private static final int BYTES_PER_FLOAT = 4;
     //Вершины двухмерные
     private static final int POSITION_COMPONENT_COUNT = 2;
+    //В текстуре 2 координаты
+    private static final int UV_COMPONENT_COUNT = 2;
 
     /**
      * Метод, создающий нативный массив значений float из массива Java
@@ -65,17 +80,37 @@ public class OpenGLES20Engine implements GraphicEngine {
     }
 
     private static int fillColorShader;
+    private static int textureShader;
 
     public static void init(Context context) {
         fillColorShader = ShaderGenerator.createProgram(context,
                 R.raw.fillcolor_vertex_shader,
                 R.raw.fillcolor_fragment_shader);
+        textureShader = ShaderGenerator.createProgram(context,
+                R.raw.texture_vertex_shader,
+                R.raw.texture_fragment_shader);
+        textureDimensions = new TreeMap<Integer, float[]>();
+    }
+
+    private static int[] convert(Object[] array) {
+        int[] result = new int[array.length];
+
+        for (int i=0; i<result.length; i++)
+            result[i] = (int)array[i];
+
+        return result;
+    }
+
+    public static void destroy() {
+        glDeleteProgram(fillColorShader);
+        glDeleteProgram(textureShader);
+        glDeleteTextures(textureDimensions.size(), convert(textureDimensions.keySet().toArray()),0);
     }
 
     @Override
     public void startDraw() {
         //Очищаем экран белым цветом
-        glClearColor(1.0f,1.0f,1.0f,0.0f);
+        glClearColor(1.0f,1.0f,1.0f,1.0f);
     }
 
     @Override
@@ -85,17 +120,84 @@ public class OpenGLES20Engine implements GraphicEngine {
 
     @Override
     public int genTexture(Bitmap b) {
-        return TextureGenerator.loadTexture(b);
+        final int id = TextureGenerator.loadTexture(b);
+        textureDimensions.put(id, new float[]{b.getWidth(), b.getHeight()});
+        return id;
     }
 
     @Override
     public void drawBitmap(int b, float x, float y) {
-
+        drawBitmap(b,x,y,1.0f);
     }
 
     @Override
-    public void drawBitmap(int b, float x, float y, int opacity) {
+    public void drawBitmap(int b, float x, float y, float opacity) {
+        //Получаем высоту
+        final float[] dimensions = (float[])textureDimensions.get(b);
+        final float width = dimensions[0];
+        final float height = dimensions[1];
 
+        //Вершины со всеми значениями
+        final FloatBuffer nativeVertexes = createNativeFloatArray(new float[]{
+                //Порядок: вершины, текстурные координаты
+                //Левый нижний угол
+                x,y, 0,0,
+                //Правый верхний угол
+                x+width, y+height, 1,1,
+                //Левый верхний угол
+                x,y+height, 0,1,
+                //Правый нижний угол
+                x+width, y, 1,0,
+                //Левый нижний угол
+                x,y, 0,0,
+                //Правый верхний угол
+                x+width, y+height, 1,1
+        });
+        //Воспользовались программой
+        glUseProgram(textureShader);
+        final int stride = (POSITION_COMPONENT_COUNT + UV_COMPONENT_COUNT)*BYTES_PER_FLOAT;
+        //Указываем значения для вершин
+        final int aPosition = glGetAttribLocation(textureShader, "a_Position");
+        nativeVertexes.position(0);
+        glVertexAttribPointer(
+                aPosition,
+                POSITION_COMPONENT_COUNT,
+                GL_FLOAT,
+                false,
+                stride,
+                nativeVertexes
+        );
+        glEnableVertexAttribArray(aPosition);
+        //Указываем значения для цвета
+        final int aTextureCoordinates = glGetAttribLocation(textureShader, "a_TextureCoordinates");
+        nativeVertexes.position(POSITION_COMPONENT_COUNT);
+        glVertexAttribPointer(
+                aTextureCoordinates,
+                UV_COMPONENT_COUNT,
+                GL_FLOAT,
+                false,
+                stride,
+                nativeVertexes
+        );
+        glEnableVertexAttribArray(aTextureCoordinates);
+        //Применили матрицу
+        useMatrix(textureShader);
+
+        //Указали прозрачность
+        final int uTransparency = glGetUniformLocation(textureShader, "u_Transparency");
+        glUniform1f(uTransparency, opacity);
+
+        //Указали текстуру
+        final int uTextureUnit = glGetUniformLocation(textureShader, "u_TextureUnit");
+        glActiveTexture(GL_TEXTURE0);
+        glBindTexture(GL_TEXTURE_2D, b);
+        glUniform1i(uTextureUnit, 0);
+
+        //Отрисовали
+        glDrawArrays(GL_TRIANGLES, 0, 6);
+
+        //Сбрасили текстуру
+        glBindTexture(GL_TEXTURE_2D, 0);
     }
 
     @Override
@@ -110,25 +212,23 @@ public class OpenGLES20Engine implements GraphicEngine {
 
     @Override
     public void drawRect(float x, float y, float x2, float y2, float r, float g, float b, float a) {
-        float sizeX = x2-x;
-        float sizeY = y2-y;
         //Создаем массив вершин
         //Рисовать можно ТОЛЬКО треугольники, а поэтому в массив записаны вершины
         //Двух треугольников (но потом это выпиливается к херам и приделывется два массива
         //первый будет состоять из 4 float (вершин), а второй из 6 int (порядок обхода)
         final FloatBuffer nativeVertexes = createNativeFloatArray(new float[]{
+                //Центр
+                (x2-x)/2, (y2-y)/2,
                 //Нижний левый угол
                 x,y,
+                //Нижний правый угол
+                x2,y,
+                //Верхний правый угол
+                x2,y2,
                 //Верхний левый угол
                 x, y2,
-                //Верхний правый угол
-                x2,y2,
                 //Нижний левый угол
-                x,y,
-                //Верхний правый угол
-                x2,y2,
-                //Нижний правый угол
-                x2,y
+                x,y
         });
         //Используем программу простой заливки
         glUseProgram(fillColorShader);
@@ -151,10 +251,7 @@ public class OpenGLES20Engine implements GraphicEngine {
                 nativeVertexes);
         //Заюзали атрибут
         glEnableVertexAttribArray(aPosition);
-        //Задаем матрицу для того чтобы отойти от экранной СК
-        final int uMatrix = glGetUniformLocation(fillColorShader, "u_Matrix");
-        projectionMatrix.position(0);
-        glUniformMatrix4fv(uMatrix, 1, false, projectionMatrix);
+        useMatrix(fillColorShader);
 
         //Задаем цвет
         //Получаем uniform для шейдра
@@ -173,7 +270,7 @@ public class OpenGLES20Engine implements GraphicEngine {
         //так как мне меньше писать, но с точки зрения машины это ни разу
         //не быстрее так за использованием
         //GL_QUADS сокрыта куча кода, которой быть не должно`
-        glDrawArrays(GL_TRIANGLES, 0, 6);
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
     }
 
 }
