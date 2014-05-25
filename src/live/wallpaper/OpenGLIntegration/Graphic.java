@@ -218,13 +218,14 @@ public class Graphic {
     }
 
     private static void drawAllRects(){
+        final int length = drawRectValues.size();
         FloatBuffer vertexes = createNativeArrayFromQueue(drawRectValues);
         //Внутри вершины записаны в следующем порядке:
         //Две координаты, четыре компоненты цвета
         final int componentCount = POSITION_COMPONENT_COUNT + COLOR_COMPONENT_COUNT;
 
         //Получаем число вершин по числу значений float
-        final int vertexesCount = drawRectValues.size() / componentCount;
+        final int vertexesCount = length / componentCount;
 
         //Используем программу, которая зальет прямоугольник цветом
         glUseProgram(fillColorShader);
@@ -293,7 +294,7 @@ public class Graphic {
         glVertexAttribPointer(aTextureCoordinates, UV_COMPONENT_COUNT, GL_FLOAT, false, stride, vertexes);
         glEnableVertexAttribArray(aTextureCoordinates);
 
-        vertexes.position(POSITION_COMPONENT_COUNT+1);
+        vertexes.position(POSITION_COMPONENT_COUNT+UV_COMPONENT_COUNT);
         glVertexAttribPointer(aTransparency, 1, GL_FLOAT, false, stride, vertexes);
         glEnableVertexAttribArray(aTransparency);
 
