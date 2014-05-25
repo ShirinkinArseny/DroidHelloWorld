@@ -1,75 +1,69 @@
 package live.wallpaper;
 
 import android.content.Context;
+import android.opengl.GLES20;
 import android.preference.PreferenceManager;
-import android.service.wallpaper.WallpaperService;
-import android.util.DisplayMetrics;
-import android.view.SurfaceHolder;
+import live.wallpaper.OpenGLIntegration.LifecycleRenderer;
+import live.wallpaper.OpenGLIntegration.OpenGLES20Engine;
+import live.wallpaper.OpenGLIntegration.OpenGLES20LiveWallpaperService;
 
-public class LiveWallpaperService extends WallpaperService {
+import javax.microedition.khronos.egl.EGLConfig;
+import javax.microedition.khronos.opengles.GL10;
 
+
+public class LiveWallpaperService extends OpenGLES20LiveWallpaperService {
     @Override
     public Engine onCreateEngine() {
-        return new RBEngine(this);
+        return new OpenGLES20LiveWallpaperService.GLEngine();
     }
 
-    @Override
-    public void onCreate() {
-        super.onCreate();
-        //Загружаем стандартные значения настроек, если пользователь ещё не зашел в настройки
-        PreferenceManager.setDefaultValues(this, R.xml.preferences, false);
-
+    public LifecycleRenderer getRenderer() {
+        return new MyRenderer();
     }
 
-    public class RBEngine extends Engine {
+    class MyRenderer implements LifecycleRenderer {
 
-        private final World world;
+        private World world;
 
-        public RBEngine(Context context) {
+        @Override
+        public void onCreate(Context context) {
+            //Загружаем стандартные значения настроек, если пользователь ещё не зашел в настройки
+            PreferenceManager.setDefaultValues(context, R.xml.preferences, false);
             world = new World(context);
         }
 
         @Override
-        public void onCreate(SurfaceHolder surfaceHolder) {
-            super.onCreate(surfaceHolder);
-            setTouchEventsEnabled(true);
+        public void onPause() {
+            world.pausePainting();
         }
 
         @Override
         public void onDestroy() {
-            super.onDestroy();
             world.stopPainting();
+            OpenGLES20Engine.destroy();
         }
 
         @Override
-        public void onSurfaceChanged(SurfaceHolder holder, int format, int width, int height) {
-            super.onSurfaceChanged(holder, format, width, height);
-            world.setSurface(holder, width, height);
+        public void onResume() {
+            world.resumePainting();
         }
 
         @Override
-        public void onSurfaceCreated(SurfaceHolder holder) {
-            super.onSurfaceCreated(holder);
-            DisplayMetrics metrics = getApplicationContext().getResources().getDisplayMetrics();
-            world.setSurface(holder, metrics.widthPixels, metrics.heightPixels);
-            world.run();
-        }
-
-
-        @Override
-        public void onVisibilityChanged(boolean visible) {
-            if (visible) {
-                world.resumePainting();
-            } else {
-                world.pausePainting();
-            }
+        public void onSurfaceCreated(GL10 gl, EGLConfig config) {
+            OpenGLES20Engine.init(getBaseContext());
+            world.init();
         }
 
         @Override
-        public void onSurfaceDestroyed(SurfaceHolder holder) {
-            super.onSurfaceDestroyed(holder);
-            world.stopPainting();
+        public void onSurfaceChanged(GL10 gl, int width, int height) {
+            OpenGLES20Engine.updateScreen(width,height);
+            world.setSurface(width, height);
         }
 
+        @Override
+        public void onDrawFrame(GL10 gl) {
+            //Рисуем
+            world.updateAndDraw();
+        }
     }
 }

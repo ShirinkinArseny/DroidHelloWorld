@@ -1,8 +1,10 @@
 package live.wallpaper.OpenGLIntegration;
 
 import android.content.Context;
+import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.opengl.Matrix;
+import live.wallpaper.Configs.LoggerConfig;
 import live.wallpaper.OpenGLIntegration.Shaders.ShaderGenerator;
 import live.wallpaper.OpenGLIntegration.Shaders.TextureGenerator;
 import live.wallpaper.R;
@@ -24,32 +26,31 @@ public class OpenGLES20Engine implements GraphicEngine {
     //Создание матрицы преобразования для вывода на экран с использованием абсолютной системы координат
     //Собственно матрица (матрица проекции)
     private static FloatBuffer projectionMatrix;
+
+    /**
+     * Включает использование матрицы преобразования в шейдере
+     * @param programId Программа шейдера
+     */
     private static void useMatrix(int programId) {
-
         //Задаем матрицу для того чтобы отойти от экранной СК
-        final int uMatrix = glGetUniformLocation(programId, "u_Matrix");
         projectionMatrix.position(0);
-        glUniformMatrix4fv(uMatrix, 1, false, projectionMatrix);
-
+        glUniformMatrix4fv(glGetUniformLocation(programId, "u_Matrix"), 1, false, projectionMatrix);
     }
-    public static void updateScreen(int width, int height) {
-        //Задаем режим вывода для OpenGL
-        glViewport(0, 0, width, height);
-        //Создаем матрицу
 
-        //Масштаб
-        float[] scale = new float[16];
-        Matrix.setIdentityM(scale,0);
-        Matrix.scaleM(scale, 0, 3.0f*width/2.0f, 3.0f*height/2.0f, 0f);
-        //Перенос
-        float[] translation = new float[16];
-        Matrix.setIdentityM(translation,0);
-        Matrix.translateM(translation, 0, -0.5f, -0.5f, 0f);
-        //Произведение преобразований
+    /**
+     * Обновление параметров матрицы преобразования. Должна быть вызвана при изменении параметров экрана
+     * @param width Ширина
+     * @param height Высота
+     */
+    public static void updateScreen(int width, int height) {
+        glViewport(0,0,width,height);
+
         float[] result = new float[16];
-        Matrix.multiplyMM(result,0,scale,0,translation,0);
+        Matrix.orthoM(result, 0, 0,width,height,0,-1,1);
+
         projectionMatrix = createNativeFloatArray(result);
         projectionMatrix.position(0);
+
     }
 
 
@@ -79,19 +80,40 @@ public class OpenGLES20Engine implements GraphicEngine {
                 put(javaFloatArray);
     }
 
+    //Шейдер, который просто заливает всё цветом
     private static int fillColorShader;
+    //Шейдер, который заливает всё текстурой и прозрачностью
     private static int textureShader;
 
+    /**
+     * Инициализация системы. Компилирование всего и вся.
+     * @param context Контекст, в котором содержатся все ресурсы
+     */
     public static void init(Context context) {
+        //Загружаем шейдеры
         fillColorShader = ShaderGenerator.createProgram(context,
                 R.raw.fillcolor_vertex_shader,
                 R.raw.fillcolor_fragment_shader);
+        ShaderGenerator.validateProgram(fillColorShader);
         textureShader = ShaderGenerator.createProgram(context,
                 R.raw.texture_vertex_shader,
                 R.raw.texture_fragment_shader);
+        ShaderGenerator.validateProgram(textureShader);
+        //Создаем словарь с размерами Bitmap
         textureDimensions = new TreeMap<Integer, float[]>();
+
+
+        //Включаем alpha-blending
+
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glEnable(GL_BLEND);
     }
 
+    /**
+     * Преобразование массива Object[] из ключей Map в массив int[]
+     * @param array Массив ключей из Map
+     * @return Массив ключей в int
+     */
     private static int[] convert(Object[] array) {
         int[] result = new int[array.length];
 
@@ -101,16 +123,23 @@ public class OpenGLES20Engine implements GraphicEngine {
         return result;
     }
 
+    /**
+     * Уничтожение контекста
+     */
     public static void destroy() {
         glDeleteProgram(fillColorShader);
         glDeleteProgram(textureShader);
         glDeleteTextures(textureDimensions.size(), convert(textureDimensions.keySet().toArray()),0);
     }
 
+    /**
+     * Начало отрисовки. Очищение экрана белым цветом.
+     */
     @Override
     public void startDraw() {
         //Очищаем экран белым цветом
         glClearColor(1.0f,1.0f,1.0f,1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
     @Override
@@ -118,8 +147,14 @@ public class OpenGLES20Engine implements GraphicEngine {
 
     }
 
+    /**
+     * Генерация текстуры из Bitmap
+     * @param b Битмап, из которого создается текстура (величина сторон должна быть степенью двойки!)
+     * @return Итентификатор
+     */
     @Override
     public int genTexture(Bitmap b) {
+        //LoggerConfig.d("OpenGLEngine", b.isRecycled()+"");
         final int id = TextureGenerator.loadTexture(b);
         textureDimensions.put(id, new float[]{b.getWidth(), b.getHeight()});
         return id;
@@ -217,18 +252,18 @@ public class OpenGLES20Engine implements GraphicEngine {
         //Двух треугольников (но потом это выпиливается к херам и приделывется два массива
         //первый будет состоять из 4 float (вершин), а второй из 6 int (порядок обхода)
         final FloatBuffer nativeVertexes = createNativeFloatArray(new float[]{
-                //Центр
-                (x2-x)/2, (y2-y)/2,
                 //Нижний левый угол
                 x,y,
-                //Нижний правый угол
-                x2,y,
                 //Верхний правый угол
                 x2,y2,
                 //Верхний левый угол
                 x, y2,
                 //Нижний левый угол
-                x,y
+                x,y,
+                //Нижний правый угол
+                x2,y,
+                //Верхний правый угол
+                x2,y2
         });
         //Используем программу простой заливки
         glUseProgram(fillColorShader);
@@ -269,8 +304,8 @@ public class OpenGLES20Engine implements GraphicEngine {
         //Использование GL_QUADS проще с моей точки зрения
         //так как мне меньше писать, но с точки зрения машины это ни разу
         //не быстрее так за использованием
-        //GL_QUADS сокрыта куча кода, которой быть не должно`
-        glDrawArrays(GL_TRIANGLE_FAN, 0, 6);
+        //GL_QUADS сокрыта куча кода, которой быть не должно
+        glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 
 }

@@ -1,7 +1,7 @@
 //Позиция
 attribute vec4 a_Position;
 //Позиция в текстуре
-attribute vec2 a_TextureCoordianates;
+attribute vec2 a_TextureCoordinates;
 //Для передачи фрагментному шейдеру
 varying vec2 v_TextureCoordinates;
 

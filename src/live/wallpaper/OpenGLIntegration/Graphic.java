@@ -4,7 +4,7 @@ import android.graphics.Bitmap;
 
 public class Graphic {
 
-    private static final GraphicEngine graphicEngine =new CanvasEngine();
+    private static final GraphicEngine graphicEngine =new OpenGLES20Engine();
 
     public static int genTexture(Bitmap b) {
         return graphicEngine.genTexture(b);

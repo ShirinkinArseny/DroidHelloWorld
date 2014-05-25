@@ -33,12 +33,11 @@ public class World {
 
     public World(Context context) {
         res=context.getResources();
-        init();
+        //init();
         Configs.init(context);
-        reInit();
     }
 
-    private static void init() {
+    public static void init() {
         DisplayMetrics metrics = res.getDisplayMetrics();
         pictureSizeCoef=Math.max(metrics.widthPixels, metrics.heightPixels)/1100f;
 
@@ -48,6 +47,8 @@ public class World {
         BloodLayer.init();
         MessagesLayer.init();
         Bullet.reInit(pictureSizeCoef);
+
+        reInit();
     }
 
     private static void loadTextures() {
@@ -59,7 +60,7 @@ public class World {
         menTexture[1][0] = getScaledResource(res, R.drawable.blue, 32);
         menTexture[1][1] = getScaledResource(res, R.drawable.blue, 96);
         menTexture[1][2] = getScaledResource(res, R.drawable.bluetower, 32);
-        menTexture[1][3] = menTexture[0][3];
+        menTexture[1][3] = getScaledResource(res, R.drawable.bullet, 28);
         menTexture[2][0] = getScaledResource(res, R.drawable.shadow, 64);
         menTexture[2][1] = getScaledResource(res, R.drawable.shadow, 192);
         menTexture[2][2] = getScaledResource(res, R.drawable.towershadow, 64);
@@ -76,7 +77,8 @@ public class World {
         int[][] menTextureIDs=new int[4][4];
         for (int i=0; i<4; i++)
             for (int j=0; j<4;j++)
-                menTextureIDs[i][j]=Graphic.genTexture(menTexture[i][j]);
+                if(menTexture[i][j]!=null)
+                    menTextureIDs[i][j]=Graphic.genTexture(menTexture[i][j]);
 
         Unit.init(menTextureIDs, sizes, pictureSizeCoef);
 
