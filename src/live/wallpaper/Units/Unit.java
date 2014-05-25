@@ -69,7 +69,7 @@ public class Unit extends ControlledUnit {
         Graphic.drawBitmap(getBitmap(), getX0(), getY0());
     }
 
-    protected void drawHealth() {
+    public void drawHealth() {
         float health=Math.max(0, this.health);
         Graphic.drawRect(getX0(), getY0()-2,
                 getX0() + getWidth() * health, getY0(),
@@ -78,6 +78,6 @@ public class Unit extends ControlledUnit {
 
     public void draw() {
         drawBase();
-        drawHealth();
+       // drawHealth();
     }
 }
