@@ -31,6 +31,10 @@ public class Graphic {
     //Очередь из значений
     private static Queue<Float> drawRectValues = new LinkedBlockingQueue<>();
     private static Map<Integer, Queue<Float>>drawBitmap = new LinkedHashMap<>();
+
+    private static Queue<Float> initialQueue = new LinkedBlockingQueue<>();
+    private static Queue<Float> tempQueue = new LinkedBlockingQueue<>();
+
     private static void addFloatArrayToQueue(float[] array, Queue<Float> queue) {
         for (int i=0; i<array.length; i++)
             queue.add(array[i]);
@@ -39,14 +43,16 @@ public class Graphic {
         addFloatArrayToQueue(values, drawRectValues);
     }
     private static void addDrawBitmap(float[] values, int textureId) {
-        Queue<Float> queue;
-        if ((queue = drawBitmap.get(textureId))!=null)
-            addFloatArrayToQueue(values, queue);
+        tempQueue = drawBitmap.get(textureId);
+        if (tempQueue!=null) {
+            addFloatArrayToQueue(values, tempQueue);
+            initialQueue = tempQueue;
+        }
         else
         {
-            queue = new LinkedBlockingQueue<>();
-            addFloatArrayToQueue(values, queue);
-            drawBitmap.put(textureId, queue);
+            initialQueue.clear();
+            addFloatArrayToQueue(values, initialQueue);
+            drawBitmap.put(textureId, initialQueue);
         }
     }
 
