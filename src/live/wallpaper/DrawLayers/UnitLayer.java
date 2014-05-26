@@ -7,7 +7,6 @@ import live.wallpaper.DrawLayers.BloodLayer.BloodLayer;
 import live.wallpaper.DrawLayers.MessagesLayer.MessagesLayer;
 import live.wallpaper.DrawLayers.SpawnLayer.SpawnsLayer;
 import live.wallpaper.Geometry.Point;
-import live.wallpaper.OpenGLIntegration.Graphic;
 import live.wallpaper.TimeFunctions.LoopedTicker;
 import live.wallpaper.Units.*;
 
@@ -268,14 +267,6 @@ public class UnitLayer{
         moveUnits(dt);
         synchroniser.unlock();
         updateSpawnAndIntersection.tick(dt);
-    }
-
-    public static void drawHealthLayer() {
-        synchroniser.waitForUnlockAndLock();
-        for (int i=0; i<4; i++)
-            for (Unit m : dividedUnits[i])
-                m.drawHealth();
-        synchroniser.unlock();
     }
 
 

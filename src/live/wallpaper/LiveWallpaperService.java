@@ -3,8 +3,8 @@ package live.wallpaper;
 import android.content.Context;
 import android.opengl.GLES20;
 import android.preference.PreferenceManager;
-import live.wallpaper.OpenGLIntegration.Graphic;
 import live.wallpaper.OpenGLIntegration.LifecycleRenderer;
+import live.wallpaper.OpenGLIntegration.OpenGLES20Engine;
 import live.wallpaper.OpenGLIntegration.OpenGLES20LiveWallpaperService;
 
 import javax.microedition.khronos.egl.EGLConfig;
@@ -40,7 +40,7 @@ public class LiveWallpaperService extends OpenGLES20LiveWallpaperService {
         @Override
         public void onDestroy() {
             world.stopPainting();
-            Graphic.destroy();
+            OpenGLES20Engine.destroy();
         }
 
         @Override
@@ -50,13 +50,13 @@ public class LiveWallpaperService extends OpenGLES20LiveWallpaperService {
 
         @Override
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-            Graphic.init(getBaseContext());
+            OpenGLES20Engine.init(getBaseContext());
             world.init();
         }
 
         @Override
         public void onSurfaceChanged(GL10 gl, int width, int height) {
-            Graphic.updateScreen(width,height);
+            OpenGLES20Engine.updateScreen(width,height);
             world.setSurface(width, height);
         }
 

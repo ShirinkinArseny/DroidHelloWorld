@@ -12,12 +12,11 @@ import live.wallpaper.DrawLayers.BloodLayer.Blood;
 import live.wallpaper.DrawLayers.BloodLayer.BloodLayer;
 import live.wallpaper.DrawLayers.MessagesLayer.MessagesLayer;
 import live.wallpaper.DrawLayers.SpawnLayer.SpawnsLayer;
+import live.wallpaper.OpenGLIntegration.CanvasEngine;
 import live.wallpaper.OpenGLIntegration.Graphic;
 import live.wallpaper.Units.*;
 
 import java.util.*;
-
-import static live.wallpaper.OpenGLIntegration.Graphic.*;
 
 public class World {
 
@@ -138,6 +137,7 @@ public class World {
     }
 
     public void setSurface(SurfaceHolder s, int width, int height) {
+           CanvasEngine.setHolder(s);
            setSurface(width,height);
     }
 
@@ -160,24 +160,13 @@ public class World {
     }
 
     private void draw() {
-        glBegin(DrawType.RECTANGLES);
-            TerritoryLayer.draw();
-        glEnd();
-        glBegin(DrawType.BITMAPS);
-            CanvaLayer.draw();
-            TimerLayer.draw();
-            BloodLayer.draw();
-        glEnd();
-        glBegin(DrawType.SCALED_ALPHA_BITMAP);
-            SpawnsLayer.draw();
-        glEnd();
-        glBegin(DrawType.BITMAPS);
-            UnitLayer.draw();
-            MessagesLayer.draw();
-        glEnd();
-        glBegin(DrawType.RECTANGLES);
-            UnitLayer.drawHealthLayer();
-        glEnd();
+        TerritoryLayer.draw();
+        CanvaLayer.draw();
+        TimerLayer.draw();
+        BloodLayer.draw();
+        SpawnsLayer.draw();
+        UnitLayer.draw();
+        MessagesLayer.draw();
     }
 }
         
