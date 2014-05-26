@@ -279,7 +279,7 @@ public class OpenGLES20Engine implements GraphicEngine {
                 //Нижний правый угол
                 x2,y,
                 //Верхний правый угол
-                x2,y2},drawBitmapVertexes);
+                x2,y2},drawRectVertexes );
         //Используем программу простой заливки
         glUseProgram(fillColorShader);
         final int aPosition = glGetAttribLocation(fillColorShader, "a_Position");
