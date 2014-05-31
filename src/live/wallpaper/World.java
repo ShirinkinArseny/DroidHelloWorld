@@ -12,7 +12,6 @@ import live.wallpaper.DrawLayers.BloodLayer.Blood;
 import live.wallpaper.DrawLayers.BloodLayer.BloodLayer;
 import live.wallpaper.DrawLayers.MessagesLayer.MessagesLayer;
 import live.wallpaper.DrawLayers.SpawnLayer.SpawnsLayer;
-import live.wallpaper.OpenGLIntegration.CanvasEngine;
 import live.wallpaper.OpenGLIntegration.Graphic;
 import live.wallpaper.Units.*;
 
@@ -137,7 +136,6 @@ public class World {
     }
 
     public void setSurface(SurfaceHolder s, int width, int height) {
-           CanvasEngine.setHolder(s);
            setSurface(width,height);
     }
 
