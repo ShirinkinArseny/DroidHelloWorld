@@ -5,7 +5,7 @@ import live.wallpaper.Geometry.Rectangle;
 
 public class Graphic {
 
-    private static final GraphicEngine graphicEngine =new OpenGLES20Engine();
+    private static final OpenGLES20Engine graphicEngine =new OpenGLES20Engine();
 
     public static int genTexture(Bitmap b) {
         return graphicEngine.genTexture(b);
@@ -24,11 +24,11 @@ public class Graphic {
     }
 
     public static void drawBitmap(int b, Rectangle r) {
-        //TODO: там всё сделать нормально graphicEngine.drawBitmap(b, r);
+        graphicEngine.drawBitmap(b, r.getX0(), r.getY0(), r.getX1(), r.getY1());
     }
 
     public static void drawBitmap(int b, Rectangle r, float opacity) {
-        //TODO: там всё сделать нормально graphicEngine.drawBitmap(b, x, y, opacity);
+        graphicEngine.drawBitmap(b, r.getX0(), r.getY0(), r.getX1(), r.getY1(), opacity);
     }
 
     public static void drawRect(float x, float y, float x2, float y2, float r, float g, float b, float a) {

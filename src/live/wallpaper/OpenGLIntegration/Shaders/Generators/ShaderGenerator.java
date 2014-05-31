@@ -1,4 +1,4 @@
-package live.wallpaper.OpenGLIntegration.Shaders;
+package live.wallpaper.OpenGLIntegration.Shaders.Generators;
 
 import android.content.Context;
 import live.wallpaper.Configs.LoggerConfig;
@@ -11,7 +11,7 @@ public class ShaderGenerator {
         return compileShader(GL_VERTEX_SHADER, shaderCode);
     }
     public static int compileVertexShader(Context context, int resourceId) {
-        return compileVertexShader(TextResourceReader.readTextFileFromResource(context,resourceId));
+        return compileVertexShader(TextResourceReader.readTextFileFromResource(context, resourceId));
     }
     public static int compileFragmentShader(String shaderCode) {
         return compileShader(GL_FRAGMENT_SHADER, shaderCode);
