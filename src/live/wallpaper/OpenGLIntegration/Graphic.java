@@ -307,7 +307,11 @@ public class Graphic {
 
     }
 
-    public static void drawRect(float x, float y, float width, float height, float r, float g, float b, float a) {
+    public static void drawRect(float x, float y, float x1, float y1, float r, float g, float b, float a) {
+        drawRectInside(x,y,x1-x,y1-y, r,g,b,a);
+    }
+
+    private static void drawRectInside(float x, float y, float width, float height, float r, float g, float b, float a) {
         //Будем рисовать только в том случае, если режим рисовки -- прямоугольники
         if (currentMode!=Mode.DRAW_RECTANGLES)
             LoggerConfig.e(TAG, "Incorrect drawing mode");
