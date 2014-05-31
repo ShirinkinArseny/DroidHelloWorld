@@ -28,6 +28,10 @@ public class CanvaLayer {
     }
 
     public static void draw() {
-                    Graphic.fillBitmap(bg, width, dx);
+            for (float i = dx - width; i < sx; i+=width) {
+                for (float j = 0; j < sy; j+=height) {
+                    Graphic.drawBitmap(bg, i, j);
+                }
+            }
     }
 }

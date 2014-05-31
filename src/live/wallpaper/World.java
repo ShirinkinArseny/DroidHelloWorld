@@ -86,10 +86,10 @@ public class World {
 
         Bitmap blood1=getScaledResource(res, R.drawable.blood, 64);
         Bitmap blood2=getScaledResource(res, R.drawable.coal, 64);
-        Blood.init(new int[]{Graphic.genTexture(blood1), Graphic.genTexture(blood2)}, blood1.getWidth(), blood1.getHeight());
+        Blood.init(new int[]{Graphic.genTexture(blood1), Graphic.genTexture(blood2)});
 
         Bitmap spawn=getScaledResource(res, R.drawable.spawn, 74);
-        SpawnsLayer.init(Graphic.genTexture(spawn), spawn.getWidth(), spawn.getHeight());
+        SpawnsLayer.init(Graphic.genTexture(spawn), spawn.getWidth()/2, spawn.getHeight()/2);
     }
 
     public static void reInit() {

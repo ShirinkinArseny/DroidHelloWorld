@@ -1,4 +1,4 @@
-package live.wallpaper.OpenGLIntegration.Shaders.Generators;
+package live.wallpaper.OpenGLIntegration.Shaders;
 
 import android.content.Context;
 import android.content.res.Resources;

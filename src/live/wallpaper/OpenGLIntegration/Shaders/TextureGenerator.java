@@ -1,4 +1,4 @@
-package live.wallpaper.OpenGLIntegration.Shaders.Generators;
+package live.wallpaper.OpenGLIntegration.Shaders;
 
 import android.graphics.Bitmap;
 import live.wallpaper.Configs.LoggerConfig;
