@@ -3,12 +3,14 @@ package live.wallpaper.Units;
 import android.util.Log;
 import live.wallpaper.DrawLayers.MessagesLayer.MessagesLayer;
 import live.wallpaper.Geometry.Point;
+import live.wallpaper.Geometry.Rectangle;
 import live.wallpaper.OpenGLIntegration.Graphic;
 import live.wallpaper.TimeFunctions.FlappyTimeFunction;
 
 public class Unit extends ControlledUnit {
 
     private FlappyTimeFunction kills;
+    private Rectangle shadow;
     private static int[][] menTexture;
     private static int[][] sizes;
 
@@ -28,6 +30,7 @@ public class Unit extends ControlledUnit {
 
     public Unit(float x, float y, int team, float health, float speed, Type t) {
         super(x, y, sizes[getTypeNumber(t)][0], sizes[getTypeNumber(t)][1], team, health, speed, t);
+        shadow=new Rectangle(x, y, sizes[getTypeNumber(t)][0]*2, sizes[getTypeNumber(t)][1]*2);
         kills=new FlappyTimeFunction(2f, new Runnable() {
             @Override
             public void run() {
@@ -59,10 +62,11 @@ public class Unit extends ControlledUnit {
             changeHealth(-10f);
         }
         kills.tick(dt);
+        shadow.changePosition(dxt, dyt);
     }
 
     public void drawShadow() {
-        Graphic.drawBitmap(getShadow(), this);
+        Graphic.drawBitmap(getShadow(), shadow);
     }
 
     public void drawBase() {
