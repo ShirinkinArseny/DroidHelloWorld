@@ -38,19 +38,19 @@
             android:inputType="number"
             android:numeric=""
             android:title="@string/bloodVisibleTime"
-            android:defaultValue="0.1f"
+            android:defaultValue="0.05f"
             />
     <EditTextPreference
             android:key="bloodInterval"
             android:inputType="number"
             android:title="@string/bloodInterval"
-            android:defaultValue="0.2f"
+            android:defaultValue="0.5f"
             />
     <EditTextPreference
             android:key="bloodCount"
             android:inputType="number"
             android:title="@string/bloodCount"
-            android:defaultValue="10"
+            android:defaultValue="4"
             />
     <CheckBoxPreference
             android:key="bloodDraw"
