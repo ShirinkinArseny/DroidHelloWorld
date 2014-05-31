@@ -12,7 +12,7 @@ public class Graphic {
     }
 
     public static void startDraw() {
-        graphicEngine.startDraw();
+        graphicEngine.startDraw(OpenGLES20Engine.Mode.DRAW_RECTANGLES);
     }
 
     public static void finishDraw() {
@@ -24,15 +24,15 @@ public class Graphic {
     }
 
     public static void drawBitmap(int b, Rectangle r) {
-        graphicEngine.drawBitmap(b, r.getX0(), r.getY0(), r.getX1(), r.getY1());
+        graphicEngine.drawBitmap(b, r.getX0(), r.getY0(), r.getWidth(), r.getHeight());
     }
 
     public static void drawBitmap(int b, Rectangle r, float opacity) {
-        graphicEngine.drawBitmap(b, r.getX0(), r.getY0(), r.getX1(), r.getY1(), opacity);
+        graphicEngine.drawBitmap(b, r.getX0(), r.getY0(), r.getWidth(), r.getHeight(), opacity);
     }
 
     public static void drawRect(float x, float y, float x2, float y2, float r, float g, float b, float a) {
-        graphicEngine.drawRect(x, y, x2, y2, r, g, b, a);
+        graphicEngine.drawRect(x, y, x2-x, y2-y, r, g, b, a);
     }
 
     public static void drawText(float x, float y, float size, float r, float g, float b, String text) {

@@ -22,7 +22,12 @@ public abstract class OpenGLES20LiveWallpaperService extends WallpaperService {
             }
 
             public void onDestroy() {
-                renderer.onDestroy();
+                this.queueEvent(new Runnable() {
+                    @Override
+                    public void run() {
+                        renderer.onDestroy();
+                    }
+                });
                 super.onDetachedFromWindow();
             }
 

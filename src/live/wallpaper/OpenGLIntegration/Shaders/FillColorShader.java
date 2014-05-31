@@ -23,6 +23,10 @@ public class FillColorShader implements Shader {
         GLES20.glUniformMatrix4fv(uMatrix, 1, false, matrix);
     }
 
+    public void setMatrix(float[] matrix, int offset) {
+        GLES20.glUniformMatrix4fv(uMatrix, 1, false, matrix, offset);
+    }
+
     private int aPosition;
     public int get_aPosition() { return aPosition; }
 

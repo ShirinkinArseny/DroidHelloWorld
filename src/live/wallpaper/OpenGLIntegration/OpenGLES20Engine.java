@@ -3,14 +3,11 @@ package live.wallpaper.OpenGLIntegration;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.opengl.Matrix;
-import live.wallpaper.Configs.IntegerField;
 import live.wallpaper.Configs.LoggerConfig;
 import live.wallpaper.OpenGLIntegration.Shaders.FillColorShader;
-import live.wallpaper.OpenGLIntegration.Shaders.Generators.ShaderGenerator;
 import live.wallpaper.OpenGLIntegration.Shaders.Generators.TextureGenerator;
 import live.wallpaper.OpenGLIntegration.Shaders.Shader;
 import live.wallpaper.OpenGLIntegration.Shaders.TextureShader;
-import live.wallpaper.R;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -26,7 +23,8 @@ public class OpenGLES20Engine {
 
     //Создание матрицы преобразования для вывода на экран с использованием абсолютной системы координат
     //Собственно матрица (матрица проекции)
-    private static FloatBuffer projectionMatrix;
+    private static FloatBuffer projectionMatrixBuffer;
+    private static float[] orthoMatrix = new float[16];
 
     /**
      * Включает использование матрицы преобразования в шейдере
@@ -34,8 +32,8 @@ public class OpenGLES20Engine {
      */
     private static void useMatrix(Shader shader) {
         //Задаем матрицу для того чтобы отойти от экранной СК
-        projectionMatrix.position(0);
-        shader.setMatrix(projectionMatrix);
+        projectionMatrixBuffer.position(0);
+        shader.setMatrix(projectionMatrixBuffer);
     }
 
     /**
@@ -45,12 +43,10 @@ public class OpenGLES20Engine {
      */
     public static void updateScreen(int width, int height) {
         glViewport(0,0,width,height);
+        Matrix.orthoM(orthoMatrix, 0, 0,width,height,0,-1,1);
 
-        float[] result = new float[16];
-        Matrix.orthoM(result, 0, 0,width,height,0,-1,1);
-
-        projectionMatrix = createNativeFloatArray(result);
-        projectionMatrix.position(0);
+        projectionMatrixBuffer = createNativeFloatArray(orthoMatrix);
+        projectionMatrixBuffer.position(0);
 
     }
 
@@ -158,6 +154,7 @@ public class OpenGLES20Engine {
         for (Integer texture : textures)
             goodArray[i++] = texture;
         glDeleteTextures(goodArray.length, goodArray, 0);
+        glDeleteBuffers(1, new int[]{vboId}, 0);
     }
 
 
@@ -172,22 +169,25 @@ public class OpenGLES20Engine {
      * Задаем режим отрисовки прямоугольников
      */
     private static void initRectangles() {
-        //Задаем буфер для отрисовки
-        glBindBuffer(GL_ARRAY_BUFFER, vboId);
         //Задаем шейдер для отрисовки
         fillColorShader.use();
+        //Задаем буфер для отрисовки
+        glBindBuffer(GL_ARRAY_BUFFER, vboId);
         //Определяем местонахождение всех атрибутов
         final int aPosition = fillColorShader.get_aPosition();
         glEnableVertexAttribArray(aPosition);
         glVertexAttribPointer(aPosition, POSITION_COMPONENT_COUNT, GL_FLOAT, false, 0, 0);
+        //Освобождаем VBO
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
     }
+
 
     /**
      * Задаем режим отрисовки текстур
      */
     private static void initBitmaps() {
-        glBindBuffer(GL_ARRAY_BUFFER, vboId);
         textureShader.use();
+        glBindBuffer(GL_ARRAY_BUFFER, vboId);
         final int aPosition = textureShader.get_aPosition();
         final int aTexturePosition = textureShader.get_aTextureCoordinates();
         glEnableVertexAttribArray(aPosition);
@@ -195,6 +195,8 @@ public class OpenGLES20Engine {
         //Для текстурных координат и для позиции используем одни и те же значения
         glEnableVertexAttribArray(aTexturePosition);
         glVertexAttribPointer(aTexturePosition, UV_COMPONENT_COUNT, GL_FLOAT, false, 0, 0);
+        //Освобождаем VBO
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         //Задаем 0-й юнит для текстуры
         //Так как текстура всего одна -- то всё будет в порядке
@@ -205,11 +207,25 @@ public class OpenGLES20Engine {
         textureShader.setTexture(0);
     }
 
+    /**
+     * Освобождаем контекст рисовки
+     */
+    private static void releaseDraw() {
+        //Задаем нулевой шейдер
+        glUseProgram(0);
+        //Освобождаем VBO
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
+
 
     /**
      * Начало отрисовки. Очищение экрана белым цветом.
      */
     public void startDraw(Mode drawMode) {
+        //Очищаем экран белым цветом
+        glClearColor(1.0f,1.0f,1.0f,1.0f);
+        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
+
         currentMode = drawMode;
         switch (drawMode) {
             case DRAW_RECTANGLES: initRectangles();
@@ -217,13 +233,10 @@ public class OpenGLES20Engine {
             case DRAW_BITMAPS:    initBitmaps();
                 break;
         }
-        //Очищаем экран белым цветом
-        glClearColor(1.0f,1.0f,1.0f,1.0f);
-        glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
     }
 
     public void finishDraw() {
-
+        //releaseDraw();
     }
 
 
@@ -241,73 +254,73 @@ public class OpenGLES20Engine {
         return id;
     }
 
-    public void drawBitmap(int b, float x, float y, float x1, float y1) {
-        drawBitmap(b,x,y,x1,y1,1.0f);
+    private static float[] scaleMatrix = new float[16];
+    private static float[] translateMatrix = new float[16];
+    private static float[] resultMatrix = new float[16];
+
+    /**
+     * Создание матрицы для преобразования "единичного" прямоугольника к необходимому виду
+     * @param x X для левого нижнего угла
+     * @param y Y для левого нижнего угла
+     * @param width Ширина прямоугольника
+     * @param height Высота прямоугольника
+     */
+    private static void createRectangle(float x, float y, float width, float height) {
+        //Создаем матрицу
+        //Задаем масштабирование
+        Matrix.setIdentityM(scaleMatrix, 0);
+        Matrix.setIdentityM(translateMatrix,0);
+        Matrix.setIdentityM(resultMatrix,0);
+        Matrix.scaleM(scaleMatrix, 0, width, height, 1);
+        //Задаем перенос
+        Matrix.translateM(translateMatrix, 0, x,y,0);
+        //Сначала масштабируем, потом переносим
+        Matrix.multiplyMM(resultMatrix, 0, translateMatrix, 0, scaleMatrix, 0);
+        //Переносим в экранную систему координат
+        Matrix.multiplyMM(resultMatrix, 0, orthoMatrix, 0, resultMatrix, 0);
     }
 
-    private static final FloatBuffer drawBitmapVertexes = createFloatBuffer(6*(POSITION_COMPONENT_COUNT+UV_COMPONENT_COUNT));
-
-    public void drawBitmap(int b, float x, float y, float x1, float y1, float opacity) {
-
-        //Вершины со всеми значениями
-        putValuesIntoFloatBuffer(new float[]{
-                //Порядок: вершины, текстурные координаты
-                //Левый нижний угол
-                x,y, 0,0,
-                //Правый верхний угол
-                x1, y1, 1,1,
-                //Левый верхний угол
-                x,y1, 0,1,
-                //Правый нижний угол
-                x1, y, 1,0,
-                //Левый нижний угол
-                x,y, 0,0,
-                //Правый верхний угол
-                x1, y1, 1,1
-        }, drawBitmapVertexes);
-        //Воспользовались программой
-        textureShader.use();
-        final int stride = (POSITION_COMPONENT_COUNT + UV_COMPONENT_COUNT)*BYTES_PER_FLOAT;
-        //Указываем значения для вершин
-        final int aPosition = textureShader.get_aPosition();
-        drawBitmapVertexes.position(0);
-        glVertexAttribPointer(
-                aPosition,
-                POSITION_COMPONENT_COUNT,
-                GL_FLOAT,
-                false,
-                stride,
-                drawBitmapVertexes
-        );
-        glEnableVertexAttribArray(aPosition);
-        //Указываем значения для цвета
-        final int aTextureCoordinates = textureShader.get_aTextureCoordinates();
-        drawBitmapVertexes.position(POSITION_COMPONENT_COUNT);
-        glVertexAttribPointer(
-                aTextureCoordinates,
-                UV_COMPONENT_COUNT,
-                GL_FLOAT,
-                false,
-                stride,
-                drawBitmapVertexes
-        );
-        glEnableVertexAttribArray(aTextureCoordinates);
-        //Применили матрицу
-        useMatrix(textureShader);
-
-        //Указали прозрачность
-        textureShader.setTransparency(opacity);
-
-        //Указали текстуру
-        glActiveTexture(GL_TEXTURE0);
-        glBindTexture(GL_TEXTURE_2D, b);
-        textureShader.setTexture(0);
-
-        //Отрисовали
+    private static void drawOneRectangle() {
+        //Отрисовываем 6 вершин одного прямоугольника
         glDrawArrays(GL_TRIANGLES, 0, 6);
+    }
 
-        //Сбрасили текстуру
-        glBindTexture(GL_TEXTURE_2D, 0);
+    public void drawBitmap(int b, float x, float y, float width, float height) {
+        drawBitmap(b,x,y,width,height,1.0f);
+    }
+
+    public void drawBitmap(int b, float x, float y, float width, float height, float opacity) {
+
+        if (currentMode!=Mode.DRAW_BITMAPS)
+            LoggerConfig.e(TAG, "Incorrect drawing mode");
+        else {
+
+            createRectangle(x,y,width,height);
+            textureShader.setMatrix(resultMatrix,0);
+            textureShader.setTransparency(opacity);
+            glBindTexture(GL_TEXTURE_2D, b);
+            drawOneRectangle();
+
+        }
+
+    }
+
+    public void drawRect(float x, float y, float width, float height, float r, float g, float b, float a) {
+        //Будем рисовать только в том случае, если режим рисовки -- прямоугольники
+        if (currentMode!=Mode.DRAW_RECTANGLES)
+            LoggerConfig.e(TAG, "Incorrect drawing mode");
+        else {
+            //Задаем матрицы, которые преобразуют прямоугольник из VBO к необходимому прямоугольнику
+            createRectangle(x,y,width,height);
+            //Задаем матрицу для шейдера
+            fillColorShader.setMatrix(resultMatrix,0);
+            //Задаем цвет
+            fillColorShader.setColor(r,g,b,a);
+
+            //Рисуем
+            drawOneRectangle();
+        }
+
     }
 
     public void drawText(float x, float y, float size, float r, float g, float b, String text) {
@@ -316,66 +329,6 @@ public class OpenGLES20Engine {
 
     public void drawText(float x, float y, float size, float r, float g, float b, float a, String text) {
 
-    }
-
-    private static final FloatBuffer drawRectVertexes = createFloatBuffer(6*POSITION_COMPONENT_COUNT);
-
-    public void drawRect(float x, float y, float x2, float y2, float r, float g, float b, float a) {
-        //Создаем массив вершин
-        //Рисовать можно ТОЛЬКО треугольники, а поэтому в массив записаны вершины
-        //Двух треугольников (но потом это выпиливается к херам и приделывется два массива
-        //первый будет состоять из 4 float (вершин), а второй из 6 int (порядок обхода)
-        putValuesIntoFloatBuffer(new float[]{
-                //Нижний левый угол
-                x,y,
-                //Верхний правый угол
-                x2,y2,
-                //Верхний левый угол
-                x, y2,
-                //Нижний левый угол
-                x,y,
-                //Нижний правый угол
-                x2,y,
-                //Верхний правый угол
-                x2,y2},drawRectVertexes );
-        //Используем программу простой заливки
-        fillColorShader.use();
-        final int aPosition = fillColorShader.get_aPosition();
-        //Устанавливаем указатель на начало массива
-        drawRectVertexes.position(0);
-        //Задаем алгоритм обхода вершин в массиве
-        glVertexAttribPointer(
-                //Атрибут задан
-                aPosition,
-                //Количество компонент в вершине равно 2 (2D)
-                POSITION_COMPONENT_COUNT,
-                //Все значения имеют тип float
-                GL_FLOAT,
-                //Значения не должны быть нормализированы
-                false,
-                //После вершины пробел для каких-либо ещё величин в массиве делать не нужно т.к. их нет
-                0,
-                //Все данные о вершинах лежат в nativeVertexes
-                drawRectVertexes);
-        //Заюзали атрибут
-        glEnableVertexAttribArray(aPosition);
-        useMatrix(fillColorShader);
-
-        //Задаем цвет
-        fillColorShader.setColor(r,g,b,a);
-
-
-        //Итак: было сделано дохера, но теперь. Мы.
-        //Отрисовываем всё к херам
-
-        //И опять про то, почему именно GL_TRIANGLES
-        //GL_QUADS и все остальное были выпилены
-        //так как по-сути видеокарта рисует только треугольники.
-        //Использование GL_QUADS проще с моей точки зрения
-        //так как мне меньше писать, но с точки зрения машины это ни разу
-        //не быстрее так за использованием
-        //GL_QUADS сокрыта куча кода, которой быть не должно
-        glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 
 }

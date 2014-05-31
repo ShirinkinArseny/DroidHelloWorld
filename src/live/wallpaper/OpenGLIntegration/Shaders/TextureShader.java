@@ -12,11 +12,11 @@ public class TextureShader implements Shader  {
     private int programId;
 
     private int uMatrix;
-    public int get_uMatrix() {
-        return uMatrix;
-    }
     public void setMatrix(FloatBuffer matrix) {
         GLES20.glUniformMatrix4fv(uMatrix, 1, false, matrix);
+    }
+    public void setMatrix(float[] matrix, int offset) {
+        GLES20.glUniformMatrix4fv(uMatrix, 1, false, matrix, offset);
     }
 
     private int aPosition;
