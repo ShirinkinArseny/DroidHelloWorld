@@ -200,7 +200,7 @@ public class UnitLayer{
                     BloodLayer.add(units.get(i).getX() - 28 + rnd.nextInt(20),
                             units.get(i).getY() - 28 + rnd.nextInt(20), j*Configs.getFloatValue(Configs.bloodInterval), tx);
 
-                if (tx==0)
+                if (c.getType()!= NotControlledUnit.Type.Bullet)
                 kills[c.getTeam()]++;
                 units.remove(i);
             }

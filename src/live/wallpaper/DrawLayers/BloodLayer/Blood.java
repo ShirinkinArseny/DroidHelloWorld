@@ -1,32 +1,26 @@
 package live.wallpaper.DrawLayers.BloodLayer;
 
 import live.wallpaper.Configs.Configs;
+import live.wallpaper.Geometry.Rectangle;
 import live.wallpaper.OpenGLIntegration.Graphic;
 import live.wallpaper.TimeFunctions.OneTimeTicker;
 
-public class Blood {
+public class Blood extends Rectangle {
 
-    private final float x;
-    private final float y;
     private final int type;
+    private static int w, h;
     private final OneTimeTicker timing;
-    private boolean noNeedMore=false;
+    private boolean noNeedMore = false;
     private static int dustTexture[];//blood texture
 
-    public static void init(int[] pics) {
-        dustTexture=pics;
+    public static void init(int[] pics, int w, int h) {
+        dustTexture = pics;
+        Blood.w = w;
+        Blood.h = h;
     }
 
     public boolean getUseless() {
         return noNeedMore;
-    }
-
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
     }
 
     public void update(float dt) {
@@ -34,18 +28,18 @@ public class Blood {
     }
 
     public Blood(float x, float y, float startValue, int type) {
-        this.x=x;
-        this.y=y;
-        this.type=type;
-        timing=new OneTimeTicker(Configs.getFloatValue(Configs.bloodVisibleTime)+startValue, new Runnable() {
+        super(x, y, w, h);
+        this.type = type;
+        timing = new OneTimeTicker(Configs.getFloatValue(Configs.bloodVisibleTime) + startValue, new Runnable() {
             @Override
             public void run() {
-                noNeedMore=true;
+                noNeedMore = true;
             }
         });
     }
 
     public void draw() {
-        Graphic.drawBitmap(dustTexture[type], x, y);
+        Graphic.drawBitmap(dustTexture[type], this);
     }
+
 }
