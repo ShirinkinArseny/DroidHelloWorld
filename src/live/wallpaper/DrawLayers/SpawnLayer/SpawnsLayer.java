@@ -10,7 +10,7 @@ public class SpawnsLayer{
     private static LinkedList<Spawn> spawns;//spawn coordinates
     private static Synchroniser synchroniser;
 
-    public static void init(int b, float w2, float h2) {
+    public static void init(int b, int w2, int h2) {
         Spawn.init(b, w2, h2);
         spawns=new LinkedList<>();
         synchroniser =new Synchroniser("SpawnsLayerSync");

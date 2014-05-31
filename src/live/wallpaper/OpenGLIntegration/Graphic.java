@@ -6,8 +6,8 @@ import android.opengl.Matrix;
 import live.wallpaper.Configs.LoggerConfig;
 import live.wallpaper.Geometry.Rectangle;
 import live.wallpaper.OpenGLIntegration.Shaders.FillColorShader;
-import live.wallpaper.OpenGLIntegration.Shaders.Generators.TextureGenerator;
 import live.wallpaper.OpenGLIntegration.Shaders.Shader;
+import live.wallpaper.OpenGLIntegration.Shaders.TextureGenerator;
 import live.wallpaper.OpenGLIntegration.Shaders.TextureShader;
 
 import java.nio.ByteBuffer;
@@ -159,7 +159,7 @@ public class Graphic {
     }
 
 
-    enum Mode {
+    public enum Mode {
         DRAW_RECTANGLES,
         DRAW_BITMAPS
     }

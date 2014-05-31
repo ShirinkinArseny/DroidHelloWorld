@@ -7,19 +7,11 @@ public class CanvaLayer {
     private static int bg;
     private static float dx;
     private static int width;
-    private static int height;
-    private static int sx, sy;
 
-    public static void init(int b, int w, int h) {
+    public static void init(int b, int w) {
         bg = b;
         width = w;
-        height = h;
         dx = 0;
-    }
-
-    public static void resize(int w, int h) {
-        sx = w;
-        sy = h;
     }
 
     public static void update(float dt) {
@@ -28,10 +20,6 @@ public class CanvaLayer {
     }
 
     public static void draw() {
-            for (float i = dx - width; i < sx; i+=width) {
-                for (float j = 0; j < sy; j+=height) {
-                    Graphic.drawBitmap(bg, i, j);
-                }
-            }
+                    Graphic.fillBitmap(bg, width, dx);
     }
 }

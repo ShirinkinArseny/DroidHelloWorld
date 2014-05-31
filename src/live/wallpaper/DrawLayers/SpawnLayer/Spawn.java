@@ -1,34 +1,25 @@
 package live.wallpaper.DrawLayers.SpawnLayer;
 
 import live.wallpaper.Configs.Configs;
+import live.wallpaper.Geometry.Rectangle;
 import live.wallpaper.OpenGLIntegration.Graphic;
 import live.wallpaper.TimeFunctions.LinearTimeFunction;
 
-public class Spawn {
+public class Spawn extends Rectangle{
 
-    private final float x;
-    private final float y;
-    private static float w2, h2;
+    private static int w, h;
     private final LinearTimeFunction timing;
     private boolean noNeedMore=false;
     private static int spawnTexture;//spawn texture
 
-    public static void init(int pic, float w2, float h2) {
+    public static void init(int pic, int w, int h) {
         spawnTexture=pic;
-        Spawn.w2=w2;
-        Spawn.h2=h2;
+        Spawn.w=w;
+        Spawn.h=h;
     }
 
     public boolean getUseless() {
         return noNeedMore;
-    }
-
-    public float getX() {
-        return x;
-    }
-
-    public float getY() {
-        return y;
     }
 
     public void update(float dt) {
@@ -36,8 +27,7 @@ public class Spawn {
     }
 
     public Spawn(float x, float y) {
-        this.x = x-w2;
-        this.y = y-h2;
+        super(x, y, w, h);
         timing = new LinearTimeFunction(Configs.getFloatValue(Configs.spawnsShowTime), 1f, 0f,
                 new Runnable() {
                     @Override
@@ -49,7 +39,7 @@ public class Spawn {
     }
 
     public void draw() {
-        Graphic.drawBitmap(spawnTexture, x, y, timing.getValue());
+        Graphic.drawBitmap(spawnTexture, this, timing.getValue());
     }
 
 }

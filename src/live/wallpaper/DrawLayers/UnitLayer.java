@@ -269,6 +269,13 @@ public class UnitLayer{
         updateSpawnAndIntersection.tick(dt);
     }
 
+    public static void drawRectangles() {
+        synchroniser.waitForUnlockAndLock();
+        for (int i=0; i<4; i++)
+            for (Unit m : dividedUnits[i])
+                m.drawHealth();
+        synchroniser.unlock();
+    }
 
     public static void draw() {
         synchroniser.waitForUnlockAndLock();
@@ -277,7 +284,7 @@ public class UnitLayer{
                 m.drawShadow();
         for (int i=0; i<6; i++)
             for (Unit m : dividedUnits[i])
-                m.draw();
+                m.drawBase();
         synchroniser.unlock();
     }
 }

@@ -2,7 +2,6 @@ package live.wallpaper.OpenGLIntegration.Shaders;
 
 import android.content.Context;
 import android.opengl.GLES20;
-import live.wallpaper.OpenGLIntegration.Shaders.Generators.ShaderGenerator;
 import live.wallpaper.R;
 
 import java.nio.FloatBuffer;

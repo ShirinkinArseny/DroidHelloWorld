@@ -62,22 +62,17 @@ public class Unit extends ControlledUnit {
     }
 
     public void drawShadow() {
-        Graphic.drawBitmap(getShadow(), getX() - getWidth(), getY() - getHeight());
+        Graphic.drawBitmap(getShadow(), this);
     }
 
-    protected void drawBase() {
-        Graphic.drawBitmap(getBitmap(), getX0(), getY0());
+    public void drawBase() {
+        Graphic.drawBitmap(getBitmap(), this);
     }
 
-    protected void drawHealth() {
+    public void drawHealth() {
         float health=Math.max(0, this.health);
         Graphic.drawRect(getX0(), getY0()-2,
                 getX0() + getWidth() * health, getY0(),
                 1 - health, 0.75f *health, 0, 1);
-    }
-
-    public void draw() {
-        drawBase();
-        drawHealth();
     }
 }
