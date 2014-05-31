@@ -82,14 +82,14 @@ public class World {
         Unit.init(menTextureIDs, sizes, pictureSizeCoef);
 
         Bitmap canva=getScaledResource(res, R.drawable.grid, 512);
-        CanvaLayer.init(Graphic.genTexture(canva), canva.getWidth(), canva.getHeight());
+        CanvaLayer.init(Graphic.genTexture(canva), canva.getWidth());
 
         Bitmap blood1=getScaledResource(res, R.drawable.blood, 64);
         Bitmap blood2=getScaledResource(res, R.drawable.coal, 64);
         Blood.init(new int[]{Graphic.genTexture(blood1), Graphic.genTexture(blood2)}, blood1.getWidth(), blood1.getHeight());
 
         Bitmap spawn=getScaledResource(res, R.drawable.spawn, 74);
-        SpawnsLayer.init(Graphic.genTexture(spawn), spawn.getWidth(), spawn.getHeight());
+        SpawnsLayer.init(Graphic.genTexture(spawn), spawn.getWidth()/2, spawn.getHeight()/2);
     }
 
     public static void reInit() {
@@ -143,7 +143,6 @@ public class World {
         TerritoryLayer.resize(width, height);
         UnitLayer.resize(width, height);
         TimerLayer.resize(width, height);
-        CanvaLayer.resize(width, height);
         Configs.setDisplayHeight(height);
         Configs.setDisplayWidth(width);
     }
@@ -158,13 +157,17 @@ public class World {
     }
 
     private void draw() {
+        Graphic.begin(Graphic.Mode.DRAW_RECTANGLES);
         TerritoryLayer.draw();
+        Graphic.begin(Graphic.Mode.DRAW_BITMAPS);
         CanvaLayer.draw();
         TimerLayer.draw();
         BloodLayer.draw();
         SpawnsLayer.draw();
         UnitLayer.draw();
         MessagesLayer.draw();
+        Graphic.begin(Graphic.Mode.DRAW_RECTANGLES);
+        UnitLayer.drawRectangles();
     }
 }
         

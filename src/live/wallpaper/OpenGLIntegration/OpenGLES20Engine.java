@@ -4,7 +4,6 @@ import android.content.Context;
 import android.graphics.Bitmap;
 import android.opengl.Matrix;
 import live.wallpaper.Configs.LoggerConfig;
-import live.wallpaper.Geometry.Rectangle;
 import live.wallpaper.OpenGLIntegration.Shaders.FillColorShader;
 import live.wallpaper.OpenGLIntegration.Shaders.Shader;
 import live.wallpaper.OpenGLIntegration.Shaders.TextureGenerator;
@@ -18,7 +17,7 @@ import java.util.*;
 
 import static android.opengl.GLES20.*;
 
-public class Graphic {
+public class OpenGLES20Engine {
 
     private static final String TAG = "OpenGLES20Engine";
 
@@ -69,13 +68,13 @@ public class Graphic {
         //Создаем ByteBuffer
         return ByteBuffer.
                 //Теперь задаем размер таким, чтобы влезли все величины
-                        allocateDirect(javaFloatArray.length * BYTES_PER_FLOAT).
+                allocateDirect(javaFloatArray.length * BYTES_PER_FLOAT).
                 //Задаем порядок, родной для машины (прямой (0x01) или перевернутый (0x10))
-                        order(ByteOrder.nativeOrder()).
+                order(ByteOrder.nativeOrder()).
                 //Храним его как массив значений float
-                        asFloatBuffer().
+                asFloatBuffer().
                 //Добавляем значения из массива
-                        put(javaFloatArray);
+                put(javaFloatArray);
     }
     private static FloatBuffer createFloatBuffer(int length) {
         return  ByteBuffer.
@@ -118,17 +117,17 @@ public class Graphic {
         vboId = buffers[0];
         //Создаем вершины
         FloatBuffer vboBufferVertexes = createNativeFloatArray(new float[]{
-                //Левый нижний угол
+            //Левый нижний угол
                 0,0,
-                //Правый верхний угол
+            //Правый верхний угол
                 1,1,
-                //Левый верхний угол
+            //Левый верхний угол
                 0,1,
-                //Правый нижний угол
+            //Правый нижний угол
                 1,0,
-                //Левый нижний угол
+            //Левый нижний угол
                 0,0,
-                //Правый верхний угол
+            //Правый верхний угол
                 1,1
         });
         //Задаем указатель на начало массива
@@ -159,12 +158,12 @@ public class Graphic {
     }
 
 
-    public enum Mode {
+    enum Mode {
         DRAW_RECTANGLES,
         DRAW_BITMAPS
     }
 
-    private static Mode currentMode;
+    Mode currentMode;
 
     /**
      * Задаем режим отрисовки прямоугольников
@@ -208,18 +207,25 @@ public class Graphic {
         textureShader.setTexture(0);
     }
 
+    /**
+     * Освобождаем контекст рисовки
+     */
+    private static void releaseDraw() {
+        //Задаем нулевой шейдер
+        glUseProgram(0);
+        //Освобождаем VBO
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+    }
 
 
     /**
      * Начало отрисовки. Очищение экрана белым цветом.
      */
-    public static void startDraw() {
+    public void startDraw(Mode drawMode) {
         //Очищаем экран белым цветом
         glClearColor(1.0f,1.0f,1.0f,1.0f);
         glClear(GL_COLOR_BUFFER_BIT | GL_DEPTH_BUFFER_BIT);
-    }
 
-    public static void begin(Mode drawMode) {
         currentMode = drawMode;
         switch (drawMode) {
             case DRAW_RECTANGLES: initRectangles();
@@ -229,7 +235,7 @@ public class Graphic {
         }
     }
 
-    public static void finishDraw() {
+    public void finishDraw() {
         //releaseDraw();
     }
 
@@ -242,7 +248,7 @@ public class Graphic {
      * @param b Битмап, из которого создается текстура (величина сторон должна быть степенью двойки!)
      * @return Итентификатор
      */
-    public static int genTexture(Bitmap b) {
+    public int genTexture(Bitmap b) {
         final int id = TextureGenerator.loadTexture(b);
         textures.add(id);
         return id;
@@ -279,19 +285,11 @@ public class Graphic {
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 
-    public static void fillBitmap(int texture, float width, float dx) {
-
+    public void drawBitmap(int b, float x, float y, float width, float height) {
+        drawBitmap(b,x,y,width,height,1.0f);
     }
 
-
-    public static void drawBitmap(int texture, Rectangle rectangle) {
-        drawBitmap(texture, rectangle.getX0(), rectangle.getY0(), rectangle.getWidth(), rectangle.getHeight(), 1.0f);
-    }
-    public static void drawBitmap(int texture, Rectangle rectangle, float transparency) {
-        drawBitmap(texture, rectangle.getX0(), rectangle.getY0(), rectangle.getWidth(), rectangle.getHeight(), transparency);
-    }
-
-    private static void drawBitmap(int b, float x, float y, float width, float height, float opacity) {
+    public void drawBitmap(int b, float x, float y, float width, float height, float opacity) {
 
         if (currentMode!=Mode.DRAW_BITMAPS)
             LoggerConfig.e(TAG, "Incorrect drawing mode");
@@ -307,11 +305,7 @@ public class Graphic {
 
     }
 
-    public static void drawRect(float x, float y, float x1, float y1, float r, float g, float b, float a) {
-        drawRectInside(x,y,x1-x,y1-y, r,g,b,a);
-    }
-
-    private static void drawRectInside(float x, float y, float width, float height, float r, float g, float b, float a) {
+    public void drawRect(float x, float y, float width, float height, float r, float g, float b, float a) {
         //Будем рисовать только в том случае, если режим рисовки -- прямоугольники
         if (currentMode!=Mode.DRAW_RECTANGLES)
             LoggerConfig.e(TAG, "Incorrect drawing mode");
@@ -329,11 +323,11 @@ public class Graphic {
 
     }
 
-    public static void drawText(float x, float y, float size, float r, float g, float b, String text) {
+    public void drawText(float x, float y, float size, float r, float g, float b, String text) {
 
     }
 
-    public static void drawText(float x, float y, float size, float r, float g, float b, float a, String text) {
+    public void drawText(float x, float y, float size, float r, float g, float b, float a, String text) {
 
     }
 
