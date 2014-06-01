@@ -422,12 +422,15 @@ public class Graphic {
             textureCoordinates[textureCoordinatesPosition++] = texX; textureCoordinates[textureCoordinatesPosition++] = texY;
             textureCoordinates[textureCoordinatesPosition++] = texX1; textureCoordinates[textureCoordinatesPosition++] = texY1;
         }
-        //Биндим положения координат в шейдер
+        //Биндим положения текстурных координат в шейдер
         FloatBuffer textureCoordinatesBuffer = createNativeFloatArray(textureCoordinates);
         textureCoordinatesBuffer.position(0);
         final int aTextureCoordinates = fontShader.get_aTextureCoordinates();
         glEnableVertexAttribArray(aTextureCoordinates);
         glVertexAttribPointer(aTextureCoordinates, UV_COMPONENT_COUNT, GL_FLOAT, false, 0, textureCoordinatesBuffer);
+        //Задаем цвет
+        fontShader.setColor(r,g,b,a);
+
         //Рисуем
         for (int i=0; i<textLength; i++)
         {
