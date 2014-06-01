@@ -81,6 +81,8 @@ public class World {
 
         Unit.init(menTextureIDs, sizes, pictureSizeCoef);
 
+        Graphic.initFont(Graphic.genTexture(getScaledResource(res, R.drawable.monospace, 512)));
+
         Bitmap canva=getScaledResource(res, R.drawable.grid, 512);
         CanvaLayer.init(Graphic.genTexture(canva), canva.getWidth());
 
@@ -159,12 +161,14 @@ public class World {
     private void draw() {
         Graphic.begin(Graphic.Mode.DRAW_RECTANGLES);
         TerritoryLayer.draw();
+        Graphic.begin(Graphic.Mode.DRAW_TEXT);
+        TimerLayer.draw();
         Graphic.begin(Graphic.Mode.DRAW_BITMAPS);
         CanvaLayer.draw();
-        TimerLayer.draw();
         BloodLayer.draw();
         SpawnsLayer.draw();
         UnitLayer.draw();
+        Graphic.begin(Graphic.Mode.DRAW_TEXT);
         MessagesLayer.draw();
         Graphic.begin(Graphic.Mode.DRAW_RECTANGLES);
         UnitLayer.drawRectangles();
