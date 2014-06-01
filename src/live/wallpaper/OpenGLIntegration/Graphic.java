@@ -6,8 +6,9 @@ import android.opengl.Matrix;
 import live.wallpaper.Configs.LoggerConfig;
 import live.wallpaper.Geometry.Rectangle;
 import live.wallpaper.OpenGLIntegration.Shaders.FillColorShader;
+import live.wallpaper.OpenGLIntegration.Shaders.FontShader;
 import live.wallpaper.OpenGLIntegration.Shaders.Shader;
-import live.wallpaper.OpenGLIntegration.Shaders.TextureGenerator;
+import live.wallpaper.OpenGLIntegration.Shaders.Generators.TextureGenerator;
 import live.wallpaper.OpenGLIntegration.Shaders.TextureShader;
 
 import java.nio.ByteBuffer;
@@ -138,11 +139,11 @@ public class Graphic {
         glBufferData(GL_ARRAY_BUFFER,vboBufferVertexes.capacity() * BYTES_PER_FLOAT, vboBufferVertexes, GL_STATIC_DRAW);
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-
         //Включаем alpha-blending
         glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
     }
+
 
     /**
      * Уничтожение контекста
@@ -161,7 +162,8 @@ public class Graphic {
 
     public enum Mode {
         DRAW_RECTANGLES,
-        DRAW_BITMAPS
+        DRAW_BITMAPS,
+        DRAW_TEXT
     }
 
     private static Mode currentMode;
@@ -225,6 +227,8 @@ public class Graphic {
             case DRAW_RECTANGLES: initRectangles();
                 break;
             case DRAW_BITMAPS:    initBitmaps();
+                break;
+            case DRAW_TEXT: initText();
                 break;
         }
     }
@@ -308,7 +312,7 @@ public class Graphic {
     }
 
     public static void drawRect(float x, float y, float x1, float y1, float r, float g, float b, float a) {
-        drawRectInside(x,y,x1-x,y1-y, r,g,b,a);
+        drawRectInside(x, y, x1 - x, y1 - y, r, g, b, a);
     }
 
     private static void drawRectInside(float x, float y, float width, float height, float r, float g, float b, float a) {
@@ -329,12 +333,113 @@ public class Graphic {
 
     }
 
-    public static void drawText(float x, float y, float size, float r, float g, float b, String text) {
 
+    //Отрисовка шрифтов
+
+    private static int fontTexture;
+    private static FontShader fontShader;
+
+    /**
+     * Задание шрифта для отрисовки текста
+     * @param context Контекст, в котором содержится шейдер для отрисовки
+     * @param fontTextureInitialize Итентификатор текстуры шрифта
+     */
+    public static void initFont(Context context,int fontTextureInitialize) {
+        fontTexture = fontTextureInitialize;
+        fontShader = new FontShader(context);
+        initFontMap();
+    }
+    //Карта шрифтов, должна совпадать с картой в текстуре шрифта
+    private static final char[][] map = new char[8][8];
+    private static void initFontMap() {
+        map[0] = new char[] {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'};
+        map[1] = new char[] {'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'};
+        map[2] = new char[] {'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X'};
+        map[3] = new char[] {'Y', 'Z', '0', '1', '2', '3', '4', '5'};
+        map[4] = new char[] {'6', '7', '8', '9', '!', '@', '#', '%'};
+        map[5] = new char[] {'*', '(', ')', '-', '+', '=', '{', '}'};
+        map[6] = new char[] {'[', ']', '<', '>', '\'', '\\', '|', '/'};
+        map[7] = new char[] {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
+        map[8] = new char[] {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
+    }
+    //Положение текущей буквы в шрифте
+    private static int fontMapX, fontMapY;
+    /**
+     * Получение положения символа в карте
+     * @param c Символ, положение которого нужно получить
+     */
+    private static void getCharLocation(char c) {
+        boolean isFounded = false;
+        for (int i=0; i<map.length; i++)
+            for (int j=0; j<map[0].length; j++)
+                if (map[i][j]==c) {
+                    isFounded = true;
+                    fontMapX = i;
+                    fontMapY = j;
+                    break;
+                }
+        if (!isFounded)
+            LoggerConfig.e(TAG, "Character \'"+c+"\' not found");
+    }
+    /**
+     * Создание контекста для рисования текста
+     */
+    private static void initText() {
+        fontShader.use();
+        glBindBuffer(GL_ARRAY_BUFFER, vboId);
+        //Определяем местонахождение всех атрибутов
+        final int aPosition = fontShader.get_aPosition();
+        glEnableVertexAttribArray(aPosition);
+        glVertexAttribPointer(aPosition, POSITION_COMPONENT_COUNT, GL_FLOAT, false, 0, 0);
+        //Освобождаем VBO
+        glBindBuffer(GL_ARRAY_BUFFER, 0);
+
+        //Задаем текстуру шрифта
+        glActiveTexture(GL_TEXTURE0);
+        fontShader.setTexture(0);
+        glBindTexture(GL_TEXTURE_2D, fontTexture);
+    }
+
+    public static void drawText(float x, float y, float size, float r, float g, float b, String text) {
+        drawText(x,y,size,r,g,b,1f,text);
     }
 
     public static void drawText(float x, float y, float size, float r, float g, float b, float a, String text) {
-
+        final int textLength = text.length();
+        //Получаем количество вершин для всего текста
+        final int vertexesNo = textLength * 6;
+        //Указатель, указывающий на позицию, куда нужно будет записывать
+        int textureCoordinatesPosition = 0;
+        float[] textureCoordinates = new float[vertexesNo*2];
+        //Получаем размеры одной буквы в шрифте
+        final float fontCharWidth=1.0f/map[0].length, fontCharHeight=1.0f/map.length;
+        //Задаем текстурные координаты для каждой буквы
+        for (int i=0; i<textLength; i++)
+        {
+            getCharLocation(text.charAt(i));
+            final float texX=fontMapX*fontCharWidth, texY=(fontMapY+1)*fontCharHeight;
+            final float texX1=texX + fontCharWidth, texY1=texY - fontCharHeight;
+            textureCoordinates[textureCoordinatesPosition++] = texX; textureCoordinates[textureCoordinatesPosition++] = texY;
+            textureCoordinates[textureCoordinatesPosition++] = texX1; textureCoordinates[textureCoordinatesPosition++] = texY1;
+        }
+        //Биндим положения координат в шейдер
+        FloatBuffer textureCoordinatesBuffer = createNativeFloatArray(textureCoordinates);
+        textureCoordinatesBuffer.position(0);
+        final int aTextureCoordinates = fontShader.get_aTextureCoordinates();
+        glEnableVertexAttribArray(aTextureCoordinates);
+        glVertexAttribPointer(aTextureCoordinates, UV_COMPONENT_COUNT, GL_FLOAT, false, 0, textureCoordinatesBuffer);
+        //Рисуем
+        for (int i=0; i<textLength; i++)
+        {
+            //Создаем матрицу
+            createRectangle(x,y,size,size);
+            //Используем её
+            fontShader.setMatrix(resultMatrix,0);
+            //Рисуем
+            drawOneRectangle();
+            //Расстояние между буквами равно 4/5 (0.8) размера буквы
+            x+=0.8*size;
+        }
     }
 
 }
