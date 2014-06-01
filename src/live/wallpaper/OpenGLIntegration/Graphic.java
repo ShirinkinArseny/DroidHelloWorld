@@ -110,6 +110,8 @@ public class Graphic {
         fillColorShader.validate();
         textureShader = new TextureShader(context);
         textureShader.validate();
+        fontShader = new FontShader(context);
+        fontShader.validate();
 
         //Создаем VBO для вершин прямоугольника
         int[] buffers = new int[1];
@@ -341,12 +343,10 @@ public class Graphic {
 
     /**
      * Задание шрифта для отрисовки текста
-     * @param context Контекст, в котором содержится шейдер для отрисовки
      * @param fontTextureInitialize Итентификатор текстуры шрифта
      */
-    public static void initFont(Context context,int fontTextureInitialize) {
+    public static void initFont(int fontTextureInitialize) {
         fontTexture = fontTextureInitialize;
-        fontShader = new FontShader(context);
         initFontMap();
     }
     //Карта шрифтов, должна совпадать с картой в текстуре шрифта
