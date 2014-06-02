@@ -39,6 +39,12 @@ public class FontShader implements Shader {
         GLES20.glUniform4f(uColor, r,g,b,a);
     }
 
+    private int uSymbolDimensions;
+    public void setSymbolDimensions(float width, float height) {GLES20.glUniform2f(uSymbolDimensions, width, height);}
+
+    private int uCharPosition;
+    public void setCharPosition(float x, float y) {GLES20.glUniform2f(uCharPosition, x,y);}
+
     public void use() {
         GLES20.glUseProgram(programId);
     }
@@ -54,5 +60,7 @@ public class FontShader implements Shader {
         aTextureCoordinates = GLES20.glGetAttribLocation(programId, "a_TextureCoordinates");
         uTextureUnit = GLES20.glGetUniformLocation(programId, "u_TextureUnit");
         uColor = GLES20.glGetUniformLocation(programId, "u_Color");
+        uSymbolDimensions = GLES20.glGetUniformLocation(programId, "u_SymbolDimensions");
+        uCharPosition = GLES20.glGetUniformLocation(programId, "u_CharPosition");
     }
 }

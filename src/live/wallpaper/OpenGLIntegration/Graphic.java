@@ -359,8 +359,7 @@ public class Graphic {
         map[4] = new char[] {'6', '7', '8', '9', '!', '@', '#', '%'};
         map[5] = new char[] {'*', '(', ')', '-', '+', '=', '{', '}'};
         map[6] = new char[] {'[', ']', '<', '>', '\'', '\\', '|', '/'};
-        map[7] = new char[] {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
-        map[8] = new char[] {' ', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
+        map[7] = new char[] {':', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
     }
     //Положение текущей буквы в шрифте
     private static int fontMapX, fontMapY;
@@ -389,8 +388,11 @@ public class Graphic {
         glBindBuffer(GL_ARRAY_BUFFER, vboId);
         //Определяем местонахождение всех атрибутов
         final int aPosition = fontShader.get_aPosition();
+        final int aTexturePosition = fontShader.get_aTextureCoordinates();
         glEnableVertexAttribArray(aPosition);
         glVertexAttribPointer(aPosition, POSITION_COMPONENT_COUNT, GL_FLOAT, false, 0, 0);
+        glEnableVertexAttribArray(aTexturePosition);
+        glVertexAttribPointer(aTexturePosition, UV_COMPONENT_COUNT, GL_FLOAT, false, 0, 0);
         //Освобождаем VBO
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
@@ -398,6 +400,9 @@ public class Graphic {
         glActiveTexture(GL_TEXTURE0);
         fontShader.setTexture(0);
         glBindTexture(GL_TEXTURE_2D, fontTexture);
+
+        //Задаем размер одного символа
+        fontShader.setSymbolDimensions(1.0f/map.length, 1.0f/map[0].length);
     }
 
     public static void drawText(float x, float y, float size, float r, float g, float b, String text) {
@@ -405,42 +410,18 @@ public class Graphic {
     }
 
     public static void drawText(float x, float y, float size, float r, float g, float b, float a, String text) {
-        final int textLength = text.length();
-        //Получаем количество вершин для всего текста
-        final int vertexesNo = textLength * 6;
-        //Указатель, указывающий на позицию, куда нужно будет записывать
-        int textureCoordinatesPosition = 0;
-        float[] textureCoordinates = new float[vertexesNo*2];
-        //Получаем размеры одной буквы в шрифте
-        final float fontCharWidth=1.0f/map[0].length, fontCharHeight=1.0f/map.length;
-        //Задаем текстурные координаты для каждой буквы
-        for (int i=0; i<textLength; i++)
-        {
-            getCharLocation(text.charAt(i));
-            final float texX=fontMapX*fontCharWidth, texY=(fontMapY+1)*fontCharHeight;
-            final float texX1=texX + fontCharWidth, texY1=texY - fontCharHeight;
-            textureCoordinates[textureCoordinatesPosition++] = texX; textureCoordinates[textureCoordinatesPosition++] = texY;
-            textureCoordinates[textureCoordinatesPosition++] = texX1; textureCoordinates[textureCoordinatesPosition++] = texY1;
-        }
-        //Биндим положения текстурных координат в шейдер
-        FloatBuffer textureCoordinatesBuffer = createNativeFloatArray(textureCoordinates);
-        textureCoordinatesBuffer.position(0);
-        final int aTextureCoordinates = fontShader.get_aTextureCoordinates();
-        glEnableVertexAttribArray(aTextureCoordinates);
-        glVertexAttribPointer(aTextureCoordinates, UV_COMPONENT_COUNT, GL_FLOAT, false, 0, textureCoordinatesBuffer);
-        //Задаем цвет
+        final String textCopy = text.toUpperCase();
+        final int textLength = textCopy.length();
         fontShader.setColor(r,g,b,a);
-
-        //Рисуем
-        for (int i=0; i<textLength; i++)
-        {
-            //Создаем матрицу
+        for (int i = 0; i<textLength; i++) {
             createRectangle(x,y,size,size);
-            //Используем её
             fontShader.setMatrix(resultMatrix,0);
-            //Рисуем
+            //Получаем положение символа в массиве
+            getCharLocation(textCopy.charAt(i));
+            //Переводим в текстурную систему координат и отправляем в шейдер
+            fontShader.setCharPosition(fontMapY, fontMapX);
+            //Отрисовываем
             drawOneRectangle();
-            //Расстояние между буквами равно 4/5 (0.8) размера буквы
             x+=0.8*size;
         }
     }
