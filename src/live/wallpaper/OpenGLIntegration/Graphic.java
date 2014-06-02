@@ -41,7 +41,7 @@ public class Graphic {
      * @param width Ширина
      * @param height Высота
      */
-    public static void updateScreen(int width, int height) {
+    public static void resize(int width, int height) {
         glViewport(0,0,width,height);
         Matrix.orthoM(orthoMatrix, 0, 0,width,height,0,-1,1);
 
@@ -246,10 +246,6 @@ public class Graphic {
         glUseProgram(0);
     }
 
-    public static void finishDraw() {
-    }
-
-
     //Список для хранения текстур чтобы их потом удалить
     private static LinkedList<Integer> textures = new LinkedList<>();
 
@@ -415,6 +411,7 @@ public class Graphic {
         fontTexture = fontTextureInitialize;
     }
 
+    //ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#%*()-+={}[]<>'\|/:;
     //Карта шрифтов, должна совпадать с картой в текстуре шрифта
     private static final String map = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#%*()-+={}[]<>\'\\|/:;";
 
@@ -443,10 +440,6 @@ public class Graphic {
             fontShader.setSymbolDimensions(1.0f / 8, 1.0f / 8);
     }
 
-    public static void drawText(float x, float y, float size, float r, float g, float b, String text) {
-        drawText(x,y,size,r,g,b,1f,text);
-    }
-
     public static void drawText(float x, float y, float size, float r, float g, float b, float a, String text) {
         if (currentMode != Mode.DRAW_TEXT) {
             LoggerConfig.e(TAG, "Incorrect drawing mode");
@@ -465,7 +458,7 @@ public class Graphic {
                     //Отрисовываем
                     drawOneRectangle();
                 }
-                x += 0.8 * size;
+                x += 0.55 * size;
             }
         }
     }

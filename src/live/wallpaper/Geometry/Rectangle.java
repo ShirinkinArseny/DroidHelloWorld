@@ -1,10 +1,10 @@
 package live.wallpaper.Geometry;
 
 public class Rectangle extends Point{
-    private final int w;
-    private final int h;
-    private final int w2;
-    private final int h2;
+    private int w;
+    private int h;
+    private int w2;
+    private int h2;
     private float x0, y0, x1, y1;
 
     public float getHalfHeight() {
@@ -29,7 +29,11 @@ public class Rectangle extends Point{
         this.h=h;
         w2=w/2;
         h2=h/2;
-        setPosition(x, y);
+        super.setPosition(x, y);
+        x0=x-w2;
+        y0=y-h2;
+        x1=x+w2;
+        y1=y+h2;
     }
 
 
@@ -73,5 +77,13 @@ public class Rectangle extends Point{
     public boolean getIntersect(Rectangle m) {
         return (Math.abs(getX()-m.getX()))<=(m.w2+w2) &&
                (Math.abs(getY()-m.getY()))<=(m.h2+h2);
+    }
+
+    public void setSize(int w, int h) {
+        this.w=w;
+        this.h=h;
+        w2=w/2;
+        h2=h/2;
+        setPosition(getX(), getY());
     }
 }

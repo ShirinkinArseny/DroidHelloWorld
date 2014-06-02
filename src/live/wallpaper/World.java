@@ -4,8 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.*;
 import android.util.DisplayMetrics;
-import android.view.SurfaceHolder;
-import live.wallpaper.AI.SimpleAI;
+import live.wallpaper.AI.AI;
 import live.wallpaper.Configs.Configs;
 import live.wallpaper.DrawLayers.*;
 import live.wallpaper.DrawLayers.BloodLayer.Blood;
@@ -81,7 +80,7 @@ public class World {
 
         Unit.init(menTextureIDs, sizes, pictureSizeCoef);
 
-        Graphic.initFont(Graphic.genTexture(getScaledResource(res, R.drawable.monospace, 512)));
+        Graphic.initFont(Graphic.genTexture(getScaledResource(res, R.drawable.monospace, 2048)));
 
         Bitmap canva=getScaledResource(res, R.drawable.grid, 512);
         CanvaLayer.init(Graphic.genTexture(canva), canva.getWidth());
@@ -95,7 +94,7 @@ public class World {
     }
 
     public static void reInit() {
-        SimpleAI.reInit();
+        AI.reInit();
         MessagesLayer.reInit();
         TerritoryLayer.reInit();
         DisplayMetrics metrics = res.getDisplayMetrics();
@@ -123,7 +122,6 @@ public class World {
             update(delta);
             Graphic.startDraw();
             draw();
-            Graphic.finishDraw();
         }
     }
 
@@ -137,16 +135,12 @@ public class World {
         }, 0, 10);
     }
 
-    public void setSurface(SurfaceHolder s, int width, int height) {
-           setSurface(width,height);
-    }
-
     public void setSurface(int width, int height) {
         TerritoryLayer.resize(width, height);
         UnitLayer.resize(width, height);
         TimerLayer.resize(width, height);
-        Configs.setDisplayHeight(height);
-        Configs.setDisplayWidth(width);
+        Configs.resize(width, height);
+        Graphic.resize(width, height);
     }
 
     private void update(float dt) {
@@ -166,8 +160,8 @@ public class World {
         Graphic.begin(Graphic.Mode.FILL_BITMAP);
         CanvaLayer.draw();
         Graphic.begin(Graphic.Mode.DRAW_BITMAPS);
-        BloodLayer.draw();
         SpawnsLayer.draw();
+        BloodLayer.draw();
         UnitLayer.draw();
         Graphic.begin(Graphic.Mode.DRAW_TEXT);
         MessagesLayer.draw();

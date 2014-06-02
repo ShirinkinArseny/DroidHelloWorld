@@ -53,6 +53,11 @@ public class Unit extends ControlledUnit {
         if (health > 1f) health = 1f;
     }
 
+    public void setPosition(float x, float y) {
+        super.setPosition(x, y);
+        shadow.setPosition(x, y);
+    }
+
     public void move(float dt) {
         float dxt = getDX() * dt;
         float dyt = getDY() * dt;

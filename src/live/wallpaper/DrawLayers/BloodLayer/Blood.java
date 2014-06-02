@@ -3,13 +3,14 @@ package live.wallpaper.DrawLayers.BloodLayer;
 import live.wallpaper.Configs.Configs;
 import live.wallpaper.Geometry.Rectangle;
 import live.wallpaper.OpenGLIntegration.Graphic;
+import live.wallpaper.TimeFunctions.LinearTimeFunction;
 import live.wallpaper.TimeFunctions.OneTimeTicker;
 
 public class Blood extends Rectangle {
 
     private final int type;
     private static int w, h;
-    private final OneTimeTicker timing;
+    private LinearTimeFunction timing;
     private boolean noNeedMore = false;
     private static int dustTexture[];//blood texture
 
@@ -30,7 +31,7 @@ public class Blood extends Rectangle {
     public Blood(float x, float y, float startValue, int type) {
         super(x, y, w, h);
         this.type = type;
-        timing = new OneTimeTicker(Configs.getFloatValue(Configs.bloodVisibleTime) + startValue, new Runnable() {
+        timing = new LinearTimeFunction(Configs.getFloatValue(Configs.bloodVisibleTime) + startValue, 1f, 0f, new Runnable() {
             @Override
             public void run() {
                 noNeedMore = true;
@@ -39,7 +40,7 @@ public class Blood extends Rectangle {
     }
 
     public void draw() {
-        Graphic.drawBitmap(dustTexture[type], this);
+        Graphic.drawBitmap(dustTexture[type], this, timing.getValue());
     }
 
 }

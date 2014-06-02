@@ -1,7 +1,6 @@
 package live.wallpaper.DrawLayers;
 
 import live.wallpaper.AI.AI;
-import live.wallpaper.AI.SimpleAI;
 import live.wallpaper.Configs.Configs;
 import live.wallpaper.DrawLayers.BloodLayer.BloodLayer;
 import live.wallpaper.DrawLayers.MessagesLayer.MessagesLayer;
@@ -16,7 +15,7 @@ import java.util.Random;
 public class UnitLayer{
 
     private static final Random rnd = new Random();
-    private static final AI ai=new SimpleAI();
+    private static final AI ai=new AI();
     //TODO: нужно с этим что=то решить
     private static final LinkedList<ControlledUnit>[] controlledUnits=
             new LinkedList[]{new LinkedList<ControlledUnit>(), new LinkedList<ControlledUnit>()}; //Lists of units to send in AI

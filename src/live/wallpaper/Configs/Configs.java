@@ -145,16 +145,13 @@ public class Configs {
         return displayWidth;
     }
 
-    public static void setDisplayWidth(int displayWidth) {
-        Configs.displayWidth = displayWidth;
-    }
-
     public static int getDisplayHeight() {
         return displayHeight;
     }
 
-    public static void setDisplayHeight(int displayHeight) {
-        Configs.displayHeight = displayHeight;
+    public static void resize(int w, int h) {
+        Configs.displayWidth = w;
+        Configs.displayHeight = h;
     }
 
     private static float[]     worldBoardersColor=new float[]{0.6156863f, 0.65882355f, 0.5647059f, 1}; //Цвет границы
