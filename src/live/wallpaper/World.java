@@ -163,8 +163,9 @@ public class World {
         TerritoryLayer.draw();
         Graphic.begin(Graphic.Mode.DRAW_TEXT);
         TimerLayer.draw();
-        Graphic.begin(Graphic.Mode.DRAW_BITMAPS);
+        Graphic.begin(Graphic.Mode.FILL_BITMAP);
         CanvaLayer.draw();
+        Graphic.begin(Graphic.Mode.DRAW_BITMAPS);
         BloodLayer.draw();
         SpawnsLayer.draw();
         UnitLayer.draw();

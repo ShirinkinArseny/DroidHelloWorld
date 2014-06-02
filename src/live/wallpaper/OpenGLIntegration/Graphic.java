@@ -427,6 +427,9 @@ public class Graphic {
      * Получение положения символа в карте
      * @param c Символ, положение которого нужно получить
      */
+
+
+
     private static void getCharLocation(char c) {
         boolean isFounded = false;
         for (int i=0; i<map.length; i++)
