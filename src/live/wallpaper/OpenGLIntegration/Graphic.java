@@ -334,10 +334,10 @@ public class Graphic {
         //Получаем ширину экрана
         final int screenWidth = Configs.getDisplayWidth(), screenHeight = Configs.getDisplayHeight();
         //Переводим смещение в систему координат OpenGL
-        dx /= 2*screenWidth;
+        dx /= screenWidth;
 
-        float height = width / 2 / screenHeight;
-        width /= 2*screenWidth;
+        final float height = width / screenHeight;
+        width /= screenWidth;
 
         //Задаем параметры для фрагментного шейдера
         fillBitmapShader.setDX(dx);
