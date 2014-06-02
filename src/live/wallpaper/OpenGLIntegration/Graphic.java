@@ -297,27 +297,32 @@ public class Graphic {
 
     private static final FloatBuffer fillBitmapVertexesBuffer = createNativeFloatArray(new float[] {
             //Левый нижний угол
-            -1, -1,
+            -1, -1, 0,0,
             //Правый верхний угол
-            1, 1,
+            1, 1, 1,1,
             //Левый верхний угол
-            -1, 1,
+            -1, 1, 0,1,
             //Правый нижний угол
-            1,-1,
+            1,-1, 1,0,
             //Левый нижний угол
-            -1, -1,
+            -1, -1, 0,0,
             //Правый верхний угол
-            1,1
+            1,1,    1,1
     });
 
     private static void initFillBitmap() {
         //Используем верную программу
         fillBitmapShader.use();
         //Задаем вершины
+        final int stride = (POSITION_COMPONENT_COUNT + UV_COMPONENT_COUNT) * BYTES_PER_FLOAT;
         final int aPosition = fillBitmapShader.get_aPosition();
         fillBitmapVertexesBuffer.position(0);
         glEnableVertexAttribArray(aPosition);
-        glVertexAttribPointer(aPosition, POSITION_COMPONENT_COUNT, GL_FLOAT, false, 0, fillBitmapVertexesBuffer);
+        glVertexAttribPointer(aPosition, POSITION_COMPONENT_COUNT, GL_FLOAT, false, stride, fillBitmapVertexesBuffer);
+        fillBitmapVertexesBuffer.position(POSITION_COMPONENT_COUNT);
+        final int aTexturePosition = fillBitmapShader.get_aTexturePosition();
+        glEnableVertexAttribArray(aTexturePosition);
+        glVertexAttribPointer(aTexturePosition, UV_COMPONENT_COUNT, GL_FLOAT, false, stride, fillBitmapVertexesBuffer);
 
         glActiveTexture(GL_TEXTURE0);
         fillBitmapShader.setTexture(0);
