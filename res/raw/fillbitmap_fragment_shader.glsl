@@ -11,5 +11,8 @@ uniform vec2 u_TextureDimensions;
 uniform float u_DX;
 
 void main() {
-    gl_FragColor = texture2D(u_TextureUnit, mod(v_TexturePosition-vec2(u_DX, 0), u_TextureDimensions));
+    vec2 colorPosition = mod(v_TexturePosition-vec2(u_DX,0), u_TextureDimensions);
+    colorPosition.x /= u_TextureDimensions.x;
+    colorPosition.y /= u_TextureDimensions.y;
+    gl_FragColor = texture2D(u_TextureUnit, colorPosition);
 }
