@@ -99,7 +99,7 @@ public class UnitLayer{
         if (att < -9991) {
             attack1 *= att + 10000;
             MessagesLayer.showMessage(enemy.getX(), enemy.getY(),
-                    "CRITICAL x" + (att + 10000) + "!", enemy.getTeam());
+                    "CRITICAL X" + (att + 10000) + "!", enemy.getTeam());
         }
         enemy.changeHealth(attack1);
         if (enemy.getHealth()<=0) unit.bumpKills();

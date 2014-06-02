@@ -35,7 +35,7 @@ public class Unit extends ControlledUnit {
             @Override
             public void run() {
                 if (kills.getValue()>5)
-                    MessagesLayer.showMessage(getX(), getY(), (int)kills.getValue()+"-kill!", getTeam());
+                    MessagesLayer.showMessage(getX(), getY(), (int)kills.getValue()+"-KILL!", getTeam());
             }
         });
     }

@@ -413,42 +413,11 @@ public class Graphic {
      */
     public static void initFont(int fontTextureInitialize) {
         fontTexture = fontTextureInitialize;
-        initFontMap();
     }
+
     //Карта шрифтов, должна совпадать с картой в текстуре шрифта
-    private static final char[][] map = new char[8][8];
-    private static void initFontMap() {
-        map[0] = new char[] {'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H'};
-        map[1] = new char[] {'I', 'J', 'K', 'L', 'M', 'N', 'O', 'P'};
-        map[2] = new char[] {'Q', 'R', 'S', 'T', 'U', 'V', 'W', 'X'};
-        map[3] = new char[] {'Y', 'Z', '0', '1', '2', '3', '4', '5'};
-        map[4] = new char[] {'6', '7', '8', '9', '!', '@', '#', '%'};
-        map[5] = new char[] {'*', '(', ')', '-', '+', '=', '{', '}'};
-        map[6] = new char[] {'[', ']', '<', '>', '\'', '\\', '|', '/'};
-        map[7] = new char[] {':', ';', ' ', ' ', ' ', ' ', ' ', ' '};
-    }
-    //Положение текущей буквы в шрифте
-    private static int fontMapX, fontMapY;
-    /**
-     * Получение положения символа в карте
-     * @param c Символ, положение которого нужно получить
-     */
+    private static final String map = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#%*()-+={}[]<>\'\\|/:;";
 
-
-
-    private static void getCharLocation(char c) {
-        boolean isFounded = false;
-        for (int i=0; i<map.length; i++)
-            for (int j=0; j<map[0].length; j++)
-                if (map[i][j]==c) {
-                    isFounded = true;
-                    fontMapX = j;
-                    fontMapY = i;
-                    break;
-                }
-        if (!isFounded)
-            LoggerConfig.e(TAG, "Character \'"+c+"\' not found");
-    }
     /**
      * Создание контекста для рисования текста
      */
@@ -471,7 +440,7 @@ public class Graphic {
             glBindTexture(GL_TEXTURE_2D, fontTexture);
 
             //Задаем размер одного символа
-            fontShader.setSymbolDimensions(1.0f / map[0].length, 1.0f / map.length);
+            fontShader.setSymbolDimensions(1.0f / 8, 1.0f / 8);
     }
 
     public static void drawText(float x, float y, float size, float r, float g, float b, String text) {
@@ -481,20 +450,21 @@ public class Graphic {
     public static void drawText(float x, float y, float size, float r, float g, float b, float a, String text) {
         if (currentMode != Mode.DRAW_TEXT) {
             LoggerConfig.e(TAG, "Incorrect drawing mode");
-        }
-        else {
-            final String textCopy = text.toUpperCase();
-            final int textLength = textCopy.length();
+        } else {
+            final int textLength = text.length();
             fontShader.setColor(r, g, b, a);
             for (int i = 0; i < textLength; i++) {
-                createRectangle(x, y, size, size);
-                fontShader.setMatrix(resultMatrix, 0);
-                //Получаем положение символа в массиве
-                getCharLocation(textCopy.charAt(i));
-                //Переводим в текстурную систему координат и отправляем в шейдер
-                fontShader.setCharPosition(fontMapX, fontMapY);
-                //Отрисовываем
-                drawOneRectangle();
+                if (text.charAt(i) != ' ') {
+                    createRectangle(x, y, size, size);
+                    fontShader.setMatrix(resultMatrix, 0);
+                    int posX = map.indexOf(text.charAt(i));
+                    int posY = posX / 8;
+                    posX %= 8;
+                    //Переводим в текстурную систему координат и отправляем в шейдер
+                    fontShader.setCharPosition(posX, posY);
+                    //Отрисовываем
+                    drawOneRectangle();
+                }
                 x += 0.8 * size;
             }
         }
