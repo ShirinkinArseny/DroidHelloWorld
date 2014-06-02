@@ -82,7 +82,7 @@ public class World {
 
         Graphic.initFont(Graphic.genTexture(getScaledResource(res, R.drawable.monospace, 2048)));
 
-        Bitmap canva=getScaledResource(res, R.drawable.grid, 512);
+        Bitmap canva=getScaledResource(res, R.drawable.grid, 256);
         CanvaLayer.init(Graphic.genTexture(canva), canva.getWidth());
 
         Bitmap blood1=getScaledResource(res, R.drawable.blood, 64);

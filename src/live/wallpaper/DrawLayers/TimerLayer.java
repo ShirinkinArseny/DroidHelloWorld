@@ -33,9 +33,9 @@ public class TimerLayer {
     }
 
     public static void resize(int w, int h) {
-        height2=h/2;
-        height2_3=h*2/3;
-        width4 =w/4;
+        height2=h/3;
+        height2_3=h*3/5;
+        width4 =w/5;
         width2=w/2;
         bigSize=w/7;
         smallSize=w/20;
