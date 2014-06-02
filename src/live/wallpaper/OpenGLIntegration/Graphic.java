@@ -3,13 +3,11 @@ package live.wallpaper.OpenGLIntegration;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.opengl.Matrix;
+import live.wallpaper.Configs.Configs;
 import live.wallpaper.Configs.LoggerConfig;
 import live.wallpaper.Geometry.Rectangle;
-import live.wallpaper.OpenGLIntegration.Shaders.FillColorShader;
-import live.wallpaper.OpenGLIntegration.Shaders.FontShader;
-import live.wallpaper.OpenGLIntegration.Shaders.Shader;
+import live.wallpaper.OpenGLIntegration.Shaders.*;
 import live.wallpaper.OpenGLIntegration.Shaders.Generators.TextureGenerator;
-import live.wallpaper.OpenGLIntegration.Shaders.TextureShader;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -96,6 +94,8 @@ public class Graphic {
     private static FillColorShader fillColorShader;
     //Шейдер, который заливает всё текстурой и прозрачностью
     private static TextureShader textureShader;
+    //Шейдер для замощения всего одним битмапом
+    private static FillBitmapShader fillBitmapShader;
 
     //Итентификатор VBO
     private static int vboId;
@@ -112,6 +112,8 @@ public class Graphic {
         textureShader.validate();
         fontShader = new FontShader(context);
         fontShader.validate();
+        fillBitmapShader = new FillBitmapShader(context);
+        fillBitmapShader.validate();
 
         //Создаем VBO для вершин прямоугольника
         int[] buffers = new int[1];
@@ -153,6 +155,8 @@ public class Graphic {
     public static void destroy() {
         fillColorShader.delete();
         textureShader.delete();
+        fontShader.delete();
+        fillBitmapShader.delete();
         int i=0;
         int[] goodArray = new int[textures.size()];
         for (Integer texture : textures)
@@ -163,6 +167,7 @@ public class Graphic {
 
 
     public enum Mode {
+        FILL_BITMAP,
         DRAW_RECTANGLES,
         DRAW_BITMAPS,
         DRAW_TEXT
@@ -232,11 +237,16 @@ public class Graphic {
                 break;
             case DRAW_TEXT: initText();
                 break;
+            case FILL_BITMAP: initFillBitmap();
+                break;
         }
     }
 
+    public static void end() {
+        glUseProgram(0);
+    }
+
     public static void finishDraw() {
-        //releaseDraw();
     }
 
 
@@ -285,8 +295,58 @@ public class Graphic {
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 
-    public static void fillBitmap(int texture, float width, float dx) {
+    private static final FloatBuffer fillBitmapVertexesBuffer = createNativeFloatArray(new float[] {
+            //Левый нижний угол
+            -1, -1,
+            //Правый верхний угол
+            1, 1,
+            //Левый верхний угол
+            -1, 1,
+            //Правый нижний угол
+            1,-1,
+            //Левый нижний угол
+            -1, -1,
+            //Правый верхний угол
+            1,1
+    });
 
+    private static void initFillBitmap() {
+        //Используем верную программу
+        fillBitmapShader.use();
+        //Задаем вершины
+        final int aPosition = fillBitmapShader.get_aPosition();
+        fillBitmapVertexesBuffer.position(0);
+        glEnableVertexAttribArray(aPosition);
+        glVertexAttribPointer(aPosition, POSITION_COMPONENT_COUNT, GL_FLOAT, false, 0, fillBitmapVertexesBuffer);
+
+        glActiveTexture(GL_TEXTURE0);
+        fillBitmapShader.setTexture(0);
+
+    }
+
+    /**
+     * Замощение битмапом (подробнее:http://cs539402.vk.me/u41272716/docs/d973cab3e84b/22.png?extra=Z-300gQW1h269BKGF0Rqg1ikgVy-GqIjf7NxXPS62Da0YORXmbgp3H6EU2RBjH1gJNFQfN7Gvl5DjQwClt036Mm1QM1rur0)
+     * @param texture Текстура для замощения
+     * @param width Ширина текстуры
+     * @param dx Смещение
+     */
+    public static void fillBitmap(int texture, float width, float dx) {
+        //Получаем ширину экрана
+        final int screenWidth = Configs.getDisplayWidth();
+        //Переводим смещение в систему координат OpenGL
+        dx /= 2*screenWidth;
+        //Переводим ширину в систему координат OpenGL
+        width /= 2*screenWidth;
+
+        //Задаем параметры для фрагментного шейдера
+        fillBitmapShader.setDX(dx);
+        fillBitmapShader.setTextureDimensions(width,width);
+        glBindTexture(GL_TEXTURE_2D,texture);
+
+        //Рисуем к херам
+        drawOneRectangle();
+        glBindTexture(GL_TEXTURE_2D, 0);
+        glUseProgram(0);
     }
 
 
@@ -359,7 +419,7 @@ public class Graphic {
         map[4] = new char[] {'6', '7', '8', '9', '!', '@', '#', '%'};
         map[5] = new char[] {'*', '(', ')', '-', '+', '=', '{', '}'};
         map[6] = new char[] {'[', ']', '<', '>', '\'', '\\', '|', '/'};
-        map[7] = new char[] {':', ' ', ' ', ' ', ' ', ' ', ' ', ' '};
+        map[7] = new char[] {':', ';', ' ', ' ', ' ', ' ', ' ', ' '};
     }
     //Положение текущей буквы в шрифте
     private static int fontMapX, fontMapY;
@@ -373,8 +433,8 @@ public class Graphic {
             for (int j=0; j<map[0].length; j++)
                 if (map[i][j]==c) {
                     isFounded = true;
-                    fontMapX = i;
-                    fontMapY = j;
+                    fontMapX = j;
+                    fontMapY = i;
                     break;
                 }
         if (!isFounded)
@@ -384,25 +444,25 @@ public class Graphic {
      * Создание контекста для рисования текста
      */
     private static void initText() {
-        fontShader.use();
-        glBindBuffer(GL_ARRAY_BUFFER, vboId);
-        //Определяем местонахождение всех атрибутов
-        final int aPosition = fontShader.get_aPosition();
-        final int aTexturePosition = fontShader.get_aTextureCoordinates();
-        glEnableVertexAttribArray(aPosition);
-        glVertexAttribPointer(aPosition, POSITION_COMPONENT_COUNT, GL_FLOAT, false, 0, 0);
-        glEnableVertexAttribArray(aTexturePosition);
-        glVertexAttribPointer(aTexturePosition, UV_COMPONENT_COUNT, GL_FLOAT, false, 0, 0);
-        //Освобождаем VBO
-        glBindBuffer(GL_ARRAY_BUFFER, 0);
+            fontShader.use();
+            glBindBuffer(GL_ARRAY_BUFFER, vboId);
+            //Определяем местонахождение всех атрибутов
+            final int aPosition = fontShader.get_aPosition();
+            final int aTexturePosition = fontShader.get_aTextureCoordinates();
+            glEnableVertexAttribArray(aPosition);
+            glVertexAttribPointer(aPosition, POSITION_COMPONENT_COUNT, GL_FLOAT, false, 0, 0);
+            glEnableVertexAttribArray(aTexturePosition);
+            glVertexAttribPointer(aTexturePosition, UV_COMPONENT_COUNT, GL_FLOAT, false, 0, 0);
+            //Освобождаем VBO
+            glBindBuffer(GL_ARRAY_BUFFER, 0);
 
-        //Задаем текстуру шрифта
-        glActiveTexture(GL_TEXTURE0);
-        fontShader.setTexture(0);
-        glBindTexture(GL_TEXTURE_2D, fontTexture);
+            //Задаем текстуру шрифта
+            glActiveTexture(GL_TEXTURE0);
+            fontShader.setTexture(0);
+            glBindTexture(GL_TEXTURE_2D, fontTexture);
 
-        //Задаем размер одного символа
-        fontShader.setSymbolDimensions(1.0f/map.length, 1.0f/map[0].length);
+            //Задаем размер одного символа
+            fontShader.setSymbolDimensions(1.0f / map[0].length, 1.0f / map.length);
     }
 
     public static void drawText(float x, float y, float size, float r, float g, float b, String text) {
@@ -410,19 +470,24 @@ public class Graphic {
     }
 
     public static void drawText(float x, float y, float size, float r, float g, float b, float a, String text) {
-        final String textCopy = text.toUpperCase();
-        final int textLength = textCopy.length();
-        fontShader.setColor(r,g,b,a);
-        for (int i = 0; i<textLength; i++) {
-            createRectangle(x,y,size,size);
-            fontShader.setMatrix(resultMatrix,0);
-            //Получаем положение символа в массиве
-            getCharLocation(textCopy.charAt(i));
-            //Переводим в текстурную систему координат и отправляем в шейдер
-            fontShader.setCharPosition(fontMapY, fontMapX);
-            //Отрисовываем
-            drawOneRectangle();
-            x+=0.8*size;
+        if (currentMode != Mode.DRAW_TEXT) {
+            LoggerConfig.e(TAG, "Incorrect drawing mode");
+        }
+        else {
+            final String textCopy = text.toUpperCase();
+            final int textLength = textCopy.length();
+            fontShader.setColor(r, g, b, a);
+            for (int i = 0; i < textLength; i++) {
+                createRectangle(x, y, size, size);
+                fontShader.setMatrix(resultMatrix, 0);
+                //Получаем положение символа в массиве
+                getCharLocation(textCopy.charAt(i));
+                //Переводим в текстурную систему координат и отправляем в шейдер
+                fontShader.setCharPosition(fontMapX, fontMapY);
+                //Отрисовываем
+                drawOneRectangle();
+                x += 0.8 * size;
+            }
         }
     }
 
