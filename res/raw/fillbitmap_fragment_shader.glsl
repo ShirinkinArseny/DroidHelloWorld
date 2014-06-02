@@ -1,3 +1,5 @@
+precision mediump float;
+
 //Текстурные координаты
 varying vec2 v_TexturePosition;
 //Текстура

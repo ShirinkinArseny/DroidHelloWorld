@@ -332,15 +332,16 @@ public class Graphic {
      */
     public static void fillBitmap(int texture, float width, float dx) {
         //Получаем ширину экрана
-        final int screenWidth = Configs.getDisplayWidth();
+        final int screenWidth = Configs.getDisplayWidth(), screenHeight = Configs.getDisplayHeight();
         //Переводим смещение в систему координат OpenGL
         dx /= 2*screenWidth;
-        //Переводим ширину в систему координат OpenGL
+
+        float height = width / 2 / screenHeight;
         width /= 2*screenWidth;
 
         //Задаем параметры для фрагментного шейдера
         fillBitmapShader.setDX(dx);
-        fillBitmapShader.setTextureDimensions(width,width);
+        fillBitmapShader.setTextureDimensions(width,height);
         glBindTexture(GL_TEXTURE_2D,texture);
 
         //Рисуем к херам
