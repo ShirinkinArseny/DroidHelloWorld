@@ -6,7 +6,7 @@ uniform float u_Transparency;
 
 void main()
 {
-    //Задаем координатные текстуры
+    //Задаем текстурные координаты
     gl_FragColor = texture2D(u_TextureUnit, v_TextureCoordinates);
     //Задаем прозрачность
     gl_FragColor.a *= u_Transparency;

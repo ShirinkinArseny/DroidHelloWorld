@@ -17,8 +17,6 @@ void main()
     //Определяем смещение в глобальной координатной системе
     TextureCoordinates *= u_SymbolDimensions;
     TextureCoordinates += u_CharPosition * u_SymbolDimensions;
-    //Получаем цвет из текстуры
-    gl_FragColor = texture2D(u_TextureUnit, TextureCoordinates);
-    //Задаем цвет
-    gl_FragColor *= u_Color;
+    //Получаем цвет из текстуры и задаем цвет
+    gl_FragColor = texture2D(u_TextureUnit, TextureCoordinates) * u_Color;
 }

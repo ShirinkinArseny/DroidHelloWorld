@@ -144,7 +144,7 @@ public class Graphic {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         //Включаем alpha-blending
-        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
+        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
     }
 
@@ -291,6 +291,7 @@ public class Graphic {
         glDrawArrays(GL_TRIANGLES, 0, 6);
     }
 
+    //Вершины для заливки экрана (не зависят от его размера совсем)
     private static final FloatBuffer fillBitmapVertexesBuffer = createNativeFloatArray(new float[] {
             //Левый нижний угол
             -1, -1, 0,0,
