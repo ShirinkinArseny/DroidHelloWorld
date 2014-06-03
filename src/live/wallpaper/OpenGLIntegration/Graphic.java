@@ -131,10 +131,10 @@ public class Graphic {
                 0,1,
                 //Правый нижний угол
                 1,0,
-                //Левый нижний угол
-                0,0,
                 //Правый верхний угол
-                1,1
+                1,1,
+                //Левый нижний угол
+                0,0
         });
         //Задаем указатель на начало массива
         vboBufferVertexes.position(0);
@@ -146,6 +146,13 @@ public class Graphic {
         //Включаем alpha-blending
         glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
+
+
+        //Отрисовываем только передние стороны каждого битмапа
+        //(обратные просто никогда не увидеть так как это 2D)
+        glFrontFace(GL_CCW);
+        glCullFace(GL_FRONT);
+        glEnable(GL_CULL_FACE);
     }
 
 
@@ -295,10 +302,10 @@ public class Graphic {
     private static final FloatBuffer fillBitmapVertexesBuffer = createNativeFloatArray(new float[] {
             //Левый нижний угол
             -1, -1, 0,0,
-            //Правый верхний угол
-            1, 1, 1,1,
             //Левый верхний угол
             -1, 1, 0,1,
+            //Правый верхний угол
+            1, 1, 1,1,
             //Правый нижний угол
             1,-1, 1,0,
             //Левый нижний угол
