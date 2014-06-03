@@ -34,11 +34,11 @@ public class TimerLayer {
 
     public static void resize(int w, int h) {
         height2=h/3;
-        height2_3=h*3/5;
         width4 =w/5;
-        width2=w/2;
+        width2=w*3/5;
         bigSize=w/7;
-        smallSize=w/20;
+        height2_3= (int) (height2+bigSize*1.3f);
+        smallSize=w/15;
     }
 
     public static void update(float dt) {
@@ -58,7 +58,7 @@ public class TimerLayer {
         if (Configs.getBooleanValue(Configs.timerDraw)) {
             Graphic.drawText(width4, height2, bigSize, pBig[0], pBig[1], pBig[2], pBig[3], getTime());
             int[] kills = UnitLayer.getTeamSizes();
-            Graphic.drawText(width2 - 100, height2_3, smallSize,
+            Graphic.drawText(width2 - smallSize*5, height2_3, smallSize,
                     pSmallRed[0], pSmallRed[1], pSmallRed[2], pSmallRed[3], String.valueOf(kills[1]));
             Graphic.drawText(width2, height2_3, smallSize,
                     pSmallBlue[0], pSmallBlue[1], pSmallBlue[2], pSmallBlue[3], String.valueOf(kills[0]));

@@ -1,6 +1,5 @@
 package live.wallpaper.Units;
 
-import android.util.Log;
 import live.wallpaper.DrawLayers.MessagesLayer.MessagesLayer;
 import live.wallpaper.Geometry.Point;
 import live.wallpaper.Geometry.Rectangle;
@@ -9,7 +8,7 @@ import live.wallpaper.TimeFunctions.FlappyTimeFunction;
 
 public class Unit extends ControlledUnit {
 
-    private FlappyTimeFunction kills;
+    //private FlappyTimeFunction kills;
     private Rectangle shadow;
     private static int[][] menTexture;
     private static int[][] sizes;
@@ -30,23 +29,23 @@ public class Unit extends ControlledUnit {
 
     public Unit(float x, float y, int team, float health, float speed, Type t) {
         super(x, y, sizes[getTypeNumber(t)][0], sizes[getTypeNumber(t)][1], team, health, speed, t);
-        shadow=new Rectangle(x, y, sizes[getTypeNumber(t)][0]*2, sizes[getTypeNumber(t)][1]*2);
-        kills=new FlappyTimeFunction(2f, new Runnable() {
-            @Override
-            public void run() {
-                if (kills.getValue()>5)
-                    MessagesLayer.showMessage(getX(), getY(), (int)kills.getValue()+"-KILL!", getTeam());
-            }
-        });
+        shadow=new Rectangle(x, y, sizes[getTypeNumber(t)][0]*4, sizes[getTypeNumber(t)][1]*4);
+        //kills=new FlappyTimeFunction(2f, new Runnable() {
+        //    @Override
+        //    public void run() {
+        //        if (kills.getValue()>5)
+        //            MessagesLayer.showMessage(getX(), getY(), (int)kills.getValue()+"-KILL!", getTeam());
+        //    }
+        //});
     }
 
     public Unit(Point p2, int team, float health, float speed, Type t) {
         this(p2.getX(), p2.getY(), team, health, speed, t);
     }
 
-    public void bumpKills() {
-        kills.flap();
-    }
+    //public void bumpKills() {
+    //    kills.flap();
+    //}
 
     public void changeHealth(float h) {
         health += getHealthCoef() * h;
@@ -62,12 +61,8 @@ public class Unit extends ControlledUnit {
         float dxt = getDX() * dt;
         float dyt = getDY() * dt;
         changePosition(dxt, dyt);
-        if (Float.valueOf(getX()).isNaN() || Float.valueOf(getY()).isNaN()) {
-            Log.i("Unit.move", getX() + " " + getY());
-            changeHealth(-10f);
-        }
-        kills.tick(dt);
         shadow.changePosition(dxt, dyt);
+        //kills.tick(dt);
     }
 
     public void drawShadow() {
@@ -80,8 +75,13 @@ public class Unit extends ControlledUnit {
 
     public void drawHealth() {
         float health=Math.max(0, this.health);
-        Graphic.drawRect(getX0(), getY0()-2,
-                getX0() + getWidth() * health, getY0(),
+        float w2=getWidth() * health/2;
+        Graphic.drawRect(getX()-w2, getY0()-5,
+                getX()+w2 * health, getY0()-3,
                 1 - health, 0.75f *health, 0, 1);
+    }
+
+    public void kill() {
+        health=-1;
     }
 }

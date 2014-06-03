@@ -23,7 +23,7 @@ public class UnitLayer{
             new LinkedList[]{new LinkedList(), new LinkedList()}; //Lists of units to send in AI
     private static final LinkedList<Unit>[] dividedUnits=
             new LinkedList[]{new LinkedList(), new LinkedList(), new LinkedList(), new LinkedList(), new LinkedList(), new LinkedList()}; //Lists of units to send in AI
-    private static final int[] kills=new int[]{0, 0};
+    private static int[] kills=new int[]{0, 0};
     private static Synchroniser synchroniser;
     private static LoopedTicker updateSpawnAndIntersection;
 
@@ -101,7 +101,7 @@ public class UnitLayer{
                     "CRITICAL X" + (att + 10000) + "!", enemy.getTeam());
         }
         enemy.changeHealth(attack1);
-        if (enemy.getHealth()<=0) unit.bumpKills();
+        //if (enemy.getHealth()<=0) unit.bumpKills();
     }
 
     private static void fightUnits(Unit unit, Unit enemy) {
@@ -168,40 +168,52 @@ public class UnitLayer{
         synchroniser.waitForUnlockAndLock();
         for (int i=0; i<4; i++) {
             for (Unit u: dividedUnits[i])
-                u.changeHealth(-10f);
+                u.kill();
         }
-        for (int i=0; i<4; i++)
-        updateDeath(dividedUnits[i]);
+        for (LinkedList<Unit> llu: dividedUnits)  {
+            for (Unit u: llu)
+            {
+                u.kill();
+                startBlood(u);
+            }
+            llu.clear();
+        }
         synchroniser.unlock();
         kills[0]=0;
         kills[1]=0;
     }
 
-    private static void updateDeath(LinkedList<Unit> units) {
-        for (int i = 0; i < units.size(); i++) {
-            if (units.get(i).getHealth() <= 0) {
+    private static void startBlood(Unit u) {
+        int tx;
+        if (u.getType()!= NotControlledUnit.Type.Tower && u.getType()!= NotControlledUnit.Type.Bullet)
+            tx=0;
+        else tx=1;
+        for (int j=0; j< Configs.getIntValue(Configs.bloodCount); j++)
+            BloodLayer.add(u.getX()+rnd.nextInt(50)-25,
+                    u.getY()+rnd.nextInt(50)-25,
+                    j*Configs.getFloatValue(Configs.bloodInterval), tx);
+    }
 
-                Unit c=units.get(i);
+    private static void updateDeath() {
+        for (LinkedList<Unit> units: dividedUnits )
+        for (int i=0; i<units.size(); i++) {
+            Unit c=units.get(i);
+            if (c.getHealth() <= 0) {
+
                 if (c.getType()== NotControlledUnit.Type.Giant)
-                    MessagesLayer.showMessage(units.get(i).getX(), units.get(i).getY(), "GIANT DEATH!", units.get(i).getTeam());
+                    MessagesLayer.showMessage(c.getX(),c.getY(), "GIANT DEATH!", c.getTeam());
                 else
                 if (c.getType()== NotControlledUnit.Type.Tower)
-                    MessagesLayer.showMessage(units.get(i).getX(), units.get(i).getY(), "TOWER DESTROYED!", units.get(i).getTeam());
+                    MessagesLayer.showMessage(c.getX(), c.getY(), "TOWER DESTROYED!", c.getTeam());
                 else
                 if (c.getType()== NotControlledUnit.Type.Man)
-                    MessagesLayer.showMessage(units.get(i).getX(), units.get(i).getY(), "-1", units.get(i).getTeam());
+                    MessagesLayer.showMessage(c.getX(), c.getY(), "-1", c.getTeam());
 
-                int tx;
-                if (c.getType()!= NotControlledUnit.Type.Tower && c.getType()!= NotControlledUnit.Type.Bullet)
-                    tx=0;
-                else tx=1;
-                for (int j=0; j< Configs.getIntValue(Configs.bloodCount); j++)
-                    BloodLayer.add(units.get(i).getX() - 28 + rnd.nextInt(20),
-                            units.get(i).getY() - 28 + rnd.nextInt(20), j*Configs.getFloatValue(Configs.bloodInterval), tx);
+                startBlood(c);
 
                 if (c.getType()!= NotControlledUnit.Type.Bullet)
                 kills[c.getTeam()]++;
-                units.remove(i);
+                units.remove(c);
             }
         }
     }
@@ -261,8 +273,7 @@ public class UnitLayer{
     public static void update(float dt) {
         synchroniser.waitForUnlockAndLock();
         doRegeneration(dt);
-        for (LinkedList l: dividedUnits )
-            updateDeath(l);
+        updateDeath();
         moveUnits(dt);
         synchroniser.unlock();
         updateSpawnAndIntersection.tick(dt);

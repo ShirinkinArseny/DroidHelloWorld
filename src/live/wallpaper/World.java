@@ -63,12 +63,12 @@ public class World {
         menTexture[1][1] = getScaledResource(res, R.drawable.blue, 96);
         menTexture[1][2] = getScaledResource(res, R.drawable.bluetower, 32);
         menTexture[1][3] = getScaledResource(res, R.drawable.bullet, 28);
-        menTexture[2][0] = getScaledResource(res, R.drawable.shadow, 64);
-        menTexture[2][1] = getScaledResource(res, R.drawable.shadow, 192);
-        menTexture[2][2] = getScaledResource(res, R.drawable.towershadow, 64);
-        menTexture[3][0] = getScaledResource(res, R.drawable.shadow, 64);
-        menTexture[3][1] = getScaledResource(res, R.drawable.shadow, 192);
-        menTexture[3][2] = getScaledResource(res, R.drawable.towershadow, 64);
+        menTexture[2][0] = getScaledResource(res, R.drawable.shadow, 128);
+        menTexture[2][1] = getScaledResource(res, R.drawable.shadow, 384);
+        menTexture[2][2] = getScaledResource(res, R.drawable.towershadow, 128);
+        menTexture[3][0] = getScaledResource(res, R.drawable.shadow, 128);
+        menTexture[3][1] = getScaledResource(res, R.drawable.shadow, 384);
+        menTexture[3][2] = getScaledResource(res, R.drawable.towershadow, 128);
 
         int[][] sizes=new int[4][2];
         for (int i=0; i<4; i++) {
@@ -171,10 +171,10 @@ public class World {
     private void draw() {
         Graphic.begin(Graphic.Mode.DRAW_RECTANGLES);
         TerritoryLayer.draw();
-        Graphic.begin(Graphic.Mode.DRAW_TEXT);
-        TimerLayer.draw();
         Graphic.begin(Graphic.Mode.FILL_BITMAP);
         CanvaLayer.draw();
+        Graphic.begin(Graphic.Mode.DRAW_TEXT);
+        TimerLayer.draw();
         Graphic.begin(Graphic.Mode.DRAW_BITMAPS);
         SpawnsLayer.draw();
         BloodLayer.draw();
