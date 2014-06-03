@@ -144,7 +144,7 @@ public class Graphic {
         glBindBuffer(GL_ARRAY_BUFFER, 0);
 
         //Включаем alpha-blending
-        glBlendFunc(GL_SRC_ALPHA, GL_ONE_MINUS_SRC_ALPHA);
+        glBlendFunc(GL_ONE, GL_ONE_MINUS_SRC_ALPHA);
         glEnable(GL_BLEND);
 
 

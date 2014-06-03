@@ -9,5 +9,5 @@ void main()
     //Задаем текстурные координаты
     gl_FragColor = texture2D(u_TextureUnit, v_TextureCoordinates);
     //Задаем прозрачность
-    gl_FragColor.a *= u_Transparency;
+    gl_FragColor *= u_Transparency;
 }

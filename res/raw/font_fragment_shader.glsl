@@ -19,4 +19,7 @@ void main()
     TextureCoordinates += u_CharPosition * u_SymbolDimensions;
     //Получаем цвет из текстуры и задаем цвет
     gl_FragColor = texture2D(u_TextureUnit, TextureCoordinates) * u_Color;
+    gl_FragColor.r *= u_Color.a;
+    gl_FragColor.g *= u_Color.a;
+    gl_FragColor.b *= u_Color.a;
 }
