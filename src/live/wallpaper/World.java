@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.*;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import live.wallpaper.AI.AI;
 import live.wallpaper.Configs.Configs;
 import live.wallpaper.DrawLayers.*;
@@ -23,10 +24,13 @@ public class World {
     private static Resources res;
     private static float pictureSizeCoef=1f;
 
+    private static Bitmap getScaledBitmap(Bitmap b, int size) {
+        return Bitmap.createScaledBitmap(
+                        b, (int)(size*pictureSizeCoef), (int)(size*pictureSizeCoef), true);
+    }
+
     private static Bitmap getScaledResource(Resources res, int id, int size) {
-        return
-        Bitmap.createScaledBitmap(
-                BitmapFactory.decodeResource(res, id), (int)(size*pictureSizeCoef), (int)(size*pictureSizeCoef), true);
+        return getScaledBitmap(BitmapFactory.decodeResource(res, id), size);
     }
 
     public World(Context context) {
@@ -39,7 +43,7 @@ public class World {
         DisplayMetrics metrics = res.getDisplayMetrics();
         pictureSizeCoef=Math.max(metrics.widthPixels, metrics.heightPixels)/1100f;
 
-        loadTextures();
+        loadTextures(metrics.widthPixels, metrics.heightPixels);
 
         UnitLayer.init();
         BloodLayer.init();
@@ -49,7 +53,7 @@ public class World {
         reInit();
     }
 
-    private static void loadTextures() {
+    private static void loadTextures(int w, int h) {
         Bitmap[][] menTexture = new Bitmap[4][4];
         menTexture[0][0] = getScaledResource(res, R.drawable.red, 32);
         menTexture[0][1] = getScaledResource(res, R.drawable.red, 96);
@@ -80,7 +84,19 @@ public class World {
 
         Unit.init(menTextureIDs, sizes, pictureSizeCoef);
 
-        Graphic.initFont(Graphic.genTexture(getScaledResource(res, R.drawable.monospace, 2048)));
+        Bitmap b=BitmapFactory.decodeResource(res, R.drawable.monospace);
+        int fontTextureSize=Math.min(b.getWidth(),
+                8*Math.max(w, h)/7);
+
+        for (int i=1;;i*=2) {
+             if (i>=fontTextureSize) {
+                 fontTextureSize=i;
+                 break;
+             }
+        }
+        Log.i("Font",  "Selected font size: "+fontTextureSize);
+
+        Graphic.initFont(Graphic.genTexture(getScaledBitmap(b, fontTextureSize)));
 
         Bitmap canva=getScaledResource(res, R.drawable.grid, 256);
         CanvaLayer.init(Graphic.genTexture(canva), canva.getWidth());
