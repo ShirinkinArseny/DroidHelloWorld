@@ -1,10 +1,9 @@
 package live.wallpaper.DrawLayers.BloodLayer;
 
-import live.wallpaper.Configs.Configs;
+import live.wallpaper.Configs.LocalConfigs;
 import live.wallpaper.Geometry.Rectangle;
 import live.wallpaper.OpenGLIntegration.Graphic;
 import live.wallpaper.TimeFunctions.LinearTimeFunction;
-import live.wallpaper.TimeFunctions.OneTimeTicker;
 
 public class Blood extends Rectangle {
 
@@ -31,7 +30,7 @@ public class Blood extends Rectangle {
     public Blood(float x, float y, float startValue, int type) {
         super(x, y, w, h);
         this.type = type;
-        timing = new LinearTimeFunction(Configs.getFloatValue(Configs.bloodVisibleTime) + startValue, 1f, 0f, new Runnable() {
+        timing = new LinearTimeFunction(LocalConfigs.getFloatValue(LocalConfigs.bloodVisibleTime) + startValue, 1f, 0f, new Runnable() {
             @Override
             public void run() {
                 noNeedMore = true;

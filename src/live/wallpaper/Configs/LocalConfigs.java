@@ -8,7 +8,7 @@ import live.wallpaper.World;
 
 import java.util.ArrayList;
 
-public class Configs {
+public class LocalConfigs {
 
     private static ArrayList<ConfigField> fields;
 
@@ -91,6 +91,16 @@ public class Configs {
         Log.i("Configs", "Loaded");
     }
 
+    private static ArrayList<ConfigField> getFields() {
+        ArrayList<ConfigField> configs=new ArrayList<>();
+        for (ConfigField f: fields) configs.add(f.copy());
+        return configs;
+    }
+
+    private static void setFields(ArrayList<ConfigField> fields) {
+        LocalConfigs.fields=fields;
+    }
+
     private static Object getValue(int num) {
         return fields.get(num).getValue();
     }
@@ -136,8 +146,8 @@ public class Configs {
     }
 
     public static void resize(int w, int h) {
-        Configs.displayWidth = w;
-        Configs.displayHeight = h;
+        LocalConfigs.displayWidth = w;
+        LocalConfigs.displayHeight = h;
     }
 
     private static float[]     worldBoardersColor=new float[]{0.6156863f, 0.65882355f, 0.5647059f, 1}; //Цвет границы

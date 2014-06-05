@@ -1,6 +1,6 @@
 package live.wallpaper.DrawLayers.MessagesLayer;
 
-import live.wallpaper.Configs.Configs;
+import live.wallpaper.Configs.LocalConfigs;
 import live.wallpaper.OpenGLIntegration.Graphic;
 import live.wallpaper.TimeFunctions.LinearTimeFunction;
 
@@ -28,13 +28,13 @@ public class Message {
 
     public Message(String text, float x, float y, float[] rgb) {
         this.x=x;
-        coordinates =new LinearTimeFunction(Configs.getFloatValue(Configs.messageShowTime), y, y-deltaHeight, new Runnable() {
+        coordinates =new LinearTimeFunction(LocalConfigs.getFloatValue(LocalConfigs.messageShowTime), y, y-deltaHeight, new Runnable() {
             @Override
             public void run() {
                 isUseless=true;
             }
         });
-        alpha= new LinearTimeFunction(Configs.getFloatValue(Configs.messageShowTime), 1, 0, new Runnable() {
+        alpha= new LinearTimeFunction(LocalConfigs.getFloatValue(LocalConfigs.messageShowTime), 1, 0, new Runnable() {
             @Override
             public void run() {
             }

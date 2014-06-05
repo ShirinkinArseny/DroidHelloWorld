@@ -1,7 +1,7 @@
 package live.wallpaper.DrawLayers;
 
 import live.wallpaper.AI.AI;
-import live.wallpaper.Configs.Configs;
+import live.wallpaper.Configs.LocalConfigs;
 import live.wallpaper.DrawLayers.BloodLayer.BloodLayer;
 import live.wallpaper.DrawLayers.MessagesLayer.MessagesLayer;
 import live.wallpaper.DrawLayers.SpawnLayer.SpawnsLayer;
@@ -47,24 +47,24 @@ public class UnitLayer{
     }
 
     public static void resize(int width, int height) {
-            float wOld = Configs.getDisplayWidth() - 2 * Configs.getIntValue(Configs.worldHorizontalBorders);
-            float hOld = Configs.getDisplayHeight()
-                    - Configs.getIntValue(Configs.worldVerticalTopBorders)
-                    - Configs.getIntValue(Configs.worldVerticalBottomBorders);
+            float wOld = LocalConfigs.getDisplayWidth() - 2 * LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders);
+            float hOld = LocalConfigs.getDisplayHeight()
+                    - LocalConfigs.getIntValue(LocalConfigs.worldVerticalTopBorders)
+                    - LocalConfigs.getIntValue(LocalConfigs.worldVerticalBottomBorders);
 
-            float wNew = width - 2 * Configs.getIntValue(Configs.worldHorizontalBorders);
-            float hNew = height - Configs.getIntValue(Configs.worldVerticalTopBorders)
-                    - Configs.getIntValue(Configs.worldVerticalBottomBorders);
+            float wNew = width - 2 * LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders);
+            float hNew = height - LocalConfigs.getIntValue(LocalConfigs.worldVerticalTopBorders)
+                    - LocalConfigs.getIntValue(LocalConfigs.worldVerticalBottomBorders);
 
         synchroniser.waitForUnlockAndLock();
             for (int i = 0; i < 6; i++)
                 for (Unit u : dividedUnits[i]) {
 
-                    float posX = (u.getX() - Configs.getIntValue(Configs.worldHorizontalBorders))
-                            / wOld * wNew + Configs.getIntValue(Configs.worldHorizontalBorders);
+                    float posX = (u.getX() - LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders))
+                            / wOld * wNew + LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders);
 
-                    float posY = (u.getY() - Configs.getIntValue(Configs.worldVerticalTopBorders))
-                            / hOld * hNew + Configs.getIntValue(Configs.worldVerticalTopBorders);
+                    float posY = (u.getY() - LocalConfigs.getIntValue(LocalConfigs.worldVerticalTopBorders))
+                            / hOld * hNew + LocalConfigs.getIntValue(LocalConfigs.worldVerticalTopBorders);
                     u.setPosition(posX, posY);
                 }
         synchroniser.unlock();
@@ -189,9 +189,9 @@ public class UnitLayer{
         if (u.getType()!= NotControlledUnit.Type.Tower && u.getType()!= NotControlledUnit.Type.Bullet)
             tx=0;
         else tx=1;
-        for (int j=0; j< Configs.getIntValue(Configs.bloodCount); j++)
+        for (int j=0; j< LocalConfigs.getIntValue(LocalConfigs.bloodCount); j++)
             BloodLayer.add(u.getX(), u.getY(),
-                    j*Configs.getFloatValue(Configs.bloodInterval), tx);
+                    j* LocalConfigs.getFloatValue(LocalConfigs.bloodInterval), tx);
     }
 
     private static void updateDeath() {
@@ -226,13 +226,13 @@ public class UnitLayer{
     private static void autoSpawn() {
         for (int team = 0; team < 2; team++) {
             Point p = getSpawnPoint(team);
-            boolean gigant = 0 == rnd.nextInt(Configs.getIntValue(Configs.worldGianSpawnProbability));
+            boolean gigant = 0 == rnd.nextInt(LocalConfigs.getIntValue(LocalConfigs.worldGianSpawnProbability));
             if (gigant) {
                 UnitLayer.spawn(new Giant(p, team));
                 showMessage(p, "GIANT SPAWNED!", team);
                 return;
             }
-            boolean tower = 0 == rnd.nextInt(Configs.getIntValue(Configs.worldTowerSpawnProbability));
+            boolean tower = 0 == rnd.nextInt(LocalConfigs.getIntValue(LocalConfigs.worldTowerSpawnProbability));
             if (tower) {
                 UnitLayer.spawn(new Tower(p, team));
                 showMessage(p, "TOWER BUILT!", team);
@@ -243,29 +243,29 @@ public class UnitLayer{
     }
 
     private static Point getSpawnPoint(int team) {
-        if (Configs.getDisplayWidth() > Configs.getDisplayHeight()) {
+        if (LocalConfigs.getDisplayWidth() > LocalConfigs.getDisplayHeight()) {
             return new Point(
 
                     ((team == 0) ?
-                            Configs.getIntValue(Configs.worldHorizontalBorders) :
-                            Configs.getDisplayWidth() * 2 / 3 - Configs.getIntValue(Configs.worldHorizontalBorders))
-                            + rnd.nextInt(Configs.getDisplayWidth() / 3),
+                            LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders) :
+                            LocalConfigs.getDisplayWidth() * 2 / 3 - LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders))
+                            + rnd.nextInt(LocalConfigs.getDisplayWidth() / 3),
 
-                    rnd.nextInt(Configs.getDisplayHeight() - Configs.getIntValue(Configs.worldVerticalBottomBorders)
-                            - Configs.getIntValue(Configs.worldVerticalTopBorders))
-                            +  Configs.getIntValue(Configs.worldVerticalTopBorders)
+                    rnd.nextInt(LocalConfigs.getDisplayHeight() - LocalConfigs.getIntValue(LocalConfigs.worldVerticalBottomBorders)
+                            - LocalConfigs.getIntValue(LocalConfigs.worldVerticalTopBorders))
+                            +  LocalConfigs.getIntValue(LocalConfigs.worldVerticalTopBorders)
             );
         } else {
             return new Point(
 
-                    rnd.nextInt(Configs.getDisplayWidth()
-                            - 2 * Configs.getIntValue(Configs.worldHorizontalBorders))
-                            + Configs.getIntValue(Configs.worldHorizontalBorders),
+                    rnd.nextInt(LocalConfigs.getDisplayWidth()
+                            - 2 * LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders))
+                            + LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders),
 
                     ((team == 0) ?
-                            Configs.getIntValue(Configs.worldVerticalTopBorders) :
-                            Configs.getDisplayHeight() * 2 / 3 - Configs.getIntValue(Configs.worldVerticalBottomBorders))
-                            + rnd.nextInt(Configs.getDisplayWidth() / 3)
+                            LocalConfigs.getIntValue(LocalConfigs.worldVerticalTopBorders) :
+                            LocalConfigs.getDisplayHeight() * 2 / 3 - LocalConfigs.getIntValue(LocalConfigs.worldVerticalBottomBorders))
+                            + rnd.nextInt(LocalConfigs.getDisplayWidth() / 3)
             );
         }
     }

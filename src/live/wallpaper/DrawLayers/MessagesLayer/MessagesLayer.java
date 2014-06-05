@@ -1,6 +1,6 @@
 package live.wallpaper.DrawLayers.MessagesLayer;
 
-import live.wallpaper.Configs.Configs;
+import live.wallpaper.Configs.LocalConfigs;
 import live.wallpaper.DrawLayers.Synchroniser;
 import live.wallpaper.Geometry.Point;
 
@@ -16,21 +16,21 @@ public class MessagesLayer{
 
     public static void init(float sizeCoef) {
 
-        pBlue=Configs.getBlueFontColor();
+        pBlue= LocalConfigs.getBlueFontColor();
 
-        pRed=Configs.getRedFontColor();
+        pRed= LocalConfigs.getRedFontColor();
 
         synchroniser =new Synchroniser("MessagesLayerSync");
         Message.init(sizeCoef);
     }
 
     public static void reInit() {
-        pBlue=Configs.getBlueFontColor();
-        pRed=Configs.getRedFontColor();
+        pBlue= LocalConfigs.getBlueFontColor();
+        pRed= LocalConfigs.getRedFontColor();
     }
 
     public static void showMessage(float x, float y, String text, int color) {
-        if (Configs.getBooleanValue(Configs.messageDraw)) {
+        if (LocalConfigs.getBooleanValue(LocalConfigs.messageDraw)) {
         synchroniser.waitForUnlockAndLock();
             messagesAddBuffer.add(
                     new Message(text, x, y, color == 0 ? pRed : pBlue)
@@ -44,7 +44,7 @@ public class MessagesLayer{
     }
 
     public static void update(float dt) {
-        if (Configs.getBooleanValue(Configs.messageDraw)) {
+        if (LocalConfigs.getBooleanValue(LocalConfigs.messageDraw)) {
             synchroniser.waitForUnlockAndLock();
             for (int i = 0; i < messages.size(); i++) {
                 messages.get(i).update(dt);
@@ -60,7 +60,7 @@ public class MessagesLayer{
     }
 
     public static void draw() {
-        if (Configs.getBooleanValue(Configs.messageDraw)) {
+        if (LocalConfigs.getBooleanValue(LocalConfigs.messageDraw)) {
             synchroniser.waitForUnlockAndLock();
         for (Message f : messages)
             f.draw();

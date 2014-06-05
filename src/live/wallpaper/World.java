@@ -6,7 +6,7 @@ import android.graphics.*;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import live.wallpaper.AI.AI;
-import live.wallpaper.Configs.Configs;
+import live.wallpaper.Configs.LocalConfigs;
 import live.wallpaper.DrawLayers.*;
 import live.wallpaper.DrawLayers.BloodLayer.Blood;
 import live.wallpaper.DrawLayers.BloodLayer.BloodLayer;
@@ -36,7 +36,7 @@ public class World {
     public World(Context context) {
         res=context.getResources();
         //init();
-        Configs.init(context);
+        LocalConfigs.init(context);
     }
 
     public static void init() {
@@ -155,7 +155,7 @@ public class World {
         TerritoryLayer.resize(width, height);
         UnitLayer.resize(width, height);
         TimerLayer.resize(width, height);
-        Configs.resize(width, height);
+        LocalConfigs.resize(width, height);
         Graphic.resize(width, height);
     }
 

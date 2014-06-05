@@ -1,6 +1,6 @@
 package live.wallpaper.AI;
 
-import live.wallpaper.Configs.Configs;
+import live.wallpaper.Configs.LocalConfigs;
 import live.wallpaper.Units.ControlledUnit;
 import live.wallpaper.Units.NotControlledUnit;
 
@@ -18,7 +18,7 @@ public class AI {
     private static float coef;
 
     public static void reInit() {
-        aiDeltaTarget= (int) (Configs.getIntValue(Configs.aiDeltaTarget)*coef);
+        aiDeltaTarget= (int) (LocalConfigs.getIntValue(LocalConfigs.aiDeltaTarget)*coef);
         aiDeltaTarget2=2*aiDeltaTarget;
     }
 
@@ -75,9 +75,9 @@ public class AI {
                         }
                     }
 
-                } else if (theirTowers.size() > 0 && (yours.size()>Configs.getIntValue(Configs.aiOurUnitsCountToAttack)
-                        || yours.size()>Configs.getIntValue(Configs.aiOurUnitsWithGiantCountToAttack) && hasOurGiant)
-                        && theirMen.size()<Configs.getIntValue(Configs.aiTheirUnitsCountToNotAttack)) {
+                } else if (theirTowers.size() > 0 && (yours.size()> LocalConfigs.getIntValue(LocalConfigs.aiOurUnitsCountToAttack)
+                        || yours.size()> LocalConfigs.getIntValue(LocalConfigs.aiOurUnitsWithGiantCountToAttack) && hasOurGiant)
+                        && theirMen.size()< LocalConfigs.getIntValue(LocalConfigs.aiTheirUnitsCountToNotAttack)) {
                     x = theirTowers.get(0).getX();
                     y = theirTowers.get(0).getY();
                     float lastHP=theirTowers.get(0).getHealth();

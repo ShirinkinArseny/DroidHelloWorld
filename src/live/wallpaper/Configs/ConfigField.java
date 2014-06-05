@@ -18,4 +18,6 @@ public abstract class ConfigField {
     public ConfigField(String name) {
         this.name=name;
     }
+
+    public abstract ConfigField copy();
 }

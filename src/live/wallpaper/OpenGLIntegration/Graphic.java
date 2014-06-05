@@ -3,7 +3,7 @@ package live.wallpaper.OpenGLIntegration;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.opengl.Matrix;
-import live.wallpaper.Configs.Configs;
+import live.wallpaper.Configs.LocalConfigs;
 import live.wallpaper.Configs.LoggerConfig;
 import live.wallpaper.Geometry.Rectangle;
 import live.wallpaper.OpenGLIntegration.Shaders.*;
@@ -341,7 +341,7 @@ public class Graphic {
      */
     public static void fillBitmap(int texture, float width, float dx) {
         //Получаем ширину экрана
-        final int screenWidth = Configs.getDisplayWidth(), screenHeight = Configs.getDisplayHeight();
+        final int screenWidth = LocalConfigs.getDisplayWidth(), screenHeight = LocalConfigs.getDisplayHeight();
         //Переводим смещение в систему координат OpenGL
         dx /= screenWidth;
 

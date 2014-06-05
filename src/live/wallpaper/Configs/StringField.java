@@ -19,4 +19,10 @@ public class StringField extends ConfigField{
     public StringField(String name) {
         super(name);
     }
+
+    public ConfigField copy() {
+        StringField copy=new StringField(super.getName());
+        copy.value=value;
+        return copy;
+    }
 }

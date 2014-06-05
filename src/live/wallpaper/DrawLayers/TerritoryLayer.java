@@ -1,6 +1,6 @@
 package live.wallpaper.DrawLayers;
 
-import live.wallpaper.Configs.Configs;
+import live.wallpaper.Configs.LocalConfigs;
 import live.wallpaper.OpenGLIntegration.Graphic;
 
 public class TerritoryLayer{
@@ -10,22 +10,22 @@ public class TerritoryLayer{
     private static float top, bottom, horizontal1, horizontal2;
 
     public static void reInit() {
-        border=Configs.getWorldBoardersColor();
-        bg=Configs.getWorldBGColor();
+        border= LocalConfigs.getWorldBoardersColor();
+        bg= LocalConfigs.getWorldBGColor();
     }
 
     public static void resize(int w, int h) {
-        top=Configs.getIntValue(Configs.worldVerticalTopBorders);
-        bottom=h-Configs.getIntValue(Configs.worldVerticalBottomBorders);
-        horizontal1=Configs.getIntValue(Configs.worldHorizontalBorders);
-        horizontal2=w-Configs.getIntValue(Configs.worldHorizontalBorders);
+        top= LocalConfigs.getIntValue(LocalConfigs.worldVerticalTopBorders);
+        bottom=h- LocalConfigs.getIntValue(LocalConfigs.worldVerticalBottomBorders);
+        horizontal1= LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders);
+        horizontal2=w- LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders);
     }
 
     public static void draw() {
 
         Graphic.drawRect(0, 0,
-            Configs.getDisplayWidth(),
-            Configs.getDisplayHeight(),
+            LocalConfigs.getDisplayWidth(),
+            LocalConfigs.getDisplayHeight(),
                 bg[0], bg[1], bg[2], bg[3]) ;
 
         Graphic.drawRect(horizontal1,

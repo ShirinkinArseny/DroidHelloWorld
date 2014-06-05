@@ -19,4 +19,10 @@ public class FloatField extends ConfigField{
     public FloatField(String name) {
         super(name);
     }
+
+    public ConfigField copy() {
+        FloatField copy=new FloatField(super.getName());
+        copy.value=value;
+        return copy;
+    }
 }

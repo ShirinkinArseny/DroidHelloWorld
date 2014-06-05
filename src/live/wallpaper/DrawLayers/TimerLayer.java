@@ -1,6 +1,6 @@
 package live.wallpaper.DrawLayers;
 
-import live.wallpaper.Configs.Configs;
+import live.wallpaper.Configs.LocalConfigs;
 import live.wallpaper.OpenGLIntegration.Graphic;
 import live.wallpaper.TimeFunctions.LoopedTicker;
 
@@ -16,7 +16,7 @@ public class TimerLayer {
     private static float bigSize, smallSize;
 
     public static void reInit(int w, int h) {
-        round=new LoopedTicker(Configs.getIntValue(Configs.timerTimer), new Runnable() {
+        round=new LoopedTicker(LocalConfigs.getIntValue(LocalConfigs.timerTimer), new Runnable() {
             @Override
             public void run() {
                 UnitLayer.killEverybody();
@@ -27,9 +27,9 @@ public class TimerLayer {
         width4 =w/4;
         width2=w/2;
 
-        pBig=Configs.getGrayFontColor();
-        pSmallRed=Configs.getRedFontColor();
-        pSmallBlue=Configs.getBlueFontColor();
+        pBig= LocalConfigs.getGrayFontColor();
+        pSmallRed= LocalConfigs.getRedFontColor();
+        pSmallBlue= LocalConfigs.getBlueFontColor();
     }
 
     public static void resize(int w, int h) {
@@ -46,16 +46,16 @@ public class TimerLayer {
     }
 
     private static String getTime() {
-        int ms= 10*Configs.getIntValue(Configs.timerTimer)-(int)(10*round.getValue());
+        int ms= 10* LocalConfigs.getIntValue(LocalConfigs.timerTimer)-(int)(10*round.getValue());
         ms%=10;
-        int seconds= Configs.getIntValue(Configs.timerTimer)-(int)(round.getValue());
+        int seconds= LocalConfigs.getIntValue(LocalConfigs.timerTimer)-(int)(round.getValue());
         int minutes=seconds/60;
         seconds%=60;
         return minutes+":"+(seconds>9?seconds:"0"+seconds)+":"+ms;
     }
 
     public static void draw() {
-        if (Configs.getBooleanValue(Configs.timerDraw)) {
+        if (LocalConfigs.getBooleanValue(LocalConfigs.timerDraw)) {
             Graphic.drawText(width4, height2, bigSize, pBig[0], pBig[1], pBig[2], pBig[3], getTime());
             int[] kills = UnitLayer.getTeamSizes();
             Graphic.drawText(width2 - smallSize*5, height2_3, smallSize,

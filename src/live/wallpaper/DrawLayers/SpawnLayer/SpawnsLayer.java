@@ -1,6 +1,6 @@
 package live.wallpaper.DrawLayers.SpawnLayer;
 
-import live.wallpaper.Configs.Configs;
+import live.wallpaper.Configs.LocalConfigs;
 import live.wallpaper.DrawLayers.Synchroniser;
 
 import java.util.LinkedList;
@@ -17,7 +17,7 @@ public class SpawnsLayer{
     }
 
     public static void addSpawn(float x, float y) {
-        if (Configs.getBooleanValue(Configs.spawnsDraw)) {
+        if (LocalConfigs.getBooleanValue(LocalConfigs.spawnsDraw)) {
             synchroniser.waitForUnlockAndLock();
             spawns.add(new Spawn(x, y));
             synchroniser.unlock();
@@ -25,7 +25,7 @@ public class SpawnsLayer{
     }
 
     public static void update(float dt) {
-        if (Configs.getBooleanValue(Configs.spawnsDraw)) {
+        if (LocalConfigs.getBooleanValue(LocalConfigs.spawnsDraw)) {
             synchroniser.waitForUnlockAndLock();
         for (int i=0; i<spawns.size(); i++) {
             spawns.get(i).update(dt);
@@ -37,7 +37,7 @@ public class SpawnsLayer{
     }
 
     public static void draw() {
-        if (Configs.getBooleanValue(Configs.spawnsDraw)) {
+        if (LocalConfigs.getBooleanValue(LocalConfigs.spawnsDraw)) {
             synchroniser.waitForUnlockAndLock();
             for (Spawn f : spawns) {
                 f.draw();

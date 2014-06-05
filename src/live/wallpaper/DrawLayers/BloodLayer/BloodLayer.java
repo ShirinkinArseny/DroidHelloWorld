@@ -1,6 +1,6 @@
 package live.wallpaper.DrawLayers.BloodLayer;
 
-import live.wallpaper.Configs.Configs;
+import live.wallpaper.Configs.LocalConfigs;
 import live.wallpaper.DrawLayers.Synchroniser;
 
 import java.util.LinkedList;
@@ -22,7 +22,7 @@ public class BloodLayer{
     }
 
     public static void add(float x, float y, float val, int type) {
-        if (Configs.getBooleanValue(Configs.bloodDraw)) {
+        if (LocalConfigs.getBooleanValue(LocalConfigs.bloodDraw)) {
         synchroniser.waitForUnlockAndLock();
         dust.add(new Blood(x+rnd.nextInt(deltaPos)-deltaPos2, y+rnd.nextInt(deltaPos)-deltaPos2, val, type));
         synchroniser.unlock();
@@ -30,7 +30,7 @@ public class BloodLayer{
     }
 
     public static void update(float dt) {
-        if (Configs.getBooleanValue(Configs.bloodDraw)) {
+        if (LocalConfigs.getBooleanValue(LocalConfigs.bloodDraw)) {
             synchroniser.waitForUnlockAndLock();
             for (int i = 0; i < dust.size(); i++) {
                 dust.get(i).update(dt);
@@ -42,7 +42,7 @@ public class BloodLayer{
     }
 
     public static void draw() {
-        if (Configs.getBooleanValue(Configs.bloodDraw)) {
+        if (LocalConfigs.getBooleanValue(LocalConfigs.bloodDraw)) {
             synchroniser.waitForUnlockAndLock();
         for (Blood f: dust) {
             f.draw();

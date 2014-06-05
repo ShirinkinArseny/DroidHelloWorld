@@ -19,4 +19,10 @@ public class BooleanField extends ConfigField{
     public BooleanField(String name) {
         super(name);
     }
+
+    public ConfigField copy() {
+        BooleanField copy=new BooleanField(super.getName());
+        copy.value=value;
+        return copy;
+    }
 }

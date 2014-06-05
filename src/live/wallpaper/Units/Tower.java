@@ -1,6 +1,6 @@
 package live.wallpaper.Units;
 
-import live.wallpaper.Configs.Configs;
+import live.wallpaper.Configs.LocalConfigs;
 import live.wallpaper.Geometry.Point;
 import live.wallpaper.TimeFunctions.LoopedTicker;
 
@@ -12,7 +12,7 @@ public class Tower extends Unit{
 
     public Tower(Point p, int team) {
         super(p, team, 10f, 3f, Type.Tower);
-        setWay(Configs.getDisplayWidth()/2, Configs.getDisplayHeight()/2);
+        setWay(LocalConfigs.getDisplayWidth()/2, LocalConfigs.getDisplayHeight()/2);
         shot=new LoopedTicker(1f, new Runnable() {
             @Override
             public void run() {

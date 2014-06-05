@@ -1,6 +1,6 @@
 package live.wallpaper.DrawLayers.SpawnLayer;
 
-import live.wallpaper.Configs.Configs;
+import live.wallpaper.Configs.LocalConfigs;
 import live.wallpaper.Geometry.Rectangle;
 import live.wallpaper.OpenGLIntegration.Graphic;
 import live.wallpaper.TimeFunctions.LinearTimeFunction;
@@ -28,7 +28,7 @@ public class Spawn extends Rectangle{
 
     public Spawn(float x, float y) {
         super(x, y, w, h);
-        timing = new LinearTimeFunction(Configs.getFloatValue(Configs.spawnsShowTime), 1f, 0f,
+        timing = new LinearTimeFunction(LocalConfigs.getFloatValue(LocalConfigs.spawnsShowTime), 1f, 0f,
                 new Runnable() {
                     @Override
                     public void run() {

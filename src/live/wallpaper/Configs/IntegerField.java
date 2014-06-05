@@ -19,4 +19,10 @@ public class IntegerField extends ConfigField{
     public IntegerField(String name) {
         super(name);
     }
+
+    public ConfigField copy() {
+        IntegerField copy=new IntegerField(super.getName());
+        copy.value=value;
+        return copy;
+    }
 }
