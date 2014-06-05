@@ -12,27 +12,32 @@ public class Configs {
 
     private static ArrayList<ConfigField> fields;
 
-    public static final int aiDeltaTarget=0;
-    public static final int bloodDraw=1;
-    public static final int aiOurUnitsCountToAttack=2;
-    public static final int aiOurUnitsWithGiantCountToAttack=3;
-    public static final int aiTheirUnitsCountToNotAttack=4;
-    public static final int bloodVisibleTime=5;
-    public static final int bloodCount=6;
-    public static final int messageShowTime=7;
-    public static final int messageDraw=8;
-    public static final int spawnsShowTime=9;
-    public static final int spawnsDraw=10;
-    public static final int timerTimer=11;
-    public static final int timerDraw=12;
-    public static final int windDraw=13;
-    public static final int worldGianSpawnProbability=14;
-    public static final int worldTowerSpawnProbability=15;
-    public static final int worldHorizontalBorders=16;
-    public static final int worldVerticalTopBorders=17;
-    public static final int worldVerticalBottomBorders=18;
-    public static final int worldBoardersDraw=19;
-    public static final int bloodInterval=20;
+    private static int lastNumber=-1;
+
+    private static int getNum() {
+        lastNumber++;
+        return lastNumber;
+    }
+
+    public static final int aiDeltaTarget=getNum();
+    public static final int bloodDraw=getNum();
+    public static final int aiOurUnitsCountToAttack=getNum();
+    public static final int aiOurUnitsWithGiantCountToAttack=getNum();
+    public static final int aiTheirUnitsCountToNotAttack=getNum();
+    public static final int bloodVisibleTime=getNum();
+    public static final int bloodCount=getNum();
+    public static final int messageShowTime=getNum();
+    public static final int messageDraw=getNum();
+    public static final int spawnsShowTime=getNum();
+    public static final int spawnsDraw=getNum();
+    public static final int timerTimer=getNum();
+    public static final int timerDraw=getNum();
+    public static final int worldGianSpawnProbability=getNum();
+    public static final int worldTowerSpawnProbability=getNum();
+    public static final int worldHorizontalBorders=getNum();
+    public static final int worldVerticalTopBorders=getNum();
+    public static final int worldVerticalBottomBorders=getNum();
+    public static final int bloodInterval=getNum();
 
     private static SharedPreferences.OnSharedPreferenceChangeListener settingsListener;
 
@@ -76,13 +81,11 @@ public class Configs {
         fields.add(new BooleanField("spawnsDraw"));
         fields.add(new IntegerField("timerTimer"));
         fields.add(new BooleanField("timerDraw"));
-        fields.add(new BooleanField("windDraw"));
         fields.add(new IntegerField("worldGianSpawnProbability"));
         fields.add(new IntegerField("worldTowerSpawnProbability"));
         fields.add(new IntegerField("worldHorizontalBorders"));
         fields.add(new IntegerField("worldVerticalTopBorders"));
         fields.add(new IntegerField("worldVerticalBottomBorders"));
-        fields.add(new BooleanField("worldBoardersDraw"));
         fields.add(new FloatField("bloodInterval"));
         settingsListener.onSharedPreferenceChanged(settings, null);
         Log.i("Configs", "Loaded");
@@ -104,7 +107,6 @@ public class Configs {
         return (Boolean)getValue(num);
     }
 
-    //TODO: убрать эту устаревшую парашу, ввести класс ColorField
     public static float[] getWorldBoardersColor() {
         return worldBoardersColor;
     }
@@ -113,32 +115,16 @@ public class Configs {
         return worldBGColor;
     }
 
-    public static void setWorldBoardersColor(float [] worldBoardersColor) {
-        Configs.worldBoardersColor = worldBoardersColor;
-    }
-
     public static float[] getRedFontColor() {
         return redFontColor;
-    }
-
-    public static void setRedFontColor(float[] redFontColor) {
-        Configs.redFontColor = redFontColor;
     }
 
     public static float[] getBlueFontColor() {
         return blueFontColor;
     }
 
-    public static void setBlueFontColor(float[] blueFontColor) {
-        Configs.blueFontColor = blueFontColor;
-    }
-
     public static float[] getGrayFontColor() {
         return grayFontColor;
-    }
-
-    public static void setGrayFontColor(float [] grayFontColor) {
-        Configs.grayFontColor = grayFontColor;
     }
 
     public static int getDisplayWidth() {
@@ -161,7 +147,7 @@ public class Configs {
     private static float[] blueFontColor=new float[]{0.6901961f, 0.4745098f, 0.7137255f, 1.0f};  // Цвет синего шрифта
     private static float[] grayFontColor=new float[]{0.87058824f, 0.87058824f, 0.87058824f, 1.0f};// Цвет шрифта таймера
 
-    private static int displayWidth;    // Ширина экрана !!НЕ ДОБАВЛЯТЬ В МЕНЮ just make getter/setter
-    private static int displayHeight;   // Высота экрана !!НЕ ДОБАВЛЯТЬ В МЕНЮ
+    private static int displayWidth;
+    private static int displayHeight;
 
 }

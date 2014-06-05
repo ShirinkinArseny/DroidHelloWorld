@@ -15,17 +15,19 @@ public class AI {
     private LinkedList<NotControlledUnit> theirMen = new LinkedList<>();
     private static int aiDeltaTarget;
     private static int aiDeltaTarget2;
+    private static float coef;
 
     public static void reInit() {
-        aiDeltaTarget=Configs.getIntValue(Configs.aiDeltaTarget);
+        aiDeltaTarget= (int) (Configs.getIntValue(Configs.aiDeltaTarget)*coef);
         aiDeltaTarget2=2*aiDeltaTarget;
     }
 
-    public AI() {
+    public AI(float coef) {
         rnd=new Random();
         theirGiants = new LinkedList<>();
         theirTowers = new LinkedList<>();
         theirMen = new LinkedList<>();
+        AI.coef=coef;
     }
 
     private float getDeltaPos() {

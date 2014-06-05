@@ -15,7 +15,7 @@ import java.util.Random;
 public class UnitLayer{
 
     private static final Random rnd = new Random();
-    private static final AI ai=new AI();
+    private static AI ai;
     //TODO: нужно с этим что=то решить
     private static final LinkedList<ControlledUnit>[] controlledUnits=
             new LinkedList[]{new LinkedList<ControlledUnit>(), new LinkedList<ControlledUnit>()}; //Lists of units to send in AI
@@ -31,8 +31,9 @@ public class UnitLayer{
         return kills;
     }
 
-    public static void init() {
+    public static void init(float coef) {
         synchroniser =new Synchroniser("UnitLayerSync");
+        ai=new AI(coef);
         updateSpawnAndIntersection=new LoopedTicker(0.2f, new Runnable() {
             @Override
             public void run() {
@@ -189,8 +190,7 @@ public class UnitLayer{
             tx=0;
         else tx=1;
         for (int j=0; j< Configs.getIntValue(Configs.bloodCount); j++)
-            BloodLayer.add(u.getX()+rnd.nextInt(50)-25,
-                    u.getY()+rnd.nextInt(50)-25,
+            BloodLayer.add(u.getX(), u.getY(),
                     j*Configs.getFloatValue(Configs.bloodInterval), tx);
     }
 

@@ -14,6 +14,8 @@ public class Message {
     private final float r;
     private final float g;
     private final float b;
+    private static float size;
+    private static float deltaHeight;
 
     public boolean getUseless() {
         return isUseless;
@@ -26,7 +28,7 @@ public class Message {
 
     public Message(String text, float x, float y, float[] rgb) {
         this.x=x;
-        coordinates =new LinearTimeFunction(Configs.getFloatValue(Configs.messageShowTime), y, y-50, new Runnable() {
+        coordinates =new LinearTimeFunction(Configs.getFloatValue(Configs.messageShowTime), y, y-deltaHeight, new Runnable() {
             @Override
             public void run() {
                 isUseless=true;
@@ -44,7 +46,11 @@ public class Message {
     }
 
     public void draw() {
-            Graphic.drawText(x, coordinates.getValue(), 20f, r, g, b, alpha.getValue(), text);
+            Graphic.drawText(x, coordinates.getValue(), size, r, g, b, alpha.getValue(), text);
     }
 
+    public static void init(float sizeCoef) {
+        size=30f*sizeCoef;
+        deltaHeight=65f*sizeCoef;
+    }
 }

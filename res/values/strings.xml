@@ -1,34 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <string name="app_name">Reds VS Blues!</string>
+    <string name="app_name">Epic Wallpaper Fight</string>
     <string name="description">Description!</string>
+
     <string name="aiDeltaTarget">Разброс толпы юнитов при атаке</string>
     <string name="aiOurUnitsCountToAttack">Кол-во юнитов, при котором можно начинать нападать на их башни</string>
     <string name="aiOurUnitsWithGiantCountToAttack">Кол-во юнитов (если есть гигант) для атаки башен</string>
     <string name="aiTheirUnitsCountToNotAttack">Кол-во вражеских юнитов, при котором игнорим предыдущие команды и начинаем выпиливать массово их</string>
-    <string name="bloodVisibleTime">Скорость сокрытия крови (трещины - тоже кровь, только машинное масло)</string>
-    <string name="bloodCount">Количество крови</string>
-    <string name="bloodDraw">Отрисовывать ли крось</string>
-    <string name="messageShowTime">Скорость сокрытия сообщений</string>
+
+
+    <string name="bloodVisibleTime">Время сокрытия крови</string>
+    <string name="bloodCount">Количество пятен крови на убийство</string>
+    <string name="bloodDraw">Отрисовывать ли кровь</string>
+    <string name="messageShowTime">Время сокрытия сообщений</string>
     <string name="messageDraw">Отрисовывать ли сообщения</string>
-    <string name="spawnsShowTime">Скорость сокрытия мест спавне</string>
-    <string name="spawnsDraw">Отрисовывать ли места спавне</string>
-    <string name="timerTimer">Время раунда в сек</string>
-    <string name="timerDraw">Отрисовывать ли таймер</string>
-    <string name="windDraw">Вероятность спавна гиганта при спавне юнита</string>
-    <string name="worldGianSpawnProbability">Вероятность спавна башни при спавне юнита</string>
+    <string name="spawnsShowTime">Время сокрытия мест спавна</string>
+    <string name="spawnsDraw">Отрисовывать ли места спавна</string>
+    <string name="timerTimer">Время раунда</string>
+    <string name="timerDraw">Отрисовывать ли таймер и счёт</string>
+    <string name="worldGianSpawnProbability">Вероятность спавна гиганта при спавне юнита</string>
     <string name="worldTowerSpawnProbability">Вероятность спавна башни при спавне юнита</string>
     <string name="worldHorizontalBorders">Боковые границы области спавна</string>
     <string name="worldVerticalTopBorders">Верхняя граница области спавна</string>
     <string name="worldVerticalBottomBorders">Нижняя граница области спавна</string>
-    <string name="worldBoardersDraw">Отрисовывать ли границу</string>
-    <string name="worldBoardersColor">Цвет границы</string>
-    <string name="redFontColor">Цвет красного шрифта</string>
-    <string name="blueFontColor">Цвет синего шрифта</string>
-    <string name="grayFontColor">Цвет шрифта таймера</string>
-
-
-
 
     <string name="applySettings">Apply</string>
     <string name="cancelSettings">Cancel</string>

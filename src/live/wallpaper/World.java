@@ -45,9 +45,9 @@ public class World {
 
         loadTextures(metrics.widthPixels, metrics.heightPixels);
 
-        UnitLayer.init();
-        BloodLayer.init();
-        MessagesLayer.init();
+        UnitLayer.init(pictureSizeCoef);
+        BloodLayer.init(pictureSizeCoef);
+        MessagesLayer.init(pictureSizeCoef);
         Bullet.reInit(pictureSizeCoef);
 
         reInit();
@@ -101,8 +101,8 @@ public class World {
         Bitmap canva=getScaledResource(res, R.drawable.grid, 256);
         CanvaLayer.init(Graphic.genTexture(canva), canva.getWidth());
 
-        Bitmap blood1=getScaledResource(res, R.drawable.blood, 64);
-        Bitmap blood2=getScaledResource(res, R.drawable.coal, 64);
+        Bitmap blood1=getScaledResource(res, R.drawable.blood, 80);
+        Bitmap blood2=getScaledResource(res, R.drawable.coal, 80);
         Blood.init(new int[]{Graphic.genTexture(blood1), Graphic.genTexture(blood2)}, blood1.getWidth(), blood1.getHeight());
 
         Bitmap spawn=getScaledResource(res, R.drawable.spawn, 74);

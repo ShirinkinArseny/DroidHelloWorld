@@ -14,13 +14,14 @@ public class MessagesLayer{
     private static float[] pRed; //Red paint
     private static Synchroniser synchroniser;
 
-    public static void init() {
+    public static void init(float sizeCoef) {
 
         pBlue=Configs.getBlueFontColor();
 
         pRed=Configs.getRedFontColor();
 
         synchroniser =new Synchroniser("MessagesLayerSync");
+        Message.init(sizeCoef);
     }
 
     public static void reInit() {

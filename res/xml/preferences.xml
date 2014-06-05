@@ -41,12 +41,6 @@
             android:defaultValue="0.05f"
             />
     <EditTextPreference
-            android:key="bloodInterval"
-            android:inputType="number"
-            android:title="@string/bloodInterval"
-            android:defaultValue="0.7f"
-            />
-    <EditTextPreference
             android:key="bloodCount"
             android:inputType="number"
             android:title="@string/bloodCount"
@@ -119,11 +113,6 @@
             android:inputType="number"
             android:title="@string/worldVerticalBottomBorders"
             android:defaultValue="15"
-            />
-    <CheckBoxPreference
-            android:key="worldBoardersDraw"
-            android:title="@string/worldBoardersDraw"
-            android:defaultValue="true"
             />
 
 </PreferenceScreen>
