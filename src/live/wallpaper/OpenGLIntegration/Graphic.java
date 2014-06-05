@@ -353,6 +353,7 @@ public class Graphic {
         fillBitmapShader.setTextureDimensions(width,height);
         glBindTexture(GL_TEXTURE_2D,texture);
 
+
         //Рисуем к херам
         drawOneRectangle();
         glBindTexture(GL_TEXTURE_2D, 0);
