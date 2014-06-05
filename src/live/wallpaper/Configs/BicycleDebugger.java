@@ -3,7 +3,7 @@ package live.wallpaper.Configs;
 import android.util.Log;
 
 
-public class LoggerConfig {
+public class BicycleDebugger {
     public static final boolean ON = true;
     public static void d(String tag, String message)
     {

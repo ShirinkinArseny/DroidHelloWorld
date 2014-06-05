@@ -1,7 +1,7 @@
 package live.wallpaper.OpenGLIntegration.Shaders.Generators;
 
 import android.graphics.Bitmap;
-import live.wallpaper.Configs.LoggerConfig;
+import live.wallpaper.Configs.BicycleDebugger;
 
 import static android.opengl.GLES20.*;
 import static android.opengl.GLUtils.texImage2D;
@@ -14,7 +14,7 @@ public class TextureGenerator {
         final int[] textureObjectIds = new int[1];
         glGenTextures(1, textureObjectIds, 0);
         if (textureObjectIds[0]==0) {
-            LoggerConfig.w(TAG, "Could not generate new a new OpenGL texture object.");
+            BicycleDebugger.w(TAG, "Could not generate new a new OpenGL texture object.");
             return 0;
         }
 

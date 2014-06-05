@@ -3,8 +3,8 @@ package live.wallpaper.OpenGLIntegration;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.opengl.Matrix;
+import live.wallpaper.Configs.BicycleDebugger;
 import live.wallpaper.Configs.LocalConfigs;
-import live.wallpaper.Configs.LoggerConfig;
 import live.wallpaper.Geometry.Rectangle;
 import live.wallpaper.OpenGLIntegration.Shaders.*;
 import live.wallpaper.OpenGLIntegration.Shaders.Generators.TextureGenerator;
@@ -119,7 +119,7 @@ public class Graphic {
         int[] buffers = new int[1];
         glGenBuffers(1,buffers,0);
         if (buffers[0]==0)
-            LoggerConfig.e(TAG, "Could not create buffers");
+            BicycleDebugger.e(TAG, "Could not create buffers");
         vboId = buffers[0];
         //Создаем вершины
         FloatBuffer vboBufferVertexes = createNativeFloatArray(new float[]{
@@ -371,7 +371,7 @@ public class Graphic {
     private static void drawBitmap(int b, float x, float y, float width, float height, float opacity) {
 
         if (currentMode!=Mode.DRAW_BITMAPS)
-            LoggerConfig.e(TAG, "Incorrect drawing mode");
+            BicycleDebugger.e(TAG, "Incorrect drawing mode");
         else {
 
             createRectangle(x,y,width,height);
@@ -391,7 +391,7 @@ public class Graphic {
     private static void drawRectInside(float x, float y, float width, float height, float r, float g, float b, float a) {
         //Будем рисовать только в том случае, если режим рисовки -- прямоугольники
         if (currentMode!=Mode.DRAW_RECTANGLES)
-            LoggerConfig.e(TAG, "Incorrect drawing mode");
+            BicycleDebugger.e(TAG, "Incorrect drawing mode");
         else {
             //Задаем матрицы, которые преобразуют прямоугольник из VBO к необходимому прямоугольнику
             createRectangle(x,y,width,height);
@@ -451,7 +451,7 @@ public class Graphic {
 
     public static void drawText(float x, float y, float size, float r, float g, float b, float a, String text) {
         if (currentMode != Mode.DRAW_TEXT) {
-            LoggerConfig.e(TAG, "Incorrect drawing mode");
+            BicycleDebugger.e(TAG, "Incorrect drawing mode");
         } else {
             final int textLength = text.length();
             fontShader.setColor(r, g, b, a);

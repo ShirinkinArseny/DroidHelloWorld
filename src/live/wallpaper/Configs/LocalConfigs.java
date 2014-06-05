@@ -3,7 +3,6 @@ package live.wallpaper.Configs;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import live.wallpaper.World;
 
 import java.util.ArrayList;
@@ -88,7 +87,7 @@ public class LocalConfigs {
         fields.add(new IntegerField("worldVerticalBottomBorders"));
         fields.add(new FloatField("bloodInterval"));
         settingsListener.onSharedPreferenceChanged(settings, null);
-        Log.i("Configs", "Loaded");
+        BicycleDebugger.i("Configs", "Loaded successfully");
     }
 
     private static ArrayList<ConfigField> getFields() {
