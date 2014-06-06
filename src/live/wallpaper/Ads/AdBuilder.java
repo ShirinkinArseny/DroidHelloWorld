@@ -23,16 +23,15 @@ public class AdBuilder {
     }
 
     private static AdRequest.Builder addTestDevices(AdRequest.Builder adBuilder) {
-        adBuilder.addTestDevice(AdRequest.DEVICE_ID_EMULATOR);
-        //Peter's Sony Xperia SP
-        adBuilder.addTestDevice("YT910HRP67");
+        //Здесь можно указать настройки рекламы
+        //Например, отключить её для тестовых девайсов
         return adBuilder;
     }
 
     public static View createAdView(Context context, int bannerID) {
         // Create the adView
         AdView adView = new AdView(context);
-        adView.setAdSize(AdSize.BANNER);
+        adView.setAdSize(AdSize.SMART_BANNER);
         adView.setAdUnitId(getIDByIntID(bannerID));
 
         // Initiate a generic request to load it with an ad

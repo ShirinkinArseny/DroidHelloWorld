@@ -18,6 +18,8 @@ public class LiveWallpaperService extends OpenGLES20LiveWallpaperService {
     }
 
     public LifecycleRenderer getRenderer() {
+        //Загружаем стандартные значения настроек, если пользователь ещё не зашел в настройки
+        PreferenceManager.setDefaultValues(getBaseContext(), R.xml.preferences, false);
         return new MyRenderer();
     }
 
@@ -27,8 +29,6 @@ public class LiveWallpaperService extends OpenGLES20LiveWallpaperService {
 
         @Override
         public void onCreate(Context context) {
-            //Загружаем стандартные значения настроек, если пользователь ещё не зашел в настройки
-            PreferenceManager.setDefaultValues(context, R.xml.preferences, false);
             world = new World(context);
         }
 

@@ -8,6 +8,13 @@ import live.wallpaper.World;
 import java.util.ArrayList;
 
 public class LocalConfigs {
+    private static final String TAG = "LocalConfigs";
+
+
+    private static boolean isListening = true;
+    public static void setListening(boolean value) {
+        isListening = value;
+    }
 
     private static ArrayList<ConfigField> fields;
 
@@ -40,24 +47,25 @@ public class LocalConfigs {
         settingsListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
-
-                for (ConfigField f : fields) {
-                    switch (f.getType()) {
-                        case Float:
-                            f.setValue(Float.valueOf(sharedPreferences.getString(f.getName(), null)));
-                            break;
-                        case Integer:
-                            f.setValue(Integer.valueOf(sharedPreferences.getString(f.getName(), null)));
-                            break;
-                        case String:
-                            f.setValue(sharedPreferences.getString(f.getName(), null));
-                            break;
-                        case Boolean:
-                            f.setValue(sharedPreferences.getBoolean(f.getName(), false));
-                            break;
+                if (isListening) {
+                    for (ConfigField f : fields) {
+                        switch (f.getType()) {
+                            case Float:
+                                f.setValue(sharedPreferences.getFloat(f.getName(), -1));
+                                break;
+                            case Integer:
+                                f.setValue(sharedPreferences.getInt(f.getName(), -1));
+                                break;
+                            case String:
+                                f.setValue(sharedPreferences.getString(f.getName(), null));
+                                break;
+                            case Boolean:
+                                f.setValue(sharedPreferences.getBoolean(f.getName(), false));
+                                break;
+                        }
                     }
+                    World.reInit();
                 }
-                World.reInit();
             }
         };
         settings.registerOnSharedPreferenceChangeListener(settingsListener);
@@ -80,13 +88,13 @@ public class LocalConfigs {
         BicycleDebugger.i("Configs", "Loaded successfully");
     }
 
-    private static ArrayList<ConfigField> getFields() {
+    public static ArrayList<ConfigField> getFields() {
         ArrayList<ConfigField> configs=new ArrayList<>();
         for (ConfigField f: fields) configs.add(f.copy());
         return configs;
     }
 
-    private static void setFields(ArrayList<ConfigField> fields) {
+    public static void setFields(ArrayList<ConfigField> fields) {
         LocalConfigs.fields=fields;
     }
 

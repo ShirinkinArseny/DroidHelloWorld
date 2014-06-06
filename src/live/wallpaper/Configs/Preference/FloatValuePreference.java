@@ -9,13 +9,11 @@ import android.view.View;
 import android.widget.NumberPicker;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import live.wallpaper.Configs.BicycleDebugger;
 import live.wallpaper.R;
 
 import java.util.Objects;
 
-/**
- * Created by peter on 19.05.14.
- */
 public class FloatValuePreference extends DialogPreference {
     private float maxValue = 100;
     private float minValue = 1;
@@ -53,12 +51,14 @@ public class FloatValuePreference extends DialogPreference {
         return getValueByProgress(progress.getProgress());
     }
     private String getTextValue(float value) {
-        return Float.toString(value);
+        return String.format("%.2f", value);
     }
 
     public FloatValuePreference(Context context, AttributeSet attrs, int defStyle) {
         super(context, attrs, defStyle);
     }
+
+    private static String TAG;
 
     public FloatValuePreference(Context context, AttributeSet attrs) {
         super(context, attrs);
@@ -67,6 +67,8 @@ public class FloatValuePreference extends DialogPreference {
 
         minValue = attrs.getAttributeFloatValue(null, "min", minValue);
         maxValue = attrs.getAttributeFloatValue(null, "max", maxValue);
+        TAG = attrs.getAttributeValue("android", "tag");
+
     }
 
     @Override
@@ -109,13 +111,17 @@ public class FloatValuePreference extends DialogPreference {
     protected void onSetInitialValue(boolean restoreValue, Object defaultValue) {
         if (restoreValue) {
             if (defaultValue == null) {
+                BicycleDebugger.i("Float", "Set default from null. Initial value null name: " + TAG);
                 value = getPersistedFloat(value);
             } else
             {
+                BicycleDebugger.i("Float", "Set default from param. Initial value " + defaultValue.toString() + " name: " + TAG);
                 value = getPersistedFloat((float) defaultValue);
             }
         } else {
+            BicycleDebugger.i("Float", "Set default from not restore. Initial value " + defaultValue.toString() + " name: " + TAG);
             value = (float)defaultValue;
+            persistFloat(value);
         }
 
     }

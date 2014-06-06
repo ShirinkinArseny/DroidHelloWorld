@@ -51,8 +51,8 @@ public class IntegerValuePreference extends DialogPreference {
     private int getValueByProgress() {
         return getValueByProgress(progress.getProgress());
     }
-    private String getTextValue(float value) {
-        return Float.toString(value);
+    private String getTextValue(int value) {
+        return Integer.toString(value);
     }
 
     public IntegerValuePreference(Context context, AttributeSet attrs, int defStyle) {
@@ -115,6 +115,7 @@ public class IntegerValuePreference extends DialogPreference {
             }
         } else {
             value = (int)defaultValue;
+            persistInt(value);
         }
 
     }
