@@ -36,6 +36,11 @@
 
     <string name="applySettings">Применить</string>
     <string name="cancelSettings">Отменить</string>
-    <string name="setDefault">Сбросить к херам</string>
+    <string name="setDefault">Сброс настроек</string>
 
+    <string name="setDefaultAlertTitle">Сброс настроек</string>
+    <string name="setDefaultMessage">Сброс приведет к потере уже существующих настроек (если вам не жалко сделанные вашим тяжёлым трудом идеально вручную подобранные конфиги - смело жмите "СБРОС")!</string>
+
+    <string name="loadingProgress">Пожалуйста подождите...</string>
+    
 </resources>
