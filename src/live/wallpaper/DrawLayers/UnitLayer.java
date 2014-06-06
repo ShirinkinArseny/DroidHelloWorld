@@ -191,7 +191,7 @@ public class UnitLayer{
         else tx=1;
         for (int j=0; j< LocalConfigs.getIntValue(LocalConfigs.bloodCount); j++)
             BloodLayer.add(u.getX(), u.getY(),
-                    j* LocalConfigs.getFloatValue(LocalConfigs.bloodInterval), tx);
+                    j* 0.5f, tx);
     }
 
     private static void updateDeath() {
