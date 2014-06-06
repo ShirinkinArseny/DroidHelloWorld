@@ -26,4 +26,7 @@
 
     <string name="applySettings">Apply</string>
     <string name="cancelSettings">Cancel</string>
+    <string name="setDefault">Set Default</string>
+
+
 </resources>

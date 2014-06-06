@@ -18,6 +18,12 @@
     <string name="worldVerticalTopBorders">Верхняя граница области спавна</string>
     <string name="worldVerticalBottomBorders">Нижняя граница области спавна</string>
 
-    <string name="applySettings">Apply</string>
-    <string name="cancelSettings">Cancel</string>
+    <string name="applySettings">Применить</string>
+    <string name="cancelSettings">Отменить</string>
+    <string name="setDefault">Сбросить</string>
+
+
+
+    <string name="setDefaultAlertTitle">Сброс к начальным настройкам</string>
+    <string name="setDefaultMessage">Сброс к начальным настройкам приведет к полной потере пользовательских данных.</string>
 </resources>
