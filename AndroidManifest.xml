@@ -14,7 +14,7 @@
                    android:value="@integer/google_play_services_version"/>
 
         <service
-                android:name="com.acidspacecompany.epicwallpaperfight.LiveWallpaperService"
+                android:name=".LiveWallpaperService"
                 android:enabled="true"
                 android:icon="@drawable/ic_launcher"
                 android:label="@string/app_name"
@@ -27,9 +27,8 @@
                     android:resource="@xml/mywallpaper" />
         </service>
         <activity
-                android:name="com.acidspacecompany.epicwallpaperfight.Settings"
+                android:name=".Settings"
                 android:exported="true"
-                android:theme="@android:style/Theme.Holo"
                 />
 
         <activity android:name="com.google.android.gms.ads.AdActivity"
