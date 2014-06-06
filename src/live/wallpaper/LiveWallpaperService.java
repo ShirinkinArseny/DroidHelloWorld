@@ -1,7 +1,6 @@
 package live.wallpaper;
 
 import android.content.Context;
-import android.opengl.GLES20;
 import android.preference.PreferenceManager;
 import live.wallpaper.OpenGLIntegration.Graphic;
 import live.wallpaper.OpenGLIntegration.LifecycleRenderer;
@@ -51,7 +50,7 @@ public class LiveWallpaperService extends OpenGLES20LiveWallpaperService {
         @Override
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
             Graphic.init(getBaseContext());
-            world.init();
+            World.init();
         }
 
         @Override
