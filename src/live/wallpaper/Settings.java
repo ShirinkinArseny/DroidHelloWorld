@@ -5,6 +5,7 @@ import android.app.ProgressDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.AsyncTask;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
@@ -29,24 +30,9 @@ public class Settings extends PreferenceActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-
         super.onCreate(savedInstanceState);
         Preference preference = new Preference(this);
         getFragmentManager().beginTransaction().replace(android.R.id.content, preference).commit();
-    }
-
-
-    @Override
-    public void onPause()
-    {
-        super.onPause();
-        //Configs.init(this);
-    }
-    @Override
-    public void onDestroy()
-    {
-        super.onDestroy();
-        //Configs.init(this);
     }
 
     public static class Preference extends PreferenceFragment
@@ -146,9 +132,24 @@ public class Settings extends PreferenceActivity {
         }
 
         @Override
+        public void onResume() {
+            super.onResume();
+            AdBuilder.getAdView().resume();
+        }
+
+        @Override
+        public void onPause() {
+            super.onPause();
+            AdBuilder.getAdView().pause();
+        }
+
+
+
+        @Override
         public void onCreate(Bundle savedInstanceState)
         {
             super.onCreate(savedInstanceState);
+            AdBuilder.getAdView().resume();
 
             backupFields = LocalConfigs.getFields();
 
@@ -170,16 +171,14 @@ public class Settings extends PreferenceActivity {
 
             linearLayout.addView(buttons);
 
-            //Создание диалога ожидания
-            ProgressDialog progressDialog = new ProgressDialog(context);
-            progressDialog.setTitle(R.string.loading);
-            progressDialog.setMessage(context.getResources().getString(R.string.loadingProgress));
-            progressDialog.show();
-
-
-            linearLayout.addView(AdBuilder.createAdView(context, AdBuilder.bannerAtSettingsID));
-            progressDialog.dismiss();
+            linearLayout.addView(AdBuilder.getAdView());
             return linearLayout;
+        }
+
+        @Override
+        public void onDestroyView() {
+            ((LinearLayout)getView()).removeView(AdBuilder.getAdView());
+            super.onDestroyView();
         }
     }
 }

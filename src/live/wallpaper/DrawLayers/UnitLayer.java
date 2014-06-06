@@ -52,7 +52,7 @@ public class UnitLayer{
 
         topBoard= (int) (height* LocalConfigs.getFloatValue(LocalConfigs.worldVerticalTopBorders));
         bottomBoard= (int) (height* LocalConfigs.getFloatValue(LocalConfigs.worldVerticalBottomBorders));
-        sideBoard=width*LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders);
+        sideBoard= (int) (width*LocalConfigs.getFloatValue(LocalConfigs.worldHorizontalBorders));
 
             float wOld = LocalConfigs.getDisplayWidth() - 2 * sideBoard;
             float hOld = LocalConfigs.getDisplayHeight()
@@ -268,7 +268,7 @@ public class UnitLayer{
                             + sideBoard,
 
                     ((team == 0) ?
-                            LocalConfigs.getIntValue(LocalConfigs.worldVerticalTopBorders) :
+                            topBoard :
                             LocalConfigs.getDisplayHeight() * 2 / 3 - bottomBoard)
                             + rnd.nextInt(LocalConfigs.getDisplayWidth() / 3)
             );

@@ -11,6 +11,17 @@ import com.google.android.gms.ads.AdView;
  */
 public class AdBuilder {
 
+    private static AdView adView;
+    public static AdView getAdView() {
+        return adView;
+    }
+
+    public static void initAd(Context context) {
+        adView = createAdView(context, bannerAtSettingsID);
+        adView.pause();
+    }
+
+
     private static final String bannerAtSettings = "ca-app-pub-9892437184583781/8615970953";
     public static final int bannerAtSettingsID = 0;
     private static String getIDByIntID(int id) {
@@ -28,7 +39,7 @@ public class AdBuilder {
         return adBuilder;
     }
 
-    public static View createAdView(Context context, int bannerID) {
+    public static AdView createAdView(Context context, int bannerID) {
         // Create the adView
         AdView adView = new AdView(context);
         adView.setAdSize(AdSize.SMART_BANNER);

@@ -2,6 +2,7 @@ package live.wallpaper;
 
 import android.content.Context;
 import android.preference.PreferenceManager;
+import live.wallpaper.Ads.AdBuilder;
 import live.wallpaper.OpenGLIntegration.Graphic;
 import live.wallpaper.OpenGLIntegration.LifecycleRenderer;
 import live.wallpaper.OpenGLIntegration.OpenGLES20LiveWallpaperService;
@@ -19,6 +20,8 @@ public class LiveWallpaperService extends OpenGLES20LiveWallpaperService {
     public LifecycleRenderer getRenderer() {
         //Загружаем стандартные значения настроек, если пользователь ещё не зашел в настройки
         PreferenceManager.setDefaultValues(getBaseContext(), R.xml.preferences, false);
+        //Создаем рекламу
+        AdBuilder.initAd(getBaseContext());
         return new MyRenderer();
     }
 

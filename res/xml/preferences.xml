@@ -12,6 +12,7 @@
             />
     <live.wallpaper.Configs.Preference.IntegerValuePreference
             android:key="bloodCount"
+            android:title="@string/bloodCount"
             android:summary="@string/bloodCount_description"
             android:icon="@drawable/number"
             android:defaultValue="3"
@@ -96,35 +97,35 @@
             min="5"
             max="200"
             />
-    <live.wallpaper.Configs.Preference.IntegerValuePreference
+    <live.wallpaper.Configs.Preference.FloatValuePreference
             android:key="worldHorizontalBorders"
             android:inputType="number"
             android:title="@string/worldHorizontalBorders"
             android:summary="@string/worldHorizontalBorders_description"
             android:icon="@drawable/horizontal"
-            android:defaultValue="5"
-            min="0"
-            max="45"
+            android:defaultValue="0.05"
+            min="0.0"
+            max="0.45"
             />
-    <live.wallpaper.Configs.Preference.IntegerValuePreference
+    <live.wallpaper.Configs.Preference.FloatValuePreference
             android:key="worldVerticalTopBorders"
             android:inputType="number"
             android:title="@string/worldVerticalTopBorders"
             android:summary="@string/worldVerticalTopBorders_description"
             android:icon="@drawable/top"
-            android:defaultValue="10"
-            min="0"
-            max="45"
+            android:defaultValue="0.1"
+            min="0.0"
+            max="0.45"
             />
-    <live.wallpaper.Configs.Preference.IntegerValuePreference
+    <live.wallpaper.Configs.Preference.FloatValuePreference
             android:key="worldVerticalBottomBorders"
             android:inputType="number"
             android:title="@string/worldVerticalBottomBorders"
             android:summary="@string/worldVerticalBottomBorders_description"
             android:icon="@drawable/bottom"
-            android:defaultValue="5"
-            min="0"
-            max="45"
+            android:defaultValue="0.05"
+            min="0.0"
+            max="0.45"
             />
 
 </PreferenceScreen>

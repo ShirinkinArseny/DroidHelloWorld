@@ -47,7 +47,7 @@ public class FloatValuePreference extends DialogPreference {
         return getValueByProgress(progress.getProgress());
     }
     private String getTextValue(float value) {
-        return Float.toString(value);
+        return String.format("%.2f", value);
     }
 
     public FloatValuePreference(Context context, AttributeSet attrs, int defStyle) {
@@ -110,6 +110,7 @@ public class FloatValuePreference extends DialogPreference {
             }
         } else {
             value = (float)defaultValue;
+            persistFloat(value);
         }
 
     }
