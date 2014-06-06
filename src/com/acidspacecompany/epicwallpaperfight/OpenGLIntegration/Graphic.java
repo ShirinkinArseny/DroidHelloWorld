@@ -449,6 +449,8 @@ public class Graphic {
             fontShader.setSymbolDimensions(1.0f / 8, 1.0f / 8);
     }
 
+    public static final float symbolSpaceCoef=0.55f;
+
     public static void drawText(float x, float y, float size, float r, float g, float b, float a, String text) {
         if (currentMode != Mode.DRAW_TEXT) {
             BicycleDebugger.e(TAG, "Incorrect drawing mode");
@@ -467,7 +469,7 @@ public class Graphic {
                     //Отрисовываем
                     drawOneRectangle();
                 }
-                x += 0.55 * size;
+                x += symbolSpaceCoef * size;
             }
         }
     }

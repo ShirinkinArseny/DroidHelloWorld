@@ -34,11 +34,11 @@ public class TimerLayer {
 
     public static void resize(int w, int h) {
         height2=h/3;
-        width4 =w/5;
         width2=w*3/5;
         bigSize=w/7;
         height2_3= (int) (height2+bigSize*1.3f);
         smallSize=w/15;
+        width4 = (int) (w/2f-bigSize*3*Graphic.symbolSpaceCoef);
     }
 
     public static void update(float dt) {

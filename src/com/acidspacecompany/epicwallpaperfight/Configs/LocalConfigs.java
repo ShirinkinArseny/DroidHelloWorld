@@ -151,7 +151,7 @@ public class LocalConfigs {
     private static final float[]     worldBGColor=new float[]{0.54901963f, 0.5803922f, 0.4862745f, 1}; //Цвет фона
 
     private static float[] redFontColor=new float[]{0.99215686f, 0.4117647f, 0.2627451f, 1.0f};   // Цвет красного шрифта
-    private static float[] blueFontColor=new float[]{0.6901961f, 0.4745098f, 0.7137255f, 1.0f};  // Цвет синего шрифта
+    private static float[] blueFontColor=new float[]{0x48/255f, 0xb0/255f, 1.0f, 1.0f};  // Цвет синего шрифта
     private static float[] grayFontColor=new float[]{0.87058824f, 0.87058824f, 0.87058824f, 1.0f};// Цвет шрифта таймера
 
     private static int displayWidth;

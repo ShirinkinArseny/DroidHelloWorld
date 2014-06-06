@@ -9,8 +9,12 @@ import com.acidspacecompany.epicwallpaperfight.AI.AI;
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.BloodLayer.Blood;
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.BloodLayer.BloodLayer;
+import com.acidspacecompany.epicwallpaperfight.DrawLayers.CanvaLayer;
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.MessagesLayer.MessagesLayer;
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.SpawnLayer.SpawnsLayer;
+import com.acidspacecompany.epicwallpaperfight.DrawLayers.TerritoryLayer;
+import com.acidspacecompany.epicwallpaperfight.DrawLayers.TimerLayer;
+import com.acidspacecompany.epicwallpaperfight.DrawLayers.UnitLayer;
 import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Graphic;
 import com.acidspacecompany.epicwallpaperfight.Units.*;
 
@@ -169,19 +173,19 @@ public class World {
 
     private void draw() {
         Graphic.begin(Graphic.Mode.DRAW_RECTANGLES);
-        com.acidspacecompany.epicwallpaperfight.DrawLayers.TerritoryLayer.draw();
+        TerritoryLayer.draw();
         Graphic.begin(Graphic.Mode.FILL_BITMAP);
-        com.acidspacecompany.epicwallpaperfight.DrawLayers.CanvaLayer.draw();
-        Graphic.begin(Graphic.Mode.DRAW_TEXT);
-        com.acidspacecompany.epicwallpaperfight.DrawLayers.TimerLayer.draw();
+        CanvaLayer.draw();
         Graphic.begin(Graphic.Mode.DRAW_BITMAPS);
         SpawnsLayer.draw();
         BloodLayer.draw();
-        com.acidspacecompany.epicwallpaperfight.DrawLayers.UnitLayer.draw();
         Graphic.begin(Graphic.Mode.DRAW_TEXT);
+        TimerLayer.draw();
         MessagesLayer.draw();
+        Graphic.begin(Graphic.Mode.DRAW_BITMAPS);
+        UnitLayer.draw();
         Graphic.begin(Graphic.Mode.DRAW_RECTANGLES);
-        com.acidspacecompany.epicwallpaperfight.DrawLayers.UnitLayer.drawRectangles();
+        UnitLayer.drawRectangles();
     }
 }
         
