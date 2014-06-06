@@ -3,26 +3,36 @@
     <string name="app_name">Epic Wallpaper Fight</string>
     <string name="description">Description!</string>
 
-    <string name="aiDeltaTarget">Разброс толпы юнитов при атаке</string>
-    <string name="aiOurUnitsCountToAttack">Кол-во юнитов, при котором можно начинать нападать на их башни</string>
-    <string name="aiOurUnitsWithGiantCountToAttack">Кол-во юнитов (если есть гигант) для атаки башен</string>
-    <string name="aiTheirUnitsCountToNotAttack">Кол-во вражеских юнитов, при котором игнорим предыдущие команды и начинаем выпиливать массово их</string>
+    <string name="bloodVisibleTime"                       >Blood visible time</string>
+    <string name="bloodCount"                             >Bloodstains number per murder</string>
+    <string name="bloodDraw"                              >Draw blood</string>
+    <string name="messageShowTime"                        >Messages show time</string>
+    <string name="messageDraw"                            >Draw messages</string>
+    <string name="spawnsShowTime"                         >Spawns visible time</string>
+    <string name="spawnsDraw"                             >Draw spawns</string>
+    <string name="timerTimer"                             >Round time</string>
+    <string name="timerDraw"                              >Draw timer and scores</string>
+    <string name="worldGianSpawnProbability"              >Giant spawn probability</string>
+    <string name="worldTowerSpawnProbability"             >Tower spawn probability</string>
+    <string name="worldHorizontalBorders"                 >Horizontal spawn area borders</string>
+    <string name="worldVerticalTopBorders"                >Top spawn area border</string>
+    <string name="worldVerticalBottomBorders"             >Bottom spawn area border</string>
 
 
-    <string name="bloodVisibleTime">Время сокрытия крови</string>
-    <string name="bloodCount">Количество пятен крови на убийство</string>
-    <string name="bloodDraw">Отрисовывать ли кровь</string>
-    <string name="messageShowTime">Время сокрытия сообщений</string>
-    <string name="messageDraw">Отрисовывать ли сообщения</string>
-    <string name="spawnsShowTime">Время сокрытия мест спавна</string>
-    <string name="spawnsDraw">Отрисовывать ли места спавна</string>
-    <string name="timerTimer">Время раунда</string>
-    <string name="timerDraw">Отрисовывать ли таймер и счёт</string>
-    <string name="worldGianSpawnProbability">Вероятность спавна гиганта при спавне юнита</string>
-    <string name="worldTowerSpawnProbability">Вероятность спавна башни при спавне юнита</string>
-    <string name="worldHorizontalBorders">Боковые границы области спавна</string>
-    <string name="worldVerticalTopBorders">Верхняя граница области спавна</string>
-    <string name="worldVerticalBottomBorders">Нижняя граница области спавна</string>
+    <string name="bloodVisibleTime_description"           >How long the blood will be visible?</string>
+    <string name="bloodCount_description"                 >How much blood will be dropped in each murder?</string>
+    <string name="bloodDraw_description"                  >Is the blood visible?</string>
+    <string name="messageShowTime_description"            >How long the messages will be visible?</string>
+    <string name="messageDraw_description"                >Are the messages visible?</string>
+    <string name="spawnsShowTime_description"             >How long the spawns will be visible?</string>
+    <string name="spawnsDraw_description"                 >Are the spawns visible?</string>
+    <string name="timerTimer_description"                 >How long is round?</string>
+    <string name="timerDraw_description"                  >Are the timer and scores visible?</string>
+    <string name="worldGianSpawnProbability_description"  >How rarely do giant spawn? </string>
+    <string name="worldTowerSpawnProbability_description" >How rarely do tower spawn?</string>
+    <string name="worldHorizontalBorders_description"     >How much space between spawn area and the sides of the screen?</string>
+    <string name="worldVerticalTopBorders_description"    >How much space between spawn area and the top of the screen?</string>
+    <string name="worldVerticalBottomBorders_description" >How much space between spawn area and the bottom of the screen?</string>
 
     <string name="applySettings">Apply</string>
     <string name="cancelSettings">Cancel</string>

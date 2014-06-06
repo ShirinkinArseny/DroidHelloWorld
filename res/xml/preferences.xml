@@ -13,80 +13,94 @@
             android:inputType="number"
             android:numeric=""
             android:title="@string/bloodVisibleTime"
+            android:summary="@string/bloodVisibleTime_description"
             android:defaultValue="0.05f"
             />
     <EditTextPreference
             android:key="bloodCount"
             android:inputType="number"
             android:title="@string/bloodCount"
+            android:summary="@string/bloodCount_description"
             android:defaultValue="3"
             />
     <CheckBoxPreference
             android:key="bloodDraw"
             android:title="@string/bloodDraw"
+            android:summary="@string/bloodDraw_description"
             android:defaultValue="true"
         />
     <EditTextPreference
             android:key="messageShowTime"
             android:inputType="number"
             android:title="@string/messageShowTime"
+            android:summary="@string/messageShowTime_description"
             android:defaultValue="1.5f"
             />
     <CheckBoxPreference
             android:key="messageDraw"
             android:title="@string/messageDraw"
+            android:summary="@string/messageDraw_description"
             android:defaultValue="true"
             />
     <EditTextPreference
             android:key="spawnsShowTime"
             android:inputType="number"
             android:title="@string/spawnsShowTime"
+            android:summary="@string/spawnsShowTime_description"
             android:defaultValue="0.6f"
             />
     <CheckBoxPreference
             android:key="spawnsDraw"
             android:title="@string/spawnsDraw"
+            android:summary="@string/spawnsDraw_description"
             android:defaultValue="true"
             />
     <EditTextPreference
             android:key="timerTimer"
             android:inputType="number"
             android:title="@string/timerTimer"
+            android:summary="@string/timerTimer_description"
             android:defaultValue="300"
             />
     <CheckBoxPreference
             android:key="timerDraw"
             android:title="@string/timerDraw"
+            android:summary="@string/timerDraw_description"
             android:defaultValue="true"
             />
     <EditTextPreference
             android:key="worldGianSpawnProbability"
             android:inputType="number"
             android:title="@string/worldGianSpawnProbability"
+            android:summary="@string/worldGianSpawnProbability_description"
             android:defaultValue="100"
             />
     <EditTextPreference
             android:key="worldTowerSpawnProbability"
             android:inputType="number"
             android:title="@string/worldTowerSpawnProbability"
+            android:summary="@string/worldTowerSpawnProbability_description"
             android:defaultValue="40"
             />
     <EditTextPreference
             android:key="worldHorizontalBorders"
             android:inputType="number"
             android:title="@string/worldHorizontalBorders"
+            android:summary="@string/worldHorizontalBorders_description"
             android:defaultValue="15"
             />
     <EditTextPreference
             android:key="worldVerticalTopBorders"
             android:inputType="number"
             android:title="@string/worldVerticalTopBorders"
+            android:summary="@string/worldVerticalTopBorders_description"
             android:defaultValue="40"
             />
     <EditTextPreference
             android:key="worldVerticalBottomBorders"
             android:inputType="number"
             android:title="@string/worldVerticalBottomBorders"
+            android:summary="@string/worldVerticalBottomBorders_description"
             android:defaultValue="15"
             />
 
