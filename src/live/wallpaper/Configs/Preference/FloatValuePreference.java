@@ -6,16 +6,10 @@ import android.preference.DialogPreference;
 import android.util.AttributeSet;
 import android.view.LayoutInflater;
 import android.view.View;
-import android.widget.NumberPicker;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import live.wallpaper.R;
 
-import java.util.Objects;
-
-/**
- * Created by peter on 19.05.14.
- */
 public class FloatValuePreference extends DialogPreference {
     private float maxValue = 100;
     private float minValue = 1;

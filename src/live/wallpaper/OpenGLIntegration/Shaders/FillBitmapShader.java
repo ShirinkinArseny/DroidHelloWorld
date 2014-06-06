@@ -5,8 +5,6 @@ import android.opengl.GLES20;
 import live.wallpaper.OpenGLIntegration.Shaders.Generators.ShaderGenerator;
 import live.wallpaper.R;
 
-import java.nio.FloatBuffer;
-
 public class FillBitmapShader {
 
     private int programId;

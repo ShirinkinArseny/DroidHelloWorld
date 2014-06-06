@@ -1,6 +1,5 @@
 package live.wallpaper.AI;
 
-import live.wallpaper.Configs.LocalConfigs;
 import live.wallpaper.Units.ControlledUnit;
 import live.wallpaper.Units.NotControlledUnit;
 

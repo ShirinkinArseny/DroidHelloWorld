@@ -15,7 +15,7 @@
             android:title="@string/bloodVisibleTime"
             android:summary="@string/bloodVisibleTime_description"
             android:icon="@drawable/time"
-            android:defaultValue="0.05f"
+            android:defaultValue="0.5"
             />
     <EditTextPreference
             android:key="bloodCount"

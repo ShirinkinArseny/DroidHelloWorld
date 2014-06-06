@@ -10,9 +10,6 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import live.wallpaper.R;
 
-/**
- * Created by peter on 21.05.14.
- */
 public class IntegerValuePreference extends DialogPreference {
 
 
