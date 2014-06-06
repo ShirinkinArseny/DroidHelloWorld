@@ -14,6 +14,7 @@
             android:numeric=""
             android:title="@string/bloodVisibleTime"
             android:summary="@string/bloodVisibleTime_description"
+            android:icon="@drawable/time"
             android:defaultValue="0.05f"
             />
     <EditTextPreference
@@ -21,12 +22,14 @@
             android:inputType="number"
             android:title="@string/bloodCount"
             android:summary="@string/bloodCount_description"
+            android:icon="@drawable/number"
             android:defaultValue="3"
             />
     <CheckBoxPreference
             android:key="bloodDraw"
             android:title="@string/bloodDraw"
             android:summary="@string/bloodDraw_description"
+            android:icon="@drawable/doing"
             android:defaultValue="true"
         />
     <EditTextPreference
@@ -34,12 +37,14 @@
             android:inputType="number"
             android:title="@string/messageShowTime"
             android:summary="@string/messageShowTime_description"
+            android:icon="@drawable/time"
             android:defaultValue="1.5f"
             />
     <CheckBoxPreference
             android:key="messageDraw"
             android:title="@string/messageDraw"
             android:summary="@string/messageDraw_description"
+            android:icon="@drawable/doing"
             android:defaultValue="true"
             />
     <EditTextPreference
@@ -47,12 +52,14 @@
             android:inputType="number"
             android:title="@string/spawnsShowTime"
             android:summary="@string/spawnsShowTime_description"
+            android:icon="@drawable/time"
             android:defaultValue="0.6f"
             />
     <CheckBoxPreference
             android:key="spawnsDraw"
             android:title="@string/spawnsDraw"
             android:summary="@string/spawnsDraw_description"
+            android:icon="@drawable/doing"
             android:defaultValue="true"
             />
     <EditTextPreference
@@ -60,12 +67,14 @@
             android:inputType="number"
             android:title="@string/timerTimer"
             android:summary="@string/timerTimer_description"
+            android:icon="@drawable/time"
             android:defaultValue="300"
             />
     <CheckBoxPreference
             android:key="timerDraw"
             android:title="@string/timerDraw"
             android:summary="@string/timerDraw_description"
+            android:icon="@drawable/doing"
             android:defaultValue="true"
             />
     <EditTextPreference
@@ -73,6 +82,7 @@
             android:inputType="number"
             android:title="@string/worldGianSpawnProbability"
             android:summary="@string/worldGianSpawnProbability_description"
+            android:icon="@drawable/probability"
             android:defaultValue="100"
             />
     <EditTextPreference
@@ -80,6 +90,7 @@
             android:inputType="number"
             android:title="@string/worldTowerSpawnProbability"
             android:summary="@string/worldTowerSpawnProbability_description"
+            android:icon="@drawable/probability"
             android:defaultValue="40"
             />
     <EditTextPreference
@@ -87,6 +98,7 @@
             android:inputType="number"
             android:title="@string/worldHorizontalBorders"
             android:summary="@string/worldHorizontalBorders_description"
+            android:icon="@drawable/horizontal"
             android:defaultValue="15"
             />
     <EditTextPreference
@@ -94,6 +106,7 @@
             android:inputType="number"
             android:title="@string/worldVerticalTopBorders"
             android:summary="@string/worldVerticalTopBorders_description"
+            android:icon="@drawable/top"
             android:defaultValue="40"
             />
     <EditTextPreference
@@ -101,6 +114,7 @@
             android:inputType="number"
             android:title="@string/worldVerticalBottomBorders"
             android:summary="@string/worldVerticalBottomBorders_description"
+            android:icon="@drawable/bottom"
             android:defaultValue="15"
             />
 
