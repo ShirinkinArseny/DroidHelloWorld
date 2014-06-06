@@ -1,9 +1,11 @@
 package com.acidspacecompany.epicwallpaperfight;
 
+import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.SharedPreferences;
+import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
@@ -18,111 +20,186 @@ import com.acidspacecompany.epicwallpaperfight.Configs.ConfigField;
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
 
 import java.util.ArrayList;
+import java.util.zip.Inflater;
 
 public class Settings extends PreferenceActivity {
     public Settings() {
 
     }
 
+    //Копия настроек для сброса
+    private static ArrayList<ConfigField> backupFields;
+
+    private static Activity me;
+
+    private static void exit() {
+        me.finish();
+    }
+
+
+    private static void destroySettings() {
+        PreferenceManager.getDefaultSharedPreferences(me).edit().clear().commit();
+        PreferenceManager.setDefaultValues(me, R.xml.preferences, false);
+        exit();
+
+    }
+
+    private static Button.OnClickListener applyButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            //Завершаем работу Activity
+            exit();
+        }
+    };
+    private static Button.OnClickListener cancelButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+
+            //Для обработки исключений -- отключаем применение настроек
+            LocalConfigs.setListening(false);
+
+            //Нужно теперь сбросить все настройки и вернуть к стандартным значениям из бэкапа
+            SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(me).edit();
+            //Очищаем
+            editor.clear();
+            //Добавляем все значения из бэкапа
+            for (ConfigField field : backupFields)
+                switch (field.getType()) {
+                    case Float:
+                        editor.putFloat(field.getName(), (float)field.getValue());
+                        break;
+                    case Integer:
+                        editor.putInt(field.getName(), (int)field.getValue());
+                        break;
+                    case String:
+                        editor.putString(field.getName(), (String)field.getValue());
+                        break;
+                    case Boolean:
+                        editor.putBoolean(field.getName(), (boolean)field.getValue());
+                        break;
+                }
+
+            editor.apply();
+
+            LocalConfigs.setFields(backupFields);
+
+            LocalConfigs.setListening(true);
+
+            exit();
+
+        }
+    };
+    private static Button.OnClickListener restoreButtonListener = new View.OnClickListener() {
+        @Override
+        public void onClick(View v) {
+            //Вызываем AlertDialog с предупреждением о потере данных
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(me);
+            alertDialogBuilder.setTitle(R.string.setDefaultAlertTitle);
+            alertDialogBuilder.setMessage(R.string.setDefaultMessage);
+            alertDialogBuilder.setCancelable(true);
+            alertDialogBuilder.setNegativeButton(R.string.cancelSettings, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    dialog.cancel();
+                }
+            });
+            alertDialogBuilder.setPositiveButton(R.string.setDefault, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    destroySettings();
+                }
+            });
+            alertDialogBuilder.create().show();
+        }
+    };
+
+    private static View createButtons(LayoutInflater inflater) {
+        View buttons = inflater.inflate(R.layout.buttons_settings, null);
+
+        buttons.findViewById(R.id.applyButton).
+                setOnClickListener(applyButtonListener);
+        buttons.findViewById(R.id.cancelButton).
+                setOnClickListener(cancelButtonListener);
+        buttons.findViewById(R.id.defaultButton)
+                .setOnClickListener(restoreButtonListener);
+
+        return buttons;
+    }
+
+    private static void pauseAd() {
+        AdBuilder.getAdView().pause();
+    }
+    private static void resumeAd() {
+        AdBuilder.getAdView().resume();
+    }
+    private static void removeAd(ViewGroup layoutWithAd) {
+        layoutWithAd.removeView(AdBuilder.getAdView());
+    }
+
+    private boolean toooooooooOld = false;
+
     @Override
     public void onCreate(Bundle savedInstanceState) {
+        me = this;
         super.onCreate(savedInstanceState);
-        Preference preference = new Preference(this);
-        getFragmentManager().beginTransaction().replace(android.R.id.content, preference).commit();
+        //Если поддерживаются Preferences
+        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
+            Preference preference = new Preference();
+            getFragmentManager().beginTransaction().replace(android.R.id.content, preference).commit();
+        }
+        else {
+            //Сегодня мы выполним трудную задачу:
+            //Реализуем древние настройки для древних телефонов
+            toooooooooOld = true;
+            //Тут мы будем использовать Deprecated методы.
+            //Ну и хер с ним.
+
+            //Вот первый
+            addPreferencesFromResource(R.xml.preferences);
+            //А теперь задаем LinearLayout
+            ViewGroup viewGroup = (ViewGroup) findViewById(android.R.id.list).getParent().getParent().getParent();
+
+
+            //Добавляем вьюшки
+            //Кнопочки
+            viewGroup.addView(createButtons(getLayoutInflater()));
+
+            //Рекламка
+            viewGroup.addView(AdBuilder.getAdView());
+
+            //А теперь получем настроечки
+            backupFields = LocalConfigs.getFields();
+
+            //На этом всё
+            //^_^
+            //Вы молодцы ^_^
+            //Знали бы вы сколько тут пришлось рефакторить
+        }
     }
+
+    @Override
+    public void onResume() {
+        super.onResume();
+        if (toooooooooOld)
+            resumeAd();
+    }
+    @Override
+    public void onPause() {
+        if (toooooooooOld)
+            pauseAd();
+        super.onPause();
+    }
+    @Override
+    public void onDestroy() {
+        if (toooooooooOld)
+
+            removeAd((ViewGroup)findViewById(android.R.id.list).getParent().getParent().getParent());
+        super.onDestroy();
+    }
+
 
     public static class Preference extends PreferenceFragment
     {
-
-        //Копия настроек для сброса
-        private ArrayList<ConfigField> backupFields;
-
-        private Button applyButton, cancelButton, restoreButton;
-
-        private void destroySettings() {
-            PreferenceManager.getDefaultSharedPreferences(context).edit().clear().commit();
-            PreferenceManager.setDefaultValues(context, R.xml.preferences, false);
-            getActivity().finish();
-
-        }
-
-        private Button.OnClickListener applyButtonListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Завершаем работу Activity
-                getActivity().finish();
-            }
-        };
-        private Button.OnClickListener cancelButtonListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-
-                //Для обработки исключений -- отключаем применение настроек
-                LocalConfigs.setListening(false);
-
-                //Нужно теперь сбросить все настройки и вернуть к стандартным значениям из бэкапа
-                SharedPreferences.Editor editor = PreferenceManager.getDefaultSharedPreferences(context).edit();
-                //Очищаем
-                editor.clear();
-                //Добавляем все значения из бэкапа
-                for (ConfigField field : backupFields)
-                    switch (field.getType()) {
-                        //Так как у нас все значения задаются на самом деле строками, а потом конвертируются --
-                        //то мы помещаем именно строку
-                        //А для Boolean хранится именно boolean
-                        case Float:
-                            editor.putFloat(field.getName(), (float)field.getValue());
-                            break;
-                        case Integer:
-                            editor.putInt(field.getName(), (int)field.getValue());
-                            break;
-                        case String:
-                            editor.putString(field.getName(), (String)field.getValue());
-                            break;
-                        case Boolean:
-                            editor.putBoolean(field.getName(), (boolean)field.getValue());
-                            break;
-                    }
-
-                editor.apply();
-
-                LocalConfigs.setFields(backupFields);
-
-                LocalConfigs.setListening(true);
-
-                getActivity().finish();
-
-            }
-        };
-        private Button.OnClickListener restoreButtonListener = new View.OnClickListener() {
-            @Override
-            public void onClick(View v) {
-                //Вызываем AlertDialog с предупреждением о потере данных
-                AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(context);
-                alertDialogBuilder.setTitle(R.string.setDefaultAlertTitle);
-                alertDialogBuilder.setMessage(R.string.setDefaultMessage);
-                alertDialogBuilder.setCancelable(true);
-                alertDialogBuilder.setNegativeButton(R.string.cancelSettings, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        dialog.cancel();
-                    }
-                });
-                alertDialogBuilder.setPositiveButton(R.string.setDefault, new DialogInterface.OnClickListener() {
-                    @Override
-                    public void onClick(DialogInterface dialog, int which) {
-                        destroySettings();
-                    }
-                });
-                alertDialogBuilder.create().show();
-            }
-        };
-
-        private static Context context;
-        private Preference(Context con) {
-            context = con;
-        }
-
         public Preference() {
 
         }
@@ -130,16 +207,19 @@ public class Settings extends PreferenceActivity {
         @Override
         public void onResume() {
             super.onResume();
-            AdBuilder.getAdView().resume();
+            resumeAd();
         }
 
         @Override
         public void onPause() {
             super.onPause();
-            AdBuilder.getAdView().pause();
+            pauseAd();
         }
-
-
+        @Override
+        public void onDestroyView() {
+            removeAd((LinearLayout)getView());
+            super.onDestroyView();
+        }
 
         @Override
         public void onCreate(Bundle savedInstanceState)
@@ -156,25 +236,11 @@ public class Settings extends PreferenceActivity {
         public View onCreateView(LayoutInflater inflater, ViewGroup container, Bundle bundleSavedInstance) {
             LinearLayout linearLayout = (LinearLayout) super.onCreateView(inflater, container, bundleSavedInstance);
 
-            View buttons = inflater.inflate(R.layout.buttons_settings, null);
-
-            applyButton = (Button)buttons.findViewById(R.id.applyButton);
-            applyButton.setOnClickListener(applyButtonListener);
-            cancelButton = (Button)buttons.findViewById(R.id.cancelButton);
-            cancelButton.setOnClickListener(cancelButtonListener);
-            restoreButton = (Button)buttons.findViewById(R.id.defaultButton);
-            restoreButton.setOnClickListener(restoreButtonListener);
-
-            linearLayout.addView(buttons);
+            linearLayout.addView(createButtons(inflater));
 
             linearLayout.addView(AdBuilder.getAdView());
             return linearLayout;
         }
 
-        @Override
-        public void onDestroyView() {
-            ((LinearLayout)getView()).removeView(AdBuilder.getAdView());
-            super.onDestroyView();
-        }
     }
 }
