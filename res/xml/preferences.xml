@@ -1,7 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <PreferenceScreen
         xmlns:android="http://schemas.android.com/apk/res/android">
-    <live.wallpaper.Configs.Preference.FloatValuePreference
+    <com.acidspacecompany.epicwallpaperfight.Configs.Preference.FloatValuePreference
             android:key="bloodVisibleTime"
             android:title="@string/bloodVisibleTime"
             android:summary="@string/bloodVisibleTime_description"
@@ -10,7 +10,7 @@
             min="0.3"
             max="1.0"
             />
-    <live.wallpaper.Configs.Preference.IntegerValuePreference
+    <com.acidspacecompany.epicwallpaperfight.Configs.Preference.IntegerValuePreference
             android:key="bloodCount"
             android:title="@string/bloodCount"
             android:summary="@string/bloodCount_description"
@@ -26,7 +26,7 @@
             android:icon="@drawable/doing"
             android:defaultValue="true"
         />
-    <live.wallpaper.Configs.Preference.FloatValuePreference
+    <com.acidspacecompany.epicwallpaperfight.Configs.Preference.FloatValuePreference
             android:key="messageShowTime"
             android:inputType="number"
             android:title="@string/messageShowTime"
@@ -43,7 +43,7 @@
             android:icon="@drawable/doing"
             android:defaultValue="true"
             />
-    <live.wallpaper.Configs.Preference.FloatValuePreference
+    <com.acidspacecompany.epicwallpaperfight.Configs.Preference.FloatValuePreference
             android:key="spawnsShowTime"
             android:inputType="number"
             android:title="@string/spawnsShowTime"
@@ -60,7 +60,7 @@
             android:icon="@drawable/doing"
             android:defaultValue="true"
             />
-    <live.wallpaper.Configs.Preference.IntegerValuePreference
+    <com.acidspacecompany.epicwallpaperfight.Configs.Preference.IntegerValuePreference
             android:key="timerTimer"
             android:inputType="number"
             android:title="@string/timerTimer"
@@ -77,7 +77,7 @@
             android:icon="@drawable/doing"
             android:defaultValue="true"
             />
-    <live.wallpaper.Configs.Preference.IntegerValuePreference
+    <com.acidspacecompany.epicwallpaperfight.Configs.Preference.IntegerValuePreference
             android:key="worldGianSpawnProbability"
             android:inputType="number"
             android:title="@string/worldGianSpawnProbability"
@@ -87,7 +87,7 @@
             min="5"
             max="200"
             />
-    <live.wallpaper.Configs.Preference.IntegerValuePreference
+    <com.acidspacecompany.epicwallpaperfight.Configs.Preference.IntegerValuePreference
             android:key="worldTowerSpawnProbability"
             android:inputType="number"
             android:title="@string/worldTowerSpawnProbability"
@@ -97,7 +97,7 @@
             min="5"
             max="200"
             />
-    <live.wallpaper.Configs.Preference.FloatValuePreference
+    <com.acidspacecompany.epicwallpaperfight.Configs.Preference.FloatValuePreference
             android:key="worldHorizontalBorders"
             android:inputType="number"
             android:title="@string/worldHorizontalBorders"
@@ -107,7 +107,7 @@
             min="0.0"
             max="0.45"
             />
-    <live.wallpaper.Configs.Preference.FloatValuePreference
+    <com.acidspacecompany.epicwallpaperfight.Configs.Preference.FloatValuePreference
             android:key="worldVerticalTopBorders"
             android:inputType="number"
             android:title="@string/worldVerticalTopBorders"
@@ -117,7 +117,7 @@
             min="0.0"
             max="0.45"
             />
-    <live.wallpaper.Configs.Preference.FloatValuePreference
+    <com.acidspacecompany.epicwallpaperfight.Configs.Preference.FloatValuePreference
             android:key="worldVerticalBottomBorders"
             android:inputType="number"
             android:title="@string/worldVerticalBottomBorders"
