@@ -3,45 +3,45 @@
     <string name="app_name">Epic Wallpaper Fight</string>
     <string name="description">Description!</string>
 
-    <string name="bloodVisibleTime"                       >Blood visible time</string>
-    <string name="bloodCount"                             >Bloodstains number per murder</string>
-    <string name="bloodDraw"                              >Draw blood</string>
-    <string name="messageShowTime"                        >Messages show time</string>
-    <string name="messageDraw"                            >Draw messages</string>
-    <string name="spawnsShowTime"                         >Spawns visible time</string>
-    <string name="spawnsDraw"                             >Draw spawns</string>
+    <string name="bloodVisibleTime"                       >The time of blood disappearance</string>
+    <string name="bloodCount"                             >The number of spots of blood for one murder</string>
+    <string name="bloodDraw"                              >Blood</string>
+    <string name="messageShowTime"                        >The time of message disappearance</string>
+    <string name="messageDraw"                            >Messages</string>
+    <string name="spawnsShowTime"                         >The time of spawn-places disappearance</string>
+    <string name="spawnsDraw"                             >Spawn-places</string>
     <string name="timerTimer"                             >Round time</string>
-    <string name="timerDraw"                              >Draw timer and scores</string>
-    <string name="worldGianSpawnProbability"              >Giant spawn probability</string>
-    <string name="worldTowerSpawnProbability"             >Tower spawn probability</string>
-    <string name="worldHorizontalBorders"                 >Horizontal spawn area borders</string>
-    <string name="worldVerticalTopBorders"                >Top spawn area border</string>
-    <string name="worldVerticalBottomBorders"             >Bottom spawn area border</string>
+    <string name="timerDraw"                              >Timer and score</string>
+    <string name="worldGianSpawnProbability"              >Probability of spawn of the giant according to the spawn of a unit</string>
+    <string name="worldTowerSpawnProbability"             >Probability of spawn of the tower according to the spawn of a unit</string>
+    <string name="worldHorizontalBorders"                 >Lateral bounds of spawn area</string>
+    <string name="worldVerticalTopBorders"                >Upper bound of spawn area</string>
+    <string name="worldVerticalBottomBorders"             >Lower bound oа spawn area</string>
 
 
-    <string name="bloodVisibleTime_description"           >How long the blood will be visible?</string>
-    <string name="bloodCount_description"                 >How much blood will be dropped in each murder?</string>
-    <string name="bloodDraw_description"                  >Is the blood visible?</string>
-    <string name="messageShowTime_description"            >How long the messages will be visible?</string>
-    <string name="messageDraw_description"                >Are the messages visible?</string>
-    <string name="spawnsShowTime_description"             >How long the spawns will be visible?</string>
-    <string name="spawnsDraw_description"                 >Are the spawns visible?</string>
-    <string name="timerTimer_description"                 >How long is round?</string>
-    <string name="timerDraw_description"                  >Are the timer and scores visible?</string>
-    <string name="worldGianSpawnProbability_description"  >How rarely do giant spawn? </string>
-    <string name="worldTowerSpawnProbability_description" >How rarely do tower spawn?</string>
-    <string name="worldHorizontalBorders_description"     >How much space between spawn area and the sides of the screen?</string>
-    <string name="worldVerticalTopBorders_description"    >How much space between spawn area and the top of the screen?</string>
-    <string name="worldVerticalBottomBorders_description" >How much space between spawn area and the bottom of the screen?</string>
+    <string name="bloodVisibleTime_description"           >For how long does blood stay visible?</string>
+    <string name="bloodCount_description"                 >Less blood or more blood?</string>
+    <string name="bloodDraw_description"                  >Do you wanna have blood on your screen or not?</string>
+    <string name="messageShowTime_description"            >The time when messages disappear</string>
+    <string name="messageDraw_description"                >Do you wanna see messages on your screen or not?</string>
+    <string name="spawnsShowTime_description"             >The time when spawn-places disappear</string>
+    <string name="spawnsDraw_description"                 >Do you wanna see spawn-places on your screen or not?</string>
+    <string name="timerTimer_description"                 >The period of time for which lasts one round</string>
+    <string name="timerDraw_description"                  >(Do you wanna see timer and score on your screen or not?</string>
+    <string name="worldGianSpawnProbability_description"  >How rarely does the giant spawn? </string>
+    <string name="worldTowerSpawnProbability_description" >How rarely does the tower spawn?</string>
+    <string name="worldHorizontalBorders_description"     >What is the distance between spawn area and lateral bounds of the screen?</string>
+    <string name="worldVerticalTopBorders_description"    >What is the distance between spawn area and upper bound of the screen?</string>
+    <string name="worldVerticalBottomBorders_description" >What is the distance between spawn area and lower bound of the screen?</string>
 
     <string name="applySettings">Apply</string>
     <string name="cancelSettings">Cancel</string>
-    <string name="setDefault">Set Default</string>
+    <string name="setDefault">Reset</string>
 
 
     <string name="setDefaultAlertTitle">Dropping configs</string>
-    <string name="setDefaultMessage">If you will continue - you will lose your handmade settings!</string>
+    <string name="setDefaultMessage">Reset will cause the loss of the existing configuration! (If you don’t care about your perfectly hand-selected configs – boldly press “RESET”)</string>
 
-    <string name="loadingProgress">Please wait</string>
+    <string name="loadingProgress">Please wait, loading settings and their names O_o</string>
 
 </resources>
