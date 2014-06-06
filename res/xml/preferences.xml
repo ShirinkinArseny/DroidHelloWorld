@@ -9,31 +9,6 @@
             max="10"
             />
     <EditTextPreference
-            android:key="aiDeltaTarget"
-            android:inputType="number"
-            android:numeric="integer"
-            android:title="@string/aiDeltaTarget"
-            android:defaultValue="100"
-            />
-    <EditTextPreference
-            android:key="aiOurUnitsCountToAttack"
-            android:inputType="number"
-            android:title="@string/aiOurUnitsCountToAttack"
-            android:defaultValue="40"
-            />
-    <EditTextPreference
-            android:key="aiOurUnitsWithGiantCountToAttack"
-            android:inputType="number"
-            android:title="@string/aiOurUnitsWithGiantCountToAttack"
-            android:defaultValue="20"
-            />
-    <EditTextPreference
-            android:key="aiTheirUnitsCountToNotAttack"
-            android:inputType="number"
-            android:title="@string/aiTheirUnitsCountToNotAttack"
-            android:defaultValue="50"
-            />
-    <EditTextPreference
             android:key="bloodVisibleTime"
             android:inputType="number"
             android:numeric=""

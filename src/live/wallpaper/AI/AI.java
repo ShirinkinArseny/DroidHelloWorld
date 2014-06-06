@@ -18,7 +18,7 @@ public class AI {
     private static float coef;
 
     public static void reInit() {
-        aiDeltaTarget= (int) (LocalConfigs.getIntValue(LocalConfigs.aiDeltaTarget)*coef);
+        aiDeltaTarget= (int) (100*coef);
         aiDeltaTarget2=2*aiDeltaTarget;
     }
 
@@ -75,9 +75,9 @@ public class AI {
                         }
                     }
 
-                } else if (theirTowers.size() > 0 && (yours.size()> LocalConfigs.getIntValue(LocalConfigs.aiOurUnitsCountToAttack)
-                        || yours.size()> LocalConfigs.getIntValue(LocalConfigs.aiOurUnitsWithGiantCountToAttack) && hasOurGiant)
-                        && theirMen.size()< LocalConfigs.getIntValue(LocalConfigs.aiTheirUnitsCountToNotAttack)) {
+                } else if (theirTowers.size() > 0 && (yours.size()> 40
+                        || yours.size()> 20 && hasOurGiant)
+                        && theirMen.size()< 50) {
                     x = theirTowers.get(0).getX();
                     y = theirTowers.get(0).getY();
                     float lastHP=theirTowers.get(0).getHealth();

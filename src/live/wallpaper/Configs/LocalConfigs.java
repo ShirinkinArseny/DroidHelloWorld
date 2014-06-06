@@ -18,11 +18,7 @@ public class LocalConfigs {
         return lastNumber;
     }
 
-    public static final int aiDeltaTarget=getNum();
     public static final int bloodDraw=getNum();
-    public static final int aiOurUnitsCountToAttack=getNum();
-    public static final int aiOurUnitsWithGiantCountToAttack=getNum();
-    public static final int aiTheirUnitsCountToNotAttack=getNum();
     public static final int bloodVisibleTime=getNum();
     public static final int bloodCount=getNum();
     public static final int messageShowTime=getNum();
@@ -36,7 +32,6 @@ public class LocalConfigs {
     public static final int worldHorizontalBorders=getNum();
     public static final int worldVerticalTopBorders=getNum();
     public static final int worldVerticalBottomBorders=getNum();
-    public static final int bloodInterval=getNum();
 
     private static SharedPreferences.OnSharedPreferenceChangeListener settingsListener;
 
@@ -67,11 +62,7 @@ public class LocalConfigs {
         };
         settings.registerOnSharedPreferenceChangeListener(settingsListener);
         fields=new ArrayList<>();
-        fields.add(new IntegerField("aiDeltaTarget"));
         fields.add(new BooleanField("bloodDraw"));
-        fields.add(new IntegerField("aiOurUnitsCountToAttack"));
-        fields.add(new IntegerField("aiOurUnitsWithGiantCountToAttack"));
-        fields.add(new IntegerField("aiTheirUnitsCountToNotAttack"));
         fields.add(new FloatField("bloodVisibleTime"));
         fields.add(new IntegerField("bloodCount"));
         fields.add(new FloatField("messageShowTime"));
@@ -85,7 +76,6 @@ public class LocalConfigs {
         fields.add(new IntegerField("worldHorizontalBorders"));
         fields.add(new IntegerField("worldVerticalTopBorders"));
         fields.add(new IntegerField("worldVerticalBottomBorders"));
-        fields.add(new FloatField("bloodInterval"));
         settingsListener.onSharedPreferenceChanged(settings, null);
         BicycleDebugger.i("Configs", "Loaded successfully");
     }
