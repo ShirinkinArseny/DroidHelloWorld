@@ -39,4 +39,9 @@
     <string name="setDefault">Set Default</string>
 
 
+    <string name="setDefaultAlertTitle">Dropping configs</string>
+    <string name="setDefaultMessage">If you will continue - you will lose your handmade settings!</string>
+
+    <string name="loadingProgress">Please wait</string>
+
 </resources>

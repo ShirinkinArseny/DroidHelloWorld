@@ -41,6 +41,6 @@
     <string name="setDefaultAlertTitle">Сброс настроек</string>
     <string name="setDefaultMessage">Сброс приведет к потере уже существующих настроек (если вам не жалко сделанные вашим тяжёлым трудом идеально вручную подобранные конфиги - смело жмите "СБРОС")!</string>
 
-    <string name="loadingProgress">Пожалуйста подождите...</string>
+    <string name="loadingProgress">Пожалуйста подождите, загружаются настройки и их названия O_o</string>
     
 </resources>
