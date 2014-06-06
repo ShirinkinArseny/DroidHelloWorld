@@ -44,7 +44,7 @@ public class World {
 
         loadTextures(metrics.widthPixels, metrics.heightPixels);
 
-        com.acidspacecompany.DrawLayers.UnitLayer.init(pictureSizeCoef);
+        com.acidspacecompany.epicwallpaperfight.DrawLayers.UnitLayer.init(pictureSizeCoef);
         BloodLayer.init(pictureSizeCoef);
         MessagesLayer.init(pictureSizeCoef);
         Bullet.reInit(pictureSizeCoef);
@@ -98,7 +98,7 @@ public class World {
         Graphic.initFont(Graphic.genTexture(getScaledBitmap(b, fontTextureSize)));
 
         Bitmap canva=getScaledResource(res, R.drawable.grid, 256);
-        com.acidspacecompany.DrawLayers.CanvaLayer.init(Graphic.genTexture(canva), canva.getWidth());
+        com.acidspacecompany.epicwallpaperfight.DrawLayers.CanvaLayer.init(Graphic.genTexture(canva), canva.getWidth());
 
         Bitmap blood1=getScaledResource(res, R.drawable.blood, 80);
         Bitmap blood2=getScaledResource(res, R.drawable.coal, 80);
@@ -111,9 +111,9 @@ public class World {
     public static void reInit() {
         AI.reInit();
         MessagesLayer.reInit();
-        com.acidspacecompany.DrawLayers.TerritoryLayer.reInit();
+        com.acidspacecompany.epicwallpaperfight.DrawLayers.TerritoryLayer.reInit();
         DisplayMetrics metrics = res.getDisplayMetrics();
-        com.acidspacecompany.DrawLayers.TimerLayer.reInit(metrics.widthPixels, metrics.heightPixels);
+        com.acidspacecompany.epicwallpaperfight.DrawLayers.TimerLayer.reInit(metrics.widthPixels, metrics.heightPixels);
     }
 
     public void pausePainting() {
@@ -151,37 +151,37 @@ public class World {
     }
 
     public void setSurface(int width, int height) {
-        com.acidspacecompany.DrawLayers.TerritoryLayer.resize(width, height);
-        com.acidspacecompany.DrawLayers.UnitLayer.resize(width, height);
-        com.acidspacecompany.DrawLayers.TimerLayer.resize(width, height);
+        com.acidspacecompany.epicwallpaperfight.DrawLayers.TerritoryLayer.resize(width, height);
+        com.acidspacecompany.epicwallpaperfight.DrawLayers.UnitLayer.resize(width, height);
+        com.acidspacecompany.epicwallpaperfight.DrawLayers.TimerLayer.resize(width, height);
         LocalConfigs.resize(width, height);
         Graphic.resize(width, height);
     }
 
     private void update(float dt) {
-        com.acidspacecompany.DrawLayers.TimerLayer.update(dt);
-        com.acidspacecompany.DrawLayers.UnitLayer.update(dt);
+        com.acidspacecompany.epicwallpaperfight.DrawLayers.TimerLayer.update(dt);
+        com.acidspacecompany.epicwallpaperfight.DrawLayers.UnitLayer.update(dt);
         SpawnsLayer.update(dt);
         BloodLayer.update(dt);
         MessagesLayer.update(dt);
-        com.acidspacecompany.DrawLayers.CanvaLayer.update(dt);
+        com.acidspacecompany.epicwallpaperfight.DrawLayers.CanvaLayer.update(dt);
     }
 
     private void draw() {
         Graphic.begin(Graphic.Mode.DRAW_RECTANGLES);
-        com.acidspacecompany.DrawLayers.TerritoryLayer.draw();
+        com.acidspacecompany.epicwallpaperfight.DrawLayers.TerritoryLayer.draw();
         Graphic.begin(Graphic.Mode.FILL_BITMAP);
-        com.acidspacecompany.DrawLayers.CanvaLayer.draw();
+        com.acidspacecompany.epicwallpaperfight.DrawLayers.CanvaLayer.draw();
         Graphic.begin(Graphic.Mode.DRAW_TEXT);
-        com.acidspacecompany.DrawLayers.TimerLayer.draw();
+        com.acidspacecompany.epicwallpaperfight.DrawLayers.TimerLayer.draw();
         Graphic.begin(Graphic.Mode.DRAW_BITMAPS);
         SpawnsLayer.draw();
         BloodLayer.draw();
-        com.acidspacecompany.DrawLayers.UnitLayer.draw();
+        com.acidspacecompany.epicwallpaperfight.DrawLayers.UnitLayer.draw();
         Graphic.begin(Graphic.Mode.DRAW_TEXT);
         MessagesLayer.draw();
         Graphic.begin(Graphic.Mode.DRAW_RECTANGLES);
-        com.acidspacecompany.DrawLayers.UnitLayer.drawRectangles();
+        com.acidspacecompany.epicwallpaperfight.DrawLayers.UnitLayer.drawRectangles();
     }
 }
         

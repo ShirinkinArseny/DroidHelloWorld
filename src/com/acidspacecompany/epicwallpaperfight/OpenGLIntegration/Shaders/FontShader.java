@@ -3,7 +3,7 @@ package com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Shaders;
 import android.content.Context;
 import android.opengl.GLES20;
 import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Shaders.Generators.ShaderGenerator;
-import com.acidspacecompany.R;
+import com.acidspacecompany.epicwallpaperfight.R;
 
 import java.nio.FloatBuffer;
 
