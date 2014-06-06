@@ -81,9 +81,9 @@ public class LocalConfigs {
         fields.add(new BooleanField("timerDraw"));
         fields.add(new IntegerField("worldGianSpawnProbability"));
         fields.add(new IntegerField("worldTowerSpawnProbability"));
-        fields.add(new IntegerField("worldHorizontalBorders"));
-        fields.add(new IntegerField("worldVerticalTopBorders"));
-        fields.add(new IntegerField("worldVerticalBottomBorders"));
+        fields.add(new FloatField("worldHorizontalBorders"));
+        fields.add(new FloatField("worldVerticalTopBorders"));
+        fields.add(new FloatField("worldVerticalBottomBorders"));
         settingsListener.onSharedPreferenceChanged(settings, null);
         BicycleDebugger.i("Configs", "Loaded successfully");
     }
