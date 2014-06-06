@@ -8,7 +8,6 @@ public class Bullet extends Unit{
     private static final float dHealth=-1f;
     private static float distance=Math.abs(speed/dHealth);
     private static float squareDistance=distance*distance;
-    //todo: учесть спидкоеф
 
     public static float getSquareDistance() {
         return squareDistance;

@@ -16,7 +16,6 @@ public class UnitLayer{
 
     private static final Random rnd = new Random();
     private static AI ai;
-    //TODO: нужно с этим что=то решить
     private static final LinkedList<ControlledUnit>[] controlledUnits=
             new LinkedList[]{new LinkedList<ControlledUnit>(), new LinkedList<ControlledUnit>()}; //Lists of units to send in AI
     private static final LinkedList<NotControlledUnit>[] uncontrolledUnits=
@@ -26,6 +25,9 @@ public class UnitLayer{
     private static int[] kills=new int[]{0, 0};
     private static Synchroniser synchroniser;
     private static LoopedTicker updateSpawnAndIntersection;
+    private static int topBoard;
+    private static int bottomBoard;
+    private static int sideBoard;
 
     public static int[] getTeamSizes() {
         return kills;
@@ -47,24 +49,28 @@ public class UnitLayer{
     }
 
     public static void resize(int width, int height) {
-            float wOld = LocalConfigs.getDisplayWidth() - 2 * LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders);
-            float hOld = LocalConfigs.getDisplayHeight()
-                    - LocalConfigs.getIntValue(LocalConfigs.worldVerticalTopBorders)
-                    - LocalConfigs.getIntValue(LocalConfigs.worldVerticalBottomBorders);
 
-            float wNew = width - 2 * LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders);
-            float hNew = height - LocalConfigs.getIntValue(LocalConfigs.worldVerticalTopBorders)
-                    - LocalConfigs.getIntValue(LocalConfigs.worldVerticalBottomBorders);
+        topBoard= (int) (height* LocalConfigs.getFloatValue(LocalConfigs.worldVerticalTopBorders));
+        bottomBoard= (int) (height* LocalConfigs.getFloatValue(LocalConfigs.worldVerticalBottomBorders));
+        sideBoard=width*LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders);
+
+            float wOld = LocalConfigs.getDisplayWidth() - 2 * sideBoard;
+            float hOld = LocalConfigs.getDisplayHeight()
+                    - topBoard - bottomBoard;
+
+            float wNew = width - 2 *sideBoard;
+            float hNew = height - topBoard-bottomBoard;
+
 
         synchroniser.waitForUnlockAndLock();
             for (int i = 0; i < 6; i++)
                 for (Unit u : dividedUnits[i]) {
 
-                    float posX = (u.getX() - LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders))
-                            / wOld * wNew + LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders);
+                    float posX = (u.getX() - sideBoard)
+                            / wOld * wNew +sideBoard;
 
-                    float posY = (u.getY() - LocalConfigs.getIntValue(LocalConfigs.worldVerticalTopBorders))
-                            / hOld * hNew + LocalConfigs.getIntValue(LocalConfigs.worldVerticalTopBorders);
+                    float posY = (u.getY() - topBoard)
+                            / hOld * hNew + topBoard;
                     u.setPosition(posX, posY);
                 }
         synchroniser.unlock();
@@ -247,24 +253,23 @@ public class UnitLayer{
             return new Point(
 
                     ((team == 0) ?
-                            LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders) :
-                            LocalConfigs.getDisplayWidth() * 2 / 3 - LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders))
+                            sideBoard :
+                            LocalConfigs.getDisplayWidth() * 2 / 3 - sideBoard)
                             + rnd.nextInt(LocalConfigs.getDisplayWidth() / 3),
 
-                    rnd.nextInt(LocalConfigs.getDisplayHeight() - LocalConfigs.getIntValue(LocalConfigs.worldVerticalBottomBorders)
-                            - LocalConfigs.getIntValue(LocalConfigs.worldVerticalTopBorders))
-                            +  LocalConfigs.getIntValue(LocalConfigs.worldVerticalTopBorders)
+                    rnd.nextInt(LocalConfigs.getDisplayHeight() - bottomBoard - topBoard)
+                            + topBoard
             );
         } else {
             return new Point(
 
                     rnd.nextInt(LocalConfigs.getDisplayWidth()
-                            - 2 * LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders))
-                            + LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders),
+                            - 2 * sideBoard)
+                            + sideBoard,
 
                     ((team == 0) ?
                             LocalConfigs.getIntValue(LocalConfigs.worldVerticalTopBorders) :
-                            LocalConfigs.getDisplayHeight() * 2 / 3 - LocalConfigs.getIntValue(LocalConfigs.worldVerticalBottomBorders))
+                            LocalConfigs.getDisplayHeight() * 2 / 3 - bottomBoard)
                             + rnd.nextInt(LocalConfigs.getDisplayWidth() / 3)
             );
         }

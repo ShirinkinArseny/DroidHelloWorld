@@ -32,8 +32,8 @@
             android:summary="@string/messageShowTime_description"
             android:icon="@drawable/time"
             android:defaultValue="1.5"
-            min="1.0"
-            max="3.0"
+            min="0.5"
+            max="5.0"
             />
     <CheckBoxPreference
             android:key="messageDraw"
@@ -49,8 +49,8 @@
             android:summary="@string/spawnsShowTime_description"
             android:icon="@drawable/time"
             android:defaultValue="0.6"
-            min="1.0"
-            max="3.0"
+            min="0.5"
+            max="5.0"
             />
     <CheckBoxPreference
             android:key="spawnsDraw"
@@ -66,8 +66,8 @@
             android:summary="@string/timerTimer_description"
             android:icon="@drawable/time"
             android:defaultValue="300"
-            min="100"
-            max="300"
+            min="15"
+            max="600"
             />
     <CheckBoxPreference
             android:key="timerDraw"
@@ -83,8 +83,8 @@
             android:summary="@string/worldGianSpawnProbability_description"
             android:icon="@drawable/probability"
             android:defaultValue="100"
-            min="100"
-            max="300"
+            min="5"
+            max="200"
             />
     <live.wallpaper.Configs.Preference.IntegerValuePreference
             android:key="worldTowerSpawnProbability"
@@ -93,8 +93,8 @@
             android:summary="@string/worldTowerSpawnProbability_description"
             android:icon="@drawable/probability"
             android:defaultValue="40"
-            min="10"
-            max="50"
+            min="5"
+            max="200"
             />
     <live.wallpaper.Configs.Preference.IntegerValuePreference
             android:key="worldHorizontalBorders"
@@ -102,9 +102,9 @@
             android:title="@string/worldHorizontalBorders"
             android:summary="@string/worldHorizontalBorders_description"
             android:icon="@drawable/horizontal"
-            android:defaultValue="15"
-            min="10"
-            max="50"
+            android:defaultValue="5"
+            min="0"
+            max="45"
             />
     <live.wallpaper.Configs.Preference.IntegerValuePreference
             android:key="worldVerticalTopBorders"
@@ -112,9 +112,9 @@
             android:title="@string/worldVerticalTopBorders"
             android:summary="@string/worldVerticalTopBorders_description"
             android:icon="@drawable/top"
-            android:defaultValue="40"
-            min="10"
-            max="50"
+            android:defaultValue="10"
+            min="0"
+            max="45"
             />
     <live.wallpaper.Configs.Preference.IntegerValuePreference
             android:key="worldVerticalBottomBorders"
@@ -122,9 +122,9 @@
             android:title="@string/worldVerticalBottomBorders"
             android:summary="@string/worldVerticalBottomBorders_description"
             android:icon="@drawable/bottom"
-            android:defaultValue="15"
-            min="10"
-            max="50"
+            android:defaultValue="5"
+            min="0"
+            max="45"
             />
 
 </PreferenceScreen>
