@@ -8,6 +8,10 @@ import com.acidspacecompany.epicwallpaperfight.World;
 import java.util.ArrayList;
 
 public class LocalConfigs {
+
+    public static final String PACKAGE_NAME = "com.acidspacecompany.epicwallpaperfight";
+
+
     private static final String TAG = "LocalConfigs";
 
 

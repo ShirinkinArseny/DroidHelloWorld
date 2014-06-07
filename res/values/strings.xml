@@ -44,5 +44,15 @@
 
     <string name="loading">Loading</string>
     <string name="loadingProgress">Please wait, loading settings and their names O_o</string>
+    <string name="loadingToast">Please wait, loading may take some time</string>
+
+    <string name="googlePlayReviewTitle">Отзыв Google Play</string>
+    <string name="googlePlayReviewSummary">Пожалуйста, оцените наше приложение на Google Play</string>
+    <string name="googlePlayGoReview">Оценить</string>
+    <string name="googlePlayLaterReview">Позже</string>
+    <string name="googlePlayDeclineReview">Никогда</string>
+
+    <string name="thankyou">Thank you!</string>
+
 
 </resources>

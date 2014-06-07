@@ -4,7 +4,9 @@ import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.Context;
 import android.content.DialogInterface;
+import android.content.Intent;
 import android.content.SharedPreferences;
+import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
 import android.preference.PreferenceActivity;
@@ -15,6 +17,7 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.Button;
 import android.widget.LinearLayout;
+import android.widget.Toast;
 import com.acidspacecompany.epicwallpaperfight.Ads.AdBuilder;
 import com.acidspacecompany.epicwallpaperfight.Configs.ConfigField;
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
@@ -25,6 +28,53 @@ import java.util.zip.Inflater;
 public class Settings extends PreferenceActivity {
     public Settings() {
 
+    }
+
+    /**
+     * Создает всплывающее уведомление о просьбе оставить отзыв,
+     * если то необходимо. Отзыв создается если:
+     * 1) Впервые были запущены настройки
+     * 2) отзыв был отложен
+     */
+    private void popReview() {
+        final boolean needReview = PreferenceManager.getDefaultSharedPreferences(this).getBoolean("need_review", true);
+        if (needReview) {
+            //Создаем всплывающее уведомление
+            AlertDialog.Builder alertDialogBuilder = new AlertDialog.Builder(this);
+            alertDialogBuilder.setTitle(R.string.googlePlayReviewTitle);
+            alertDialogBuilder.setMessage(R.string.googlePlayReviewSummary);
+            alertDialogBuilder.setCancelable(false);
+            alertDialogBuilder.setNegativeButton(R.string.googlePlayGoReview, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+                    //Говорим пользователю "спасибо"
+                    Toast.makeText(getBaseContext(), R.string.thankyou, 5).show();
+
+                    //Значит, всё-таки пользователь оставляет отзыв
+                    //Создаем переход на страницу Google Play
+                    try {
+                        //Если у пользователя стоит Google Play -- то открывем его в приложении
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("market://details?id=" + LocalConfigs.PACKAGE_NAME)));
+                    } catch (android.content.ActivityNotFoundException anfe) {
+                        //Если не стоит -- то открываем в браузере
+                        startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + LocalConfigs.PACKAGE_NAME)));
+                    }
+                }
+            });
+            alertDialogBuilder.setPositiveButton(R.string.googlePlayDeclineReview, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            alertDialogBuilder.setNeutralButton(R.string.googlePlayLaterReview, new DialogInterface.OnClickListener() {
+                @Override
+                public void onClick(DialogInterface dialog, int which) {
+
+                }
+            });
+            alertDialogBuilder.create().show();
+        }
     }
 
     //Копия настроек для сброса
@@ -140,8 +190,13 @@ public class Settings extends PreferenceActivity {
 
     @Override
     public void onCreate(Bundle savedInstanceState) {
-        me = this;
         super.onCreate(savedInstanceState);
+
+        //Создаем всплывающее уведомление о просьбе оставить отзыв
+        //если то необходимо
+        popReview();
+
+        me = this;
         //Если поддерживаются Preferences
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB) {
             Preference preference = new Preference();
