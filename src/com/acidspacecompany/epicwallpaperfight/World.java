@@ -28,12 +28,11 @@ public class World {
     private static float pictureSizeCoef=1f;
 
     private static Bitmap getScaledBitmap(Bitmap b, int size) {
-        return Bitmap.createScaledBitmap(
-                        b, (int)(size*pictureSizeCoef), (int)(size*pictureSizeCoef), true);
+        return Bitmap.createScaledBitmap(b, size, size, true);
     }
 
     private static Bitmap getScaledResource(Resources res, int id, int size) {
-        return getScaledBitmap(BitmapFactory.decodeResource(res, id), size);
+        return getScaledBitmap(BitmapFactory.decodeResource(res, id), (int) (size*pictureSizeCoef));
     }
 
     public World(Context context) {
@@ -54,6 +53,14 @@ public class World {
         Bullet.reInit(pictureSizeCoef);
 
         reInit();
+    }
+
+    private static int power2nearest(float s) {
+        for (int i=1;;i*=2) {
+            if (i>=s) {
+                return i;
+            }
+        }
     }
 
     private static void loadTextures(int w, int h) {
@@ -88,21 +95,14 @@ public class World {
         Unit.init(menTextureIDs, sizes, pictureSizeCoef);
 
         Bitmap b=BitmapFactory.decodeResource(res, R.drawable.monospace);
-        int fontTextureSize=Math.min(b.getWidth(),
-                8*Math.max(w, h)/7);
+        float fontTextureSize=Math.min(b.getWidth(),
+                8*Math.max(w, h)/7f);
 
-        for (int i=1;;i*=2) {
-             if (i>=fontTextureSize) {
-                 fontTextureSize=i;
-                 break;
-             }
-        }
-        Log.i("Font",  "Selected font size: "+fontTextureSize);
+        Graphic.initFont(Graphic.genTexture(getScaledBitmap(b, power2nearest(fontTextureSize))));
 
-        Graphic.initFont(Graphic.genTexture(getScaledBitmap(b, fontTextureSize)));
 
-        Bitmap canva=getScaledResource(res, R.drawable.grid, 256);
-        com.acidspacecompany.epicwallpaperfight.DrawLayers.CanvaLayer.init(Graphic.genTexture(canva), canva.getWidth());
+        Bitmap canva=getScaledBitmap(BitmapFactory.decodeResource(res, R.drawable.grid), power2nearest(256*pictureSizeCoef));
+        CanvaLayer.init(Graphic.genInfinityTexture(canva), (int) (canva.getWidth()*pictureSizeCoef));
 
         Bitmap blood1=getScaledResource(res, R.drawable.blood, 80);
         Bitmap blood2=getScaledResource(res, R.drawable.coal, 80);

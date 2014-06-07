@@ -23,7 +23,7 @@
             android:key="bloodDraw"
             android:title="@string/bloodDraw"
             android:summary="@string/bloodDraw_description"
-            android:icon="@drawable/doing"
+            android:icon="@drawable/do"
             android:defaultValue="true"
         />
     <com.acidspacecompany.epicwallpaperfight.Configs.Preference.FloatValuePreference
@@ -40,7 +40,7 @@
             android:key="messageDraw"
             android:title="@string/messageDraw"
             android:summary="@string/messageDraw_description"
-            android:icon="@drawable/doing"
+            android:icon="@drawable/do"
             android:defaultValue="true"
             />
     <com.acidspacecompany.epicwallpaperfight.Configs.Preference.FloatValuePreference
@@ -57,7 +57,7 @@
             android:key="spawnsDraw"
             android:title="@string/spawnsDraw"
             android:summary="@string/spawnsDraw_description"
-            android:icon="@drawable/doing"
+            android:icon="@drawable/do"
             android:defaultValue="true"
             />
     <com.acidspacecompany.epicwallpaperfight.Configs.Preference.IntegerValuePreference
@@ -74,7 +74,7 @@
             android:key="timerDraw"
             android:title="@string/timerDraw"
             android:summary="@string/timerDraw_description"
-            android:icon="@drawable/doing"
+            android:icon="@drawable/do"
             android:defaultValue="true"
             />
     <com.acidspacecompany.epicwallpaperfight.Configs.Preference.IntegerValuePreference

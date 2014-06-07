@@ -267,7 +267,7 @@ public class Graphic {
         return id;
     }
 
-    public static int getInfinityTexture(Bitmap b) {
+    public static int genInfinityTexture(Bitmap b) {
         final int id = TextureGenerator.loadTexture(b,true);
         textures.add(id);
         return id;
