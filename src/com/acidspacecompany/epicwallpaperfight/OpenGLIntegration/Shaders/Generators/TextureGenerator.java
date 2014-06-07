@@ -11,6 +11,8 @@ public class TextureGenerator {
     private static final String TAG = "TextureGenerator";
 
     public static int loadTexture(Bitmap bitmap) {
+        BicycleDebugger.d(TAG, "Bitmap dimensions " + bitmap.getWidth() + " " + bitmap.getHeight());
+
         final int[] textureObjectIds = new int[1];
         glGenTextures(1, textureObjectIds, 0);
         if (textureObjectIds[0]==0) {
@@ -33,6 +35,7 @@ public class TextureGenerator {
 
         //Битмап не нужен больше ни кому
         bitmap.recycle();
+
 
         //Сбрасываем текстуру так как действия с ней пока закончились
         glBindTexture(GL_TEXTURE_2D, 0);
