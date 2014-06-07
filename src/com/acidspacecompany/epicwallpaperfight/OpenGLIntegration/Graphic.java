@@ -262,7 +262,13 @@ public class Graphic {
      * @return Итентификатор
      */
     public static int genTexture(Bitmap b) {
-        final int id = TextureGenerator.loadTexture(b);
+        final int id = TextureGenerator.loadTexture(b,false);
+        textures.add(id);
+        return id;
+    }
+
+    public static int getInfinityTexture(Bitmap b) {
+        final int id = TextureGenerator.loadTexture(b,true);
         textures.add(id);
         return id;
     }
