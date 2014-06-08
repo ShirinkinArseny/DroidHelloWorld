@@ -59,12 +59,14 @@ public class Settings extends PreferenceActivity {
                         //Если не стоит -- то открываем в браузере
                         startActivity(new Intent(Intent.ACTION_VIEW, Uri.parse("http://play.google.com/store/apps/details?id=" + LocalConfigs.PACKAGE_NAME)));
                     }
+
+                    PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putBoolean("need_review", false);
                 }
             });
             alertDialogBuilder.setPositiveButton(R.string.googlePlayDeclineReview, new DialogInterface.OnClickListener() {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
-
+                    PreferenceManager.getDefaultSharedPreferences(getBaseContext()).edit().putBoolean("need_review", false);
                 }
             });
             alertDialogBuilder.setNeutralButton(R.string.googlePlayLaterReview, new DialogInterface.OnClickListener() {

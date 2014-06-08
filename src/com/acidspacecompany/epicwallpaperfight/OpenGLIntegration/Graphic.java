@@ -256,6 +256,13 @@ public class Graphic {
     //Список для хранения текстур чтобы их потом удалить
     private static LinkedList<Integer> textures = new LinkedList<>();
 
+    public static int[] genTextures(Bitmap[] array) {
+        boolean[] infiniteArray = new boolean[array.length];
+        for (int i=0; i<array.length; i++)
+            infiniteArray[i] = false;
+        return TextureGenerator.loadTextures(array, infiniteArray);
+    }
+
     /**
      * Генерация текстуры из Bitmap
      * @param b Битмап, из которого создается текстура (величина сторон должна быть степенью двойки!)
