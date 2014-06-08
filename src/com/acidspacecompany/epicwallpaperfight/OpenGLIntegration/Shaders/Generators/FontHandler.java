@@ -8,7 +8,7 @@ import com.acidspacecompany.epicwallpaperfight.Configs.BicycleDebugger;
 import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Graphic;
 import com.acidspacecompany.epicwallpaperfight.R;
 
-public class FontLoader {
+public class FontHandler {
 
     private static final String TAG = "FontLoader";
 
@@ -22,7 +22,10 @@ public class FontLoader {
     private static int[][] dimensions = new int[letterNo][2];
     private static int[] textures = new int[letterNo];
 
-    public static int[][] getDimensions() { return dimensions; }
+
+    public static int[][] getDimensions() {
+        return dimensions;
+    }
 
     public static void loadFont(Resources res) {
         int currentPosition = 0;
@@ -87,8 +90,7 @@ public class FontLoader {
         bitmaps[currentPosition++] = Bitmap.createBitmap(BitmapFactory.decodeResource(res, R.drawable.letter56));
         bitmaps[currentPosition] = Bitmap.createBitmap(BitmapFactory.decodeResource(res, R.drawable.letter57));
 
-        for (int i=0; i<bitmaps.length; i++)
-        {
+        for (int i = 0; i < bitmaps.length; i++) {
             dimensions[i][0] = bitmaps[i].getWidth();
             dimensions[i][1] = bitmaps[i].getHeight();
         }
@@ -99,21 +101,43 @@ public class FontLoader {
         string = string.toUpperCase();
         final int length = string.length();
         int position;
-        float scaleFactor,scaledWidth;
-        scaledWidth = dimensions[0][0] * height / dimensions[0][1];
-            for (int i = 0; i < length; i++) {
-                if (string.charAt(i)!=' ') {
-                    //Позиция символа в карте
-                    position = map.indexOf(string.charAt(i));
-                    //Узнаем, на сколько нужно масштабировать
-                    scaleFactor = height / dimensions[position][1];
-                    scaledWidth = dimensions[position][0] * scaleFactor;
-                    Graphic.drawBitmap(textures[position], x, y, scaledWidth, height, r, g, b, a);
-                    x += scaledWidth;
-                }
-                else {
-                    x+=scaledWidth;
-                }
+        //Узнаем, на сколько нужно масштабировать
+        final float scaleFactor = height / dimensions[0][1];
+        float scaledWidth = dimensions[0][0] * scaleFactor;
+        for (int i = 0; i < length; i++) {
+            if (string.charAt(i) != ' ') {
+                //Позиция символа в карте
+                position = map.indexOf(string.charAt(i));
+                scaledWidth = dimensions[position][0] * scaleFactor;
+                Graphic.drawBitmap(textures[position], x, y, scaledWidth, height, r, g, b, a);
+                x += scaledWidth;
+            } else {
+                x += scaledWidth;
             }
         }
     }
+
+
+    public static float getStringWidth(float height, String string) {
+        float x = 0.0f;
+        string = string.toUpperCase();
+        final int length = string.length();
+        int position;
+        //Узнаем, на сколько нужно масштабировать
+        final float scaleFactor = height / dimensions[0][1];
+        float scaledWidth = dimensions[0][0] * scaleFactor;
+        for (int i = 0; i < length; i++) {
+            if (string.charAt(i) != ' ') {
+                //Позиция символа в карте
+                position = map.indexOf(string.charAt(i));
+                scaledWidth = dimensions[position][0] * scaleFactor;
+                x += scaledWidth;
+            }
+            else {
+                x += scaledWidth;
+            }
+        }
+
+        return x;
+    }
+}

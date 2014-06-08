@@ -7,7 +7,7 @@ import com.acidspacecompany.epicwallpaperfight.Configs.BicycleDebugger;
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
 import com.acidspacecompany.epicwallpaperfight.Geometry.Rectangle;
 import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Shaders.*;
-import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Shaders.Generators.FontLoader;
+import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Shaders.Generators.FontHandler;
 import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Shaders.Generators.TextureGenerator;
 
 import java.nio.ByteBuffer;
@@ -116,7 +116,7 @@ public class Graphic {
         fillBitmapShader = new FillBitmapShader(context);
         fillBitmapShader.validate();
 
-        FontLoader.loadFont(context.getResources());
+        FontHandler.loadFont(context.getResources());
 
         //Создаем VBO для вершин прямоугольника
         int[] buffers = new int[1];
@@ -492,7 +492,7 @@ public class Graphic {
                 x += symbolSpaceCoef * size;
             }
         } */
-        FontLoader.drawString(text,size,x,y,r,g,b,a);
+        FontHandler.drawString(text, size, x, y, r, g, b, a);
     }
 
 }
