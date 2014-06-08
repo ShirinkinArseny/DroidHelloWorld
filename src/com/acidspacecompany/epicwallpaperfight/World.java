@@ -179,7 +179,6 @@ public class World {
         Graphic.begin(Graphic.Mode.DRAW_BITMAPS);
         SpawnsLayer.draw();
         BloodLayer.draw();
-        Graphic.begin(Graphic.Mode.DRAW_TEXT);
         TimerLayer.draw();
         MessagesLayer.draw();
         Graphic.begin(Graphic.Mode.DRAW_BITMAPS);
