@@ -4,10 +4,14 @@ import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
+import com.acidspacecompany.epicwallpaperfight.Configs.BicycleDebugger;
 import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Graphic;
 import com.acidspacecompany.epicwallpaperfight.R;
 
 public class FontLoader {
+
+    private static final String TAG = "FontLoader";
+
 
     //ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#%*()-+={}[]<>'\|/:;
     //Карта шрифтов, должна совпадать с картой в текстуре шрифта
@@ -96,14 +100,20 @@ public class FontLoader {
         final int length = string.length();
         int position;
         float scaleFactor,scaledWidth;
-        for (int i=0; i<length; i++) {
-            //Позиция символа в карте
-            position = map.indexOf(string.charAt(i));
-            //Узнаем, на сколько нужно масштабировать
-            scaleFactor = height/dimensions[position][1];
-            scaledWidth = dimensions[position][0]*scaleFactor;
-            Graphic.drawBitmap(textures[position],x,y,scaledWidth,height,r,g,b,a);
-            x+=scaledWidth;
+        scaledWidth = dimensions[0][0] * height / dimensions[0][1];
+            for (int i = 0; i < length; i++) {
+                if (string.charAt(i)!=' ') {
+                    //Позиция символа в карте
+                    position = map.indexOf(string.charAt(i));
+                    //Узнаем, на сколько нужно масштабировать
+                    scaleFactor = height / dimensions[position][1];
+                    scaledWidth = dimensions[position][0] * scaleFactor;
+                    Graphic.drawBitmap(textures[position], x, y, scaledWidth, height, r, g, b, a);
+                    x += scaledWidth;
+                }
+                else {
+                    x+=scaledWidth;
+                }
+            }
         }
     }
-}
