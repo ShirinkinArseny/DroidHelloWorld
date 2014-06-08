@@ -98,9 +98,6 @@ public class World {
         float fontTextureSize=Math.min(b.getWidth(),
                 8*Math.max(w, h)/7f);
 
-        Graphic.initFont(Graphic.genTexture(getScaledBitmap(b, power2nearest(fontTextureSize))));
-
-
         Bitmap canva=getScaledBitmap(BitmapFactory.decodeResource(res, R.drawable.grid), power2nearest(256*pictureSizeCoef));
         CanvaLayer.init(Graphic.genInfinityTexture(canva), (int) (canva.getWidth()*pictureSizeCoef));
 

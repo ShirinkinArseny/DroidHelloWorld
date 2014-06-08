@@ -71,6 +71,7 @@ public class Unit extends ControlledUnit {
         Graphic.drawBitmap(getBitmap(), this);
     }
 
+
     public void drawHealth() {
         float health=Math.max(0, this.health);
         float w2=getWidth() * health/2;

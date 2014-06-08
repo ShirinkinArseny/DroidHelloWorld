@@ -38,7 +38,7 @@ public class TimerLayer {
         bigSize=w/7;
         height2_3= (int) (height2+bigSize*1.3f);
         smallSize=w/15;
-        width4 = (int) (w/2f-bigSize*3*Graphic.symbolSpaceCoef);
+        width4 = (int) (w/2f);//-bigSize*3*Graphic.symbolSpaceCoef);
     }
 
     public static void update(float dt) {

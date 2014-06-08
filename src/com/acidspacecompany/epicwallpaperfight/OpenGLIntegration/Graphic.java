@@ -374,9 +374,18 @@ public class Graphic {
     }
 
 
+    public static void drawBitmap(int texture, Rectangle rectangle) {
+        drawBitmap(texture, rectangle.getX0(), rectangle.getY0(), rectangle.getWidth(), rectangle.getHeight(), 1,1,1, 1.0f);
+    }
+
+    public static void drawBitmap(int texture, Rectangle rectangle, float a) {
+        drawBitmap(texture, rectangle.getX0(), rectangle.getY0(), rectangle.getWidth(), rectangle.getHeight(), 1,1,1, a);
+    }
+
     public static void drawBitmap(int texture, Rectangle rectangle, float r, float g, float b) {
         drawBitmap(texture, rectangle.getX0(), rectangle.getY0(), rectangle.getWidth(), rectangle.getHeight(),r,g,b, 1.0f);
     }
+
     public static void drawBitmap(int texture, Rectangle rectangle,float r, float g, float b, float a) {
         drawBitmap(texture, rectangle.getX0(), rectangle.getY0(), rectangle.getWidth(), rectangle.getHeight(),r,g,b, a);
     }
