@@ -9,9 +9,18 @@ import com.acidspacecompany.epicwallpaperfight.R;
 
 public class FontLoader {
 
+    //ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#%*()-+={}[]<>'\|/:;
+    //Карта шрифтов, должна совпадать с картой в текстуре шрифта
+    private static final String map = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#%*()-+={}[]<>\'\\|/:;";
+
     private static final int letterNo = 58;
 
-    public static int[] loadFont(Resources res) {
+    private static int[][] dimensions = new int[letterNo][2];
+    private static int[] textures = new int[letterNo];
+
+    public static int[][] getDimensions() { return dimensions; }
+
+    public static void loadFont(Resources res) {
         int currentPosition = 0;
         Bitmap[] bitmaps = new Bitmap[letterNo];
 
@@ -74,9 +83,27 @@ public class FontLoader {
         bitmaps[currentPosition++] = Bitmap.createBitmap(BitmapFactory.decodeResource(res, R.drawable.letter56));
         bitmaps[currentPosition] = Bitmap.createBitmap(BitmapFactory.decodeResource(res, R.drawable.letter57));
 
-        return Graphic.genTextures(bitmaps);
+        for (int i=0; i<bitmaps.length; i++)
+        {
+            dimensions[i][0] = bitmaps[i].getWidth();
+            dimensions[i][1] = bitmaps[i].getHeight();
+        }
+        textures = Graphic.genTextures(bitmaps);
     }
 
-
-
+    public static void drawString(String string, float height, float x, float y, float r, float g, float b, float a) {
+        string = string.toUpperCase();
+        final int length = string.length();
+        int position;
+        float scaleFactor,scaledWidth;
+        for (int i=0; i<length; i++) {
+            //Позиция символа в карте
+            position = map.indexOf(string.charAt(i));
+            //Узнаем, на сколько нужно масштабировать
+            scaleFactor = height/dimensions[position][1];
+            scaledWidth = dimensions[position][0]*scaleFactor;
+            Graphic.drawBitmap(textures[position],x,y,scaledWidth,height,r,g,b,a);
+            x+=scaledWidth;
+        }
+    }
 }

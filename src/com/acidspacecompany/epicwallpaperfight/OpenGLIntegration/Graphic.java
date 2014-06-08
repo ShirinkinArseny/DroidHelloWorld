@@ -7,6 +7,7 @@ import com.acidspacecompany.epicwallpaperfight.Configs.BicycleDebugger;
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
 import com.acidspacecompany.epicwallpaperfight.Geometry.Rectangle;
 import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Shaders.*;
+import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Shaders.Generators.FontLoader;
 import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Shaders.Generators.TextureGenerator;
 
 import java.nio.ByteBuffer;
@@ -110,10 +111,12 @@ public class Graphic {
         fillColorShader.validate();
         textureShader = new TextureShader(context);
         textureShader.validate();
-        fontShader = new FontShader(context);
-        fontShader.validate();
+        //fontShader = new FontShader(context);
+        //fontShader.validate();
         fillBitmapShader = new FillBitmapShader(context);
         fillBitmapShader.validate();
+
+        FontLoader.loadFont(context.getResources());
 
         //Создаем VBO для вершин прямоугольника
         int[] buffers = new int[1];
@@ -162,7 +165,7 @@ public class Graphic {
     public static void destroy() {
         fillColorShader.delete();
         textureShader.delete();
-        fontShader.delete();
+        //fontShader.delete();
         fillBitmapShader.delete();
         int i=0;
         int[] goodArray = new int[textures.size()];
@@ -242,8 +245,8 @@ public class Graphic {
                 break;
             case DRAW_BITMAPS:    initBitmaps();
                 break;
-            case DRAW_TEXT: initText();
-                break;
+           // case DRAW_TEXT: initText();
+           //     break;
             case FILL_BITMAP: initFillBitmap();
                 break;
         }
@@ -371,25 +374,23 @@ public class Graphic {
     }
 
 
-    public static void drawBitmap(int texture, Rectangle rectangle) {
-        drawBitmap(texture, rectangle.getX0(), rectangle.getY0(), rectangle.getWidth(), rectangle.getHeight(), 1.0f);
+    public static void drawBitmap(int texture, Rectangle rectangle, float r, float g, float b) {
+        drawBitmap(texture, rectangle.getX0(), rectangle.getY0(), rectangle.getWidth(), rectangle.getHeight(),r,g,b, 1.0f);
     }
-    public static void drawBitmap(int texture, Rectangle rectangle, float transparency) {
-        drawBitmap(texture, rectangle.getX0(), rectangle.getY0(), rectangle.getWidth(), rectangle.getHeight(), transparency);
+    public static void drawBitmap(int texture, Rectangle rectangle,float r, float g, float b, float a) {
+        drawBitmap(texture, rectangle.getX0(), rectangle.getY0(), rectangle.getWidth(), rectangle.getHeight(),r,g,b, a);
     }
 
-    private static void drawBitmap(int b, float x, float y, float width, float height, float opacity) {
+    public static void drawBitmap(int bitmap, float x, float y, float width, float height,float r, float g, float b, float a) {
 
         if (currentMode!=Mode.DRAW_BITMAPS)
             BicycleDebugger.e(TAG, "Incorrect drawing mode");
         else {
-
             createRectangle(x,y,width,height);
             textureShader.setMatrix(resultMatrix,0);
-            textureShader.setTransparency(opacity);
-            glBindTexture(GL_TEXTURE_2D, b);
+            textureShader.setColor(r, g, b, a);
+            glBindTexture(GL_TEXTURE_2D, bitmap);
             drawOneRectangle();
-
         }
 
     }
@@ -417,27 +418,27 @@ public class Graphic {
     }
 
 
-    //Отрисовка шрифтов
+    /*//Отрисовка шрифтов
 
     private static int fontTexture;
-    private static FontShader fontShader;
+    private static FontShader fontShader;*/
 
     /**
      * Задание шрифта для отрисовки текста
      * @param fontTextureInitialize Итентификатор текстуры шрифта
      */
-    public static void initFont(int fontTextureInitialize) {
+   /* public static void initFont(int fontTextureInitialize) {
         fontTexture = fontTextureInitialize;
     }
 
     //ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#%*()-+={}[]<>'\|/:;
     //Карта шрифтов, должна совпадать с картой в текстуре шрифта
-    private static final String map = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#%*()-+={}[]<>\'\\|/:;";
+    private static final String map = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#%*()-+={}[]<>\'\\|/:;";  */
 
     /**
      * Создание контекста для рисования текста
      */
-    private static void initText() {
+    /*private static void initText() {
             fontShader.use();
             glBindBuffer(GL_ARRAY_BUFFER, vboId);
             //Определяем местонахождение всех атрибутов
@@ -459,10 +460,10 @@ public class Graphic {
             fontShader.setSymbolDimensions(1.0f / 8, 1.0f / 8);
     }
 
-    public static final float symbolSpaceCoef=0.55f;
+    public static final float symbolSpaceCoef=0.55f;  */
 
     public static void drawText(float x, float y, float size, float r, float g, float b, float a, String text) {
-        if (currentMode != Mode.DRAW_TEXT) {
+        /*if (currentMode != Mode.DRAW_TEXT) {
             BicycleDebugger.e(TAG, "Incorrect drawing mode");
         } else {
             final int textLength = text.length();
@@ -481,7 +482,8 @@ public class Graphic {
                 }
                 x += symbolSpaceCoef * size;
             }
-        }
+        } */
+        FontLoader.drawString(text,size,x,y,r,g,b,a);
     }
 
 }

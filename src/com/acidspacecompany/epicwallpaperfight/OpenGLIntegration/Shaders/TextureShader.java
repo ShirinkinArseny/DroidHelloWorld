@@ -35,10 +35,9 @@ public class TextureShader implements Shader  {
         GLES20.glUniform1i(uTextureUnit, textureUnit);
     }
 
-    private int uTransparency;
-    public int get_uTransparency() { return uTransparency; }
-    public void setTransparency(float transparency) {
-        GLES20.glUniform1f(uTransparency, transparency);
+    private int uColor;
+    public void setColor(float r,float g,float b, float a) {
+        GLES20.glUniform4f(uColor, r,g,b,a);
     }
 
     public void use() {
@@ -55,7 +54,7 @@ public class TextureShader implements Shader  {
         aPosition = GLES20.glGetAttribLocation(programId, "a_Position");
         aTextureCoordinates = GLES20.glGetAttribLocation(programId, "a_TextureCoordinates");
         uTextureUnit = GLES20.glGetUniformLocation(programId, "u_TextureUnit");
-        uTransparency = GLES20.glGetUniformLocation(programId, "u_Transparency");
+        uColor = GLES20.glGetUniformLocation(programId, "u_Color");
     }
 
 }
