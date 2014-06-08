@@ -257,10 +257,7 @@ public class Graphic {
     private static LinkedList<Integer> textures = new LinkedList<>();
 
     public static int[] genTextures(Bitmap[] array) {
-        boolean[] infiniteArray = new boolean[array.length];
-        for (int i=0; i<array.length; i++)
-            infiniteArray[i] = false;
-        return TextureGenerator.loadTextures(array, infiniteArray);
+        return TextureGenerator.loadTextures(array);
     }
 
     /**
