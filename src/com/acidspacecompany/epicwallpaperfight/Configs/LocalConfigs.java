@@ -3,6 +3,7 @@ package com.acidspacecompany.epicwallpaperfight.Configs;
 import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
+import android.util.Log;
 import com.acidspacecompany.epicwallpaperfight.World;
 
 import java.util.ArrayList;
@@ -33,6 +34,7 @@ public class LocalConfigs {
     public static final int bloodVisibleTime=getNum();
     public static final int bloodCount=getNum();
     public static final int canvaDraw=getNum();
+    public static final int canvaSpeed=getNum();
     public static final int messageShowTime=getNum();
     public static final int messageDraw=getNum();
     public static final int spawnsShowTime=getNum();
@@ -79,6 +81,7 @@ public class LocalConfigs {
         fields.add(new FloatField("bloodVisibleTime"));
         fields.add(new IntegerField("bloodCount"));
         fields.add(new BooleanField("canvaDraw"));
+        fields.add(new IntegerField("canvasSpeed"));
         fields.add(new FloatField("messageShowTime"));
         fields.add(new BooleanField("messageDraw"));
         fields.add(new FloatField("spawnsShowTime"));
@@ -87,9 +90,9 @@ public class LocalConfigs {
         fields.add(new BooleanField("timerDraw"));
         fields.add(new IntegerField("worldGianSpawnProbability"));
         fields.add(new IntegerField("worldTowerSpawnProbability"));
-        fields.add(new FloatField("worldHorizontalBorders"));
-        fields.add(new FloatField("worldVerticalTopBorders"));
-        fields.add(new FloatField("worldVerticalBottomBorders"));
+        fields.add(new IntegerField("worldHorizontalBorders"));
+        fields.add(new IntegerField("worldVerticalTopBorders"));
+        fields.add(new IntegerField("worldVerticalBottomBorders"));
         settingsListener.onSharedPreferenceChanged(settings, null);
         BicycleDebugger.i("Configs", "Loaded successfully");
     }

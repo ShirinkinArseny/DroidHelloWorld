@@ -50,9 +50,9 @@ public class UnitLayer{
 
     public static void resize(int width, int height) {
 
-        topBoard= (int) (height* LocalConfigs.getFloatValue(LocalConfigs.worldVerticalTopBorders));
-        bottomBoard= (int) (height* LocalConfigs.getFloatValue(LocalConfigs.worldVerticalBottomBorders));
-        sideBoard= (int) (width*LocalConfigs.getFloatValue(LocalConfigs.worldHorizontalBorders));
+        topBoard= LocalConfigs.getIntValue(LocalConfigs.worldVerticalTopBorders);
+        bottomBoard= LocalConfigs.getIntValue(LocalConfigs.worldVerticalBottomBorders);
+        sideBoard=LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders);
 
             float wOld = LocalConfigs.getDisplayWidth() - 2 * sideBoard;
             float hOld = LocalConfigs.getDisplayHeight()

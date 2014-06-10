@@ -52,7 +52,7 @@ public class World {
         UnitLayer.init();
         BloodLayer.init();
         MessagesLayer.init();
-        Bullet.reInit();
+        Bullet.init();
 
         reInit();
     }
@@ -109,11 +109,10 @@ public class World {
 
     public static void reInit() {
         AI.reInit();
+        CanvaLayer.reInit();
         MessagesLayer.reInit();
         TerritoryLayer.reInit();
-        DisplayMetrics metrics = res.getDisplayMetrics();
         TimerLayer.reInit();
-        TimerLayer.resize(metrics.widthPixels, metrics.heightPixels);
     }
 
     public void pausePainting() {
@@ -156,6 +155,7 @@ public class World {
         TimerLayer.resize(width, height);
         LocalConfigs.resize(width, height);
         Graphic.resize(width, height);
+        TimerLayer.resize(width, height);
     }
 
     private void update(float dt) {

@@ -8,6 +8,7 @@ public class CanvaLayer {
     private static int bg;
     private static float dx;
     private static int width;
+    private static int speed;
 
     public static void init(int b, int w) {
         bg = b;
@@ -15,9 +16,13 @@ public class CanvaLayer {
         dx = 0;
     }
 
+    public static void reInit() {
+        speed=LocalConfigs.getIntValue(LocalConfigs.canvaSpeed);
+    }
+
     public static void update(float dt) {
         if (LocalConfigs.getBooleanValue(LocalConfigs.canvaDraw)) {
-            dx += dt * 50;
+            dx += dt * speed;
             if (dx > width) dx -= width;
         }
     }

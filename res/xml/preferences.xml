@@ -39,6 +39,14 @@
             android:icon="@drawable/doing"
             android:defaultValue="true"
             />
+    <com.acidspacecompany.epicwallpaperfight.Configs.Preference.IntegerValuePreference
+            android:key="canvasSpeed"
+            android:inputType="number"
+            android:title="@string/canvaSpeed"
+            android:defaultValue="50"
+            min="0"
+            max="100"
+            />
     <com.acidspacecompany.epicwallpaperfight.Configs.Preference.FloatValuePreference
             android:key="messageShowTime"
             android:inputType="number"
@@ -110,35 +118,35 @@
             min="5"
             max="200"
             />
-    <com.acidspacecompany.epicwallpaperfight.Configs.Preference.FloatValuePreference
+    <com.acidspacecompany.epicwallpaperfight.Configs.Preference.IntegerValuePreference
             android:key="worldHorizontalBorders"
             android:inputType="number"
             android:title="@string/worldHorizontalBorders"
             android:summary="@string/worldHorizontalBorders_description"
             android:icon="@drawable/horizontal"
-            android:defaultValue="0.05"
-            min="0.0"
-            max="0.45"
+            android:defaultValue="10"
+            min="0"
+            max="200"
             />
-    <com.acidspacecompany.epicwallpaperfight.Configs.Preference.FloatValuePreference
+    <com.acidspacecompany.epicwallpaperfight.Configs.Preference.IntegerValuePreference
             android:key="worldVerticalTopBorders"
             android:inputType="number"
             android:title="@string/worldVerticalTopBorders"
             android:summary="@string/worldVerticalTopBorders_description"
             android:icon="@drawable/top"
-            android:defaultValue="0.1"
-            min="0.0"
-            max="0.45"
+            android:defaultValue="45"
+            min="0"
+            max="200"
             />
-    <com.acidspacecompany.epicwallpaperfight.Configs.Preference.FloatValuePreference
+    <com.acidspacecompany.epicwallpaperfight.Configs.Preference.IntegerValuePreference
             android:key="worldVerticalBottomBorders"
             android:inputType="number"
             android:title="@string/worldVerticalBottomBorders"
             android:summary="@string/worldVerticalBottomBorders_description"
             android:icon="@drawable/bottom"
-            android:defaultValue="0.05"
-            min="0.0"
-            max="0.45"
+            android:defaultValue="10"
+            min="0"
+            max="200"
             />
 
 </PreferenceScreen>

@@ -15,7 +15,7 @@ public class Bullet extends Unit{
         return squareDistance;
     }
 
-    public static void reInit() {
+    public static void init() {
         distance=Math.abs(getScaledValue(speed/dHealth));
         squareDistance=distance*distance;
     }

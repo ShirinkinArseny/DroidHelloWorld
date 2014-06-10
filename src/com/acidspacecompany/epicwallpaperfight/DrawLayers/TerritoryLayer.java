@@ -15,10 +15,10 @@ public class TerritoryLayer{
     }
 
     public static void resize(int w, int h) {
-        top= h*LocalConfigs.getFloatValue(LocalConfigs.worldVerticalTopBorders);
-        bottom=h*(1- LocalConfigs.getFloatValue(LocalConfigs.worldVerticalBottomBorders));
-        horizontal1= w*LocalConfigs.getFloatValue(LocalConfigs.worldHorizontalBorders);
-        horizontal2=w*(1-LocalConfigs.getFloatValue(LocalConfigs.worldHorizontalBorders));
+        top= LocalConfigs.getIntValue(LocalConfigs.worldVerticalTopBorders);
+        bottom=h- LocalConfigs.getIntValue(LocalConfigs.worldVerticalBottomBorders);
+        horizontal1= LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders);
+        horizontal2=w-LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders);
     }
 
     public static void draw() {
