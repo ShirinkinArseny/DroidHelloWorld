@@ -2,6 +2,8 @@ package com.acidspacecompany.epicwallpaperfight.Units;
 
 import com.acidspacecompany.epicwallpaperfight.Geometry.Rectangle;
 
+import static com.acidspacecompany.epicwallpaperfight.World.getScaledValue;
+
 public class NotControlledUnit extends Rectangle {
     private final int team;
     protected float health;
@@ -10,11 +12,6 @@ public class NotControlledUnit extends Rectangle {
     public enum Type {Man, Giant, Tower, Bullet}
     private final Type type;
     private final float speed;
-    private static float speedCoef;
-
-    public static void init(float speedCoef) {
-        NotControlledUnit.speedCoef=speedCoef;
-    }
 
     public static int getTypeNumber(Type type) {
         switch (type) {
@@ -40,7 +37,7 @@ public class NotControlledUnit extends Rectangle {
         super(x, y, w, h);
         this.team=team;
         this.health=1f;
-        this.speed=speed*speedCoef;
+        this.speed=getScaledValue(speed);
         this.type=type;
         this.healthCoef=healthCoef;
         power=1/healthCoef;

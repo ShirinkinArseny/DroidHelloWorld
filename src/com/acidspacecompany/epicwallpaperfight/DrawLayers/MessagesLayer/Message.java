@@ -4,6 +4,8 @@ import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
 import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Graphic;
 import com.acidspacecompany.epicwallpaperfight.TimeFunctions.LinearTimeFunction;
 
+import static com.acidspacecompany.epicwallpaperfight.World.getScaledValue;
+
 public class Message {
 
     private final String text;
@@ -49,8 +51,8 @@ public class Message {
             Graphic.drawText(x, coordinates.getValue(), size, r, g, b, alpha.getValue(), text);
     }
 
-    public static void init(float sizeCoef) {
-        size=50f*sizeCoef;
-        deltaHeight=65f*sizeCoef;
+    public static void init() {
+        size=getScaledValue(50);
+        deltaHeight=getScaledValue(65);
     }
 }

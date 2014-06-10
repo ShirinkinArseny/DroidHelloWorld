@@ -6,6 +6,8 @@ import com.acidspacecompany.epicwallpaperfight.DrawLayers.Synchroniser;
 import java.util.LinkedList;
 import java.util.Random;
 
+import static com.acidspacecompany.epicwallpaperfight.World.getScaledValue;
+
 public class BloodLayer{
 
     private static LinkedList<Blood> dust;//blood coordinates
@@ -14,10 +16,10 @@ public class BloodLayer{
     private static int deltaPos2;
     private static Random rnd=new Random();
 
-    public static void init(float coef) {
+    public static void init() {
         dust=new LinkedList<>();
         synchroniser =new Synchroniser("BloodLayerSync");
-        deltaPos= (int) (50*coef);
+        deltaPos= (int) (getScaledValue(50));
         deltaPos2=deltaPos/2;
     }
 

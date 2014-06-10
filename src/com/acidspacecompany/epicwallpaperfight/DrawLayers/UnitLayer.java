@@ -33,9 +33,9 @@ public class UnitLayer{
         return kills;
     }
 
-    public static void init(float coef) {
+    public static void init() {
         synchroniser =new Synchroniser("UnitLayerSync");
-        ai=new AI(coef);
+        ai=new AI();
         updateSpawnAndIntersection=new LoopedTicker(0.2f, new Runnable() {
             @Override
             public void run() {

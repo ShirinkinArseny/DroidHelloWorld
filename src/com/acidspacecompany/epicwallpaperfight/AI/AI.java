@@ -6,6 +6,8 @@ import com.acidspacecompany.epicwallpaperfight.Units.NotControlledUnit;
 import java.util.LinkedList;
 import java.util.Random;
 
+import static com.acidspacecompany.epicwallpaperfight.World.getScaledValue;
+
 public class AI {
 
     private final Random rnd;
@@ -14,19 +16,17 @@ public class AI {
     private LinkedList<NotControlledUnit> theirMen = new LinkedList<>();
     private static int aiDeltaTarget;
     private static int aiDeltaTarget2;
-    private static float coef;
 
     public static void reInit() {
-        aiDeltaTarget= (int) (100*coef);
+        aiDeltaTarget= (int) (getScaledValue(100));
         aiDeltaTarget2=2*aiDeltaTarget;
     }
 
-    public AI(float coef) {
+    public AI() {
         rnd=new Random();
         theirGiants = new LinkedList<>();
         theirTowers = new LinkedList<>();
         theirMen = new LinkedList<>();
-        AI.coef=coef;
     }
 
     private float getDeltaPos() {

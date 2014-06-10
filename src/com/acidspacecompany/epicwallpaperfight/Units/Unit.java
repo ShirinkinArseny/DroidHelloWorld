@@ -19,8 +19,7 @@ public class Unit extends ControlledUnit {
         return menTexture[getTeam()][getTypeNumber()];
     }
 
-    public static void init(int[][] menTexture, int[][] sizes, float pictureSizeCoef) {
-        NotControlledUnit.init(pictureSizeCoef);
+    public static void init(int[][] menTexture, int[][] sizes) {
         Unit.menTexture=menTexture;
         Unit.sizes=sizes;
     }

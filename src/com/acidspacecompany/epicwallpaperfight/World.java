@@ -24,7 +24,7 @@ public class World {
     private boolean active = true;//is working
     private long lastTime;
     private static Resources res;
-    private static float pictureSizeCoef=1f;
+    private static float pictureSizeCoef;
 
     private static Bitmap getScaledBitmap(Bitmap b, int size) {
         return Bitmap.createScaledBitmap(b, size, size, true);
@@ -40,16 +40,19 @@ public class World {
         LocalConfigs.init(context);
     }
 
+    public static float getScaledValue(float value) {
+        return pictureSizeCoef*value;
+    }
+
     public static void init() {
         DisplayMetrics metrics = res.getDisplayMetrics();
         pictureSizeCoef=Math.max(metrics.widthPixels, metrics.heightPixels)/1100f;
 
-        loadTextures(metrics.widthPixels, metrics.heightPixels);
-
-        com.acidspacecompany.epicwallpaperfight.DrawLayers.UnitLayer.init(pictureSizeCoef);
-        BloodLayer.init(pictureSizeCoef);
-        MessagesLayer.init(pictureSizeCoef);
-        Bullet.reInit(pictureSizeCoef);
+        loadTextures();
+        UnitLayer.init();
+        BloodLayer.init();
+        MessagesLayer.init();
+        Bullet.reInit();
 
         reInit();
     }
@@ -62,7 +65,7 @@ public class World {
         }
     }
 
-    private static void loadTextures(int w, int h) {
+    private static void loadTextures() {
         Bitmap[][] menTexture = new Bitmap[4][4];
         menTexture[0][0] = getScaledResource(res, R.drawable.red, 32);
         menTexture[0][1] = getScaledResource(res, R.drawable.red, 96);
@@ -91,14 +94,10 @@ public class World {
                 if(menTexture[i][j]!=null)
                     menTextureIDs[i][j]=Graphic.genTexture(menTexture[i][j]);
 
-        Unit.init(menTextureIDs, sizes, pictureSizeCoef);
+        Unit.init(menTextureIDs, sizes);
 
-        Bitmap b=BitmapFactory.decodeResource(res, R.drawable.monospace);
-        float fontTextureSize=Math.min(b.getWidth(),
-                8*Math.max(w, h)/7f);
-
-        Bitmap canva=getScaledBitmap(BitmapFactory.decodeResource(res, R.drawable.grid), power2nearest(256*pictureSizeCoef));
-        CanvaLayer.init(Graphic.genInfinityTexture(canva), (int) (canva.getWidth()*pictureSizeCoef));
+        Bitmap canva=getScaledBitmap(BitmapFactory.decodeResource(res, R.drawable.grid), power2nearest(getScaledValue(256)));
+        CanvaLayer.init(Graphic.genInfinityTexture(canva), (int) (getScaledValue(canva.getWidth())));
 
         Bitmap blood1=getScaledResource(res, R.drawable.blood, 80);
         Bitmap blood2=getScaledResource(res, R.drawable.coal, 80);

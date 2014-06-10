@@ -3,6 +3,7 @@ package com.acidspacecompany.epicwallpaperfight.DrawLayers;
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
 import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Graphic;
 import com.acidspacecompany.epicwallpaperfight.TimeFunctions.LoopedTicker;
+import com.acidspacecompany.epicwallpaperfight.TimeFunctions.NiceMoveTimeFunction;
 
 import static com.acidspacecompany.epicwallpaperfight.DrawLayers.UnitLayer.getMiddleXUnits;
 import static com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Font.getStringWidth;
@@ -14,11 +15,15 @@ public class TimerLayer {
     private static float[] pSmallRed, pSmallBlue;
     private static int clockHeight;
     private static int scoreHeight;
-    private static int score1X, score2X;
     private static float bigSize, smallSize;
-    private static float xPos=0;
-    private static float idealPos=0;
-    private static String time;
+
+    private static NiceMoveTimeFunction timePosition =new NiceMoveTimeFunction(0, 0, 2f);
+    private static NiceMoveTimeFunction score1Position =new NiceMoveTimeFunction(0, 0, 2f);
+    private static NiceMoveTimeFunction score2Position =new NiceMoveTimeFunction(0, 0, 2f);
+
+    private static String time="";
+    private static String s1="";
+    private static String s2="";
     private static int lastTime;
 
     public static void reInit() {
@@ -35,33 +40,33 @@ public class TimerLayer {
     }
 
     public static void resize(int w, int h) {
-
         bigSize=w/4;
         smallSize=w/6;
-
         clockHeight =h/4;
-
-        score1X =w/3;
-        score2X =w*2/3;
         scoreHeight = (int) (clockHeight +bigSize);
-
     }
 
     public static void update(float dt) {
         round.tick(dt);
-        if (Math.abs(xPos-idealPos)>=1f) {
-             xPos+=(idealPos-xPos)*dt;
-        }
-        resetTime();
+
+        timePosition.tick(dt);
+        score1Position.tick(dt);
+        score2Position.tick(dt);
+
+        updateTime();
     }
 
-    private static void resetTime() {
+    private static void updateTime() {
         int seconds= LocalConfigs.getIntValue(LocalConfigs.timerTimer)-(int)(round.getValue());
         if (lastTime!=seconds) {
             int minutes = seconds / 60;
             seconds %= 60;
             time = minutes + ":" + (seconds > 9 ? seconds : "0" + seconds);
-            idealPos=getMiddleXUnits()-getStringWidth(bigSize, time)/2;
+            float mid=getMiddleXUnits();
+            float s1width_15=1.5f*getStringWidth(smallSize, s1);
+            score1Position.setAim(mid-s1width_15);
+            score2Position.setAim(score1Position.getValue()+s1width_15+getStringWidth(smallSize, s2)/2);
+            timePosition.setAim(mid - getStringWidth(bigSize, time) / 2);
             lastTime = seconds;
         }
     }
@@ -70,14 +75,14 @@ public class TimerLayer {
         if (LocalConfigs.getBooleanValue(LocalConfigs.timerDraw)) {
 
             int[] kills = UnitLayer.getTeamSizes();
-            Graphic.drawText(xPos, clockHeight, bigSize, pBig[0], pBig[1], pBig[2], pBig[3], time);
+            Graphic.drawText(timePosition.getValue(), clockHeight, bigSize, pBig[0], pBig[1], pBig[2], pBig[3], time);
 
-            String s1=String.valueOf(kills[1]);
-            String s2=String.valueOf(kills[0]);
+            s1=String.valueOf(kills[1]);
+            s2=String.valueOf(kills[0]);
 
-            Graphic.drawText(score1X - getStringWidth(smallSize, s1)/2, scoreHeight, smallSize,
+            Graphic.drawText(score1Position.getValue(), scoreHeight, smallSize,
                     pSmallRed[0], pSmallRed[1], pSmallRed[2], pSmallRed[3], s1);
-            Graphic.drawText(score2X - getStringWidth(smallSize, s2)/2, scoreHeight, smallSize,
+            Graphic.drawText(score2Position.getValue(), scoreHeight, smallSize,
                     pSmallBlue[0], pSmallBlue[1], pSmallBlue[2], pSmallBlue[3], s2);
         }
     }

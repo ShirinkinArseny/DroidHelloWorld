@@ -1,5 +1,7 @@
 package com.acidspacecompany.epicwallpaperfight.Units;
 
+import static com.acidspacecompany.epicwallpaperfight.World.getScaledValue;
+
 public class Bullet extends Unit{
 
     private final float dx;
@@ -13,8 +15,8 @@ public class Bullet extends Unit{
         return squareDistance;
     }
 
-    public static void reInit(float speedCoef) {
-        distance=Math.abs(speed*speedCoef/dHealth);
+    public static void reInit() {
+        distance=Math.abs(getScaledValue(speed/dHealth));
         squareDistance=distance*distance;
     }
 

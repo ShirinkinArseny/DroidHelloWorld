@@ -1,25 +1,8 @@
 package com.acidspacecompany.epicwallpaperfight.TimeFunctions;
 
-public abstract class TimeFunction {
+public interface TimeFunction {
 
-    protected final float length;
-    protected float time;
-    protected final Runnable action;
+    public void tick(float dt);
 
-    public float getValue() {
-        return time;
-    }
-
-    public void tick(float delta) {
-        time+=delta;
-        if (time>=length) {
-            action.run();
-        }
-    }
-
-    public TimeFunction(float length, Runnable onStop) {
-        this.length=length;
-        time=0;
-        action =onStop;
-    }
+    public float getValue();
 }
