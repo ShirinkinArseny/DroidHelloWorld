@@ -14,9 +14,18 @@ public class NiceMoveTimeFunction implements TimeFunction{
         return t1*t1*from+2*t*t1*lastTo+t*t*to;
     }
 
+    private float tripleBezierCurve(float t) {
+        float t1=(1-t);
+        float t1_2=(1-t)*t1;
+
+        float t_2=t*t;
+
+        return from*t1*t1_2+3*lastTo*t*t1_2+3*to*t_2*t1+to*t_2*t;
+    }
+
     public float getValue() {
         if (time<length)
-            return doubleBezierCurve(time/length);
+            return tripleBezierCurve(time/length);
         else return to;
     }
 

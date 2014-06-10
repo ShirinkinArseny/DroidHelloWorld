@@ -26,6 +26,19 @@
             android:icon="@drawable/doing"
             android:defaultValue="true"
         />
+    <CheckBoxPreference
+            android:key="bloodDraw"
+            android:title="@string/bloodDraw"
+            android:summary="@string/bloodDraw_description"
+            android:icon="@drawable/doing"
+            android:defaultValue="true"
+            />
+    <CheckBoxPreference
+            android:key="canvaDraw"
+            android:title="@string/bloodCanva"
+            android:icon="@drawable/doing"
+            android:defaultValue="true"
+            />
     <com.acidspacecompany.epicwallpaperfight.Configs.Preference.FloatValuePreference
             android:key="messageShowTime"
             android:inputType="number"

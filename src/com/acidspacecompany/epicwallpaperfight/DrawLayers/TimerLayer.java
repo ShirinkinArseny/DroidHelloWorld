@@ -57,7 +57,7 @@ public class TimerLayer {
     }
 
     private static void updateTime() {
-        int seconds= LocalConfigs.getIntValue(LocalConfigs.timerTimer)-(int)(round.getValue());
+        int seconds= (int)(round.getValue());
         if (lastTime!=seconds) {
             int minutes = seconds / 60;
             seconds %= 60;

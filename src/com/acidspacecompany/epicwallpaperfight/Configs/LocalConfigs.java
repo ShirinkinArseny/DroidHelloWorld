@@ -32,6 +32,7 @@ public class LocalConfigs {
     public static final int bloodDraw=getNum();
     public static final int bloodVisibleTime=getNum();
     public static final int bloodCount=getNum();
+    public static final int canvaDraw=getNum();
     public static final int messageShowTime=getNum();
     public static final int messageDraw=getNum();
     public static final int spawnsShowTime=getNum();
@@ -77,6 +78,7 @@ public class LocalConfigs {
         fields.add(new BooleanField("bloodDraw"));
         fields.add(new FloatField("bloodVisibleTime"));
         fields.add(new IntegerField("bloodCount"));
+        fields.add(new BooleanField("canvaDraw"));
         fields.add(new FloatField("messageShowTime"));
         fields.add(new BooleanField("messageDraw"));
         fields.add(new FloatField("spawnsShowTime"));

@@ -6,6 +6,7 @@
     <string name="bloodVisibleTime"                       >The time of blood disappearance</string>
     <string name="bloodCount"                             >Less blood or more blood?</string>
     <string name="bloodDraw"                              >Blood</string>
+    <string name="bloodCanva"                              >Background</string>
     <string name="messageShowTime"                        >The time of message disappearance</string>
     <string name="messageDraw"                            >Messages</string>
     <string name="spawnsShowTime"                         >The time of spawn-places disappearance</string>
