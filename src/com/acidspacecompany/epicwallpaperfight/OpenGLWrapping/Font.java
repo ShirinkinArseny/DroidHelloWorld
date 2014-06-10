@@ -1,35 +1,22 @@
-package com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Shaders.Generators;
+package com.acidspacecompany.epicwallpaperfight.OpenGLWrapping;
 
 import android.content.res.Resources;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 
-import com.acidspacecompany.epicwallpaperfight.Configs.BicycleDebugger;
-import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Graphic;
 import com.acidspacecompany.epicwallpaperfight.R;
 
-public class FontHandler {
+public class Font {
 
-    private static final String TAG = "FontLoader";
-
-
-    //ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#%*()-+={}[]<>'\|/:;
-    //Карта шрифтов, должна совпадать с картой в текстуре шрифта
     private static final String map = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#%*()-+={}[]<>\'\\|/:;";
 
-    private static final int letterNo = 58;
-
-    private static int[][] dimensions = new int[letterNo][2];
-    private static int[] textures = new int[letterNo];
-
-
-    public static int[][] getDimensions() {
-        return dimensions;
-    }
+    private static final int[] dimensions = {152,137,140,141,131,131,145,145,67,127,142,124,169,145,147,138,147,139,142,140,141,150,186,143,143,135,130,92,131,130,137,127,131,132,133,132,67,198,144,169,120,93,94,91,139,120,100,100,83,93,121,123,65,112,77,110,71,71};
+    private static int[] textures = new int[dimensions.length];
 
     public static void loadFont(Resources res) {
+
         int currentPosition = 0;
-        Bitmap[] bitmaps = new Bitmap[letterNo];
+        Bitmap[] bitmaps = new Bitmap[dimensions.length];
 
         bitmaps[currentPosition++] = Bitmap.createBitmap(BitmapFactory.decodeResource(res, R.drawable.letter0));
         bitmaps[currentPosition++] = Bitmap.createBitmap(BitmapFactory.decodeResource(res, R.drawable.letter1));
@@ -90,54 +77,45 @@ public class FontHandler {
         bitmaps[currentPosition++] = Bitmap.createBitmap(BitmapFactory.decodeResource(res, R.drawable.letter56));
         bitmaps[currentPosition] = Bitmap.createBitmap(BitmapFactory.decodeResource(res, R.drawable.letter57));
 
-        for (int i = 0; i < bitmaps.length; i++) {
-            dimensions[i][0] = bitmaps[i].getWidth();
-            dimensions[i][1] = bitmaps[i].getHeight();
-        }
         textures = Graphic.genTextures(bitmaps);
     }
 
-    public static void drawString(String string, float height, float x, float y, float r, float g, float b, float a) {
-        string = string.toUpperCase();
-        final int length = string.length();
+    public static void drawString(String string, float size, float x, float y, float r, float g, float b, float a) {
         int position;
         //Узнаем, на сколько нужно масштабировать
-        final float scaleFactor = height / dimensions[0][1];
-        float scaledWidth = dimensions[0][0] * scaleFactor;
-        for (int i = 0; i < length; i++) {
+        float scaleFactor = size / 256f;
+        float scaledWidth;
+        for (int i = 0; i < string.length(); i++) {
             if (string.charAt(i) != ' ') {
                 //Позиция символа в карте
                 position = map.indexOf(string.charAt(i));
-                scaledWidth = dimensions[position][0] * scaleFactor;
-                Graphic.drawBitmap(textures[position], x, y, scaledWidth, height, r, g, b, a);
+                scaledWidth = dimensions[position] * scaleFactor;
+                Graphic.drawBitmap(textures[position], x, y, size, size, r, g, b, a);
                 x += scaledWidth;
             } else {
-                x += scaledWidth;
+                x += size;
             }
         }
     }
 
 
-    public static float getStringWidth(float height, String string) {
+    public static float getStringWidth(float size, String string) {
         float x = 0.0f;
-        string = string.toUpperCase();
-        final int length = string.length();
         int position;
         //Узнаем, на сколько нужно масштабировать
-        final float scaleFactor = height / dimensions[0][1];
-        float scaledWidth = dimensions[0][0] * scaleFactor;
-        for (int i = 0; i < length; i++) {
-            if (string.charAt(i) != ' ') {
-                //Позиция символа в карте
-                position = map.indexOf(string.charAt(i));
-                scaledWidth = dimensions[position][0] * scaleFactor;
+        final float scaleFactor = size / 256;
+        float scaledWidth;
+        char c;
+        for (int i=0; i<string.length(); i++) {
+            if ((c=string.charAt(i)) != ' ') {
+                position = map.indexOf(c);
+                scaledWidth = dimensions[position] * scaleFactor;
                 x += scaledWidth;
             }
             else {
-                x += scaledWidth;
+                x += size;
             }
         }
-
         return x;
     }
 }

@@ -1,7 +1,7 @@
 package com.acidspacecompany.epicwallpaperfight.DrawLayers.MessagesLayer;
 
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
-import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Graphic;
+import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Graphic;
 import com.acidspacecompany.epicwallpaperfight.TimeFunctions.LinearTimeFunction;
 
 public class Message {
@@ -50,7 +50,7 @@ public class Message {
     }
 
     public static void init(float sizeCoef) {
-        size=30f*sizeCoef;
+        size=50f*sizeCoef;
         deltaHeight=65f*sizeCoef;
     }
 }

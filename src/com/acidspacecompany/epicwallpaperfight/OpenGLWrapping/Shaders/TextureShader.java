@@ -1,8 +1,8 @@
-package com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Shaders;
+package com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Shaders;
 
 import android.content.Context;
 import android.opengl.GLES20;
-import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Shaders.Generators.ShaderGenerator;
+import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Shaders.Generators.ShaderGenerator;
 import com.acidspacecompany.epicwallpaperfight.R;
 
 import java.nio.FloatBuffer;
@@ -37,7 +37,7 @@ public class TextureShader implements Shader  {
 
     private int uColor;
     public void setColor(float r,float g,float b, float a) {
-        GLES20.glUniform4f(uColor, r,g,b,a);
+        GLES20.glUniform4f(uColor, r, g, b, a);
     }
 
     public void use() {

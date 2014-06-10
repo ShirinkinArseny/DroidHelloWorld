@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.*;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import com.acidspacecompany.epicwallpaperfight.AI.AI;
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.BloodLayer.Blood;
@@ -15,7 +14,7 @@ import com.acidspacecompany.epicwallpaperfight.DrawLayers.SpawnLayer.SpawnsLayer
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.TerritoryLayer;
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.TimerLayer;
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.UnitLayer;
-import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Graphic;
+import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Graphic;
 import com.acidspacecompany.epicwallpaperfight.Units.*;
 
 import java.util.*;
@@ -112,9 +111,10 @@ public class World {
     public static void reInit() {
         AI.reInit();
         MessagesLayer.reInit();
-        com.acidspacecompany.epicwallpaperfight.DrawLayers.TerritoryLayer.reInit();
+        TerritoryLayer.reInit();
         DisplayMetrics metrics = res.getDisplayMetrics();
-        com.acidspacecompany.epicwallpaperfight.DrawLayers.TimerLayer.reInit(metrics.widthPixels, metrics.heightPixels);
+        TimerLayer.reInit();
+        TimerLayer.resize(metrics.widthPixels, metrics.heightPixels);
     }
 
     public void pausePainting() {
@@ -152,20 +152,20 @@ public class World {
     }
 
     public void setSurface(int width, int height) {
-        com.acidspacecompany.epicwallpaperfight.DrawLayers.TerritoryLayer.resize(width, height);
-        com.acidspacecompany.epicwallpaperfight.DrawLayers.UnitLayer.resize(width, height);
-        com.acidspacecompany.epicwallpaperfight.DrawLayers.TimerLayer.resize(width, height);
+        TerritoryLayer.resize(width, height);
+        UnitLayer.resize(width, height);
+        TimerLayer.resize(width, height);
         LocalConfigs.resize(width, height);
         Graphic.resize(width, height);
     }
 
     private void update(float dt) {
-        com.acidspacecompany.epicwallpaperfight.DrawLayers.TimerLayer.update(dt);
-        com.acidspacecompany.epicwallpaperfight.DrawLayers.UnitLayer.update(dt);
+        TimerLayer.update(dt);
+        UnitLayer.update(dt);
         SpawnsLayer.update(dt);
         BloodLayer.update(dt);
         MessagesLayer.update(dt);
-        com.acidspacecompany.epicwallpaperfight.DrawLayers.CanvaLayer.update(dt);
+        CanvaLayer.update(dt);
     }
 
     private void draw() {

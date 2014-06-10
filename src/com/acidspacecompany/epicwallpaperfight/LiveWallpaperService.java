@@ -3,9 +3,9 @@ package com.acidspacecompany.epicwallpaperfight;
 import android.content.Context;
 import android.preference.PreferenceManager;
 import com.acidspacecompany.epicwallpaperfight.Ads.AdBuilder;
-import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Graphic;
-import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.LifecycleRenderer;
-import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.OpenGLES20LiveWallpaperService;
+import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Graphic;
+import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.LifecycleRenderer;
+import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.OpenGLES20LiveWallpaperService;
 
 import javax.microedition.khronos.egl.EGLConfig;
 import javax.microedition.khronos.opengles.GL10;

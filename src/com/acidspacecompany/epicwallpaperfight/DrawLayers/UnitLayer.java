@@ -275,6 +275,17 @@ public class UnitLayer{
         }
     }
 
+    public static float getMiddleXUnits() {
+        float x=LocalConfigs.getDisplayWidth()/2;
+        int size=1;
+        for (LinkedList<Unit> u: dividedUnits)
+        for (Unit u2: u) {
+            x += u2.getX();
+            size++;
+        }
+        return x/size;
+    }
+
     public static void update(float dt) {
         synchroniser.waitForUnlockAndLock();
         doRegeneration(dt);

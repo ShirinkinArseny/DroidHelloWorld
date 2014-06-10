@@ -2,7 +2,7 @@ package com.acidspacecompany.epicwallpaperfight.Units;
 
 import com.acidspacecompany.epicwallpaperfight.Geometry.Point;
 import com.acidspacecompany.epicwallpaperfight.Geometry.Rectangle;
-import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Graphic;
+import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Graphic;
 
 public class Unit extends ControlledUnit {
 

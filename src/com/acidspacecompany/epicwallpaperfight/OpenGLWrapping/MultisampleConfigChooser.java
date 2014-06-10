@@ -1,4 +1,4 @@
-package com.acidspacecompany.epicwallpaperfight.OpenGLIntegration;
+package com.acidspacecompany.epicwallpaperfight.OpenGLWrapping;
 
 import javax.microedition.khronos.egl.EGL10;
 import javax.microedition.khronos.egl.EGLConfig;

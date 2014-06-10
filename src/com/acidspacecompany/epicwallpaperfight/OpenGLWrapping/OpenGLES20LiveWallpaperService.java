@@ -1,4 +1,4 @@
-package com.acidspacecompany.epicwallpaperfight.OpenGLIntegration;
+package com.acidspacecompany.epicwallpaperfight.OpenGLWrapping;
 
 import android.content.Context;
 import android.opengl.GLSurfaceView;

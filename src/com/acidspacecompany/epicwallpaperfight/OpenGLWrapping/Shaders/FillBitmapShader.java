@@ -1,8 +1,8 @@
-package com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Shaders;
+package com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Shaders;
 
 import android.content.Context;
 import android.opengl.GLES20;
-import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Shaders.Generators.ShaderGenerator;
+import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Shaders.Generators.ShaderGenerator;
 import com.acidspacecompany.epicwallpaperfight.R;
 
 public class FillBitmapShader {

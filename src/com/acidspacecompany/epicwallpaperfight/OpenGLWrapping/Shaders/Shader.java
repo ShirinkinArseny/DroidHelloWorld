@@ -1,4 +1,4 @@
-package com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Shaders;
+package com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Shaders;
 
 import java.nio.FloatBuffer;
 

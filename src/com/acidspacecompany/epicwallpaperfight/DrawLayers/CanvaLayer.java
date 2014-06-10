@@ -1,6 +1,6 @@
 package com.acidspacecompany.epicwallpaperfight.DrawLayers;
 
-import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Graphic;
+import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Graphic;
 
 public class CanvaLayer {
 

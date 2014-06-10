@@ -1,4 +1,4 @@
-package com.acidspacecompany.epicwallpaperfight.OpenGLIntegration;
+package com.acidspacecompany.epicwallpaperfight.OpenGLWrapping;
 
 import android.content.Context;
 import android.graphics.Bitmap;
@@ -6,9 +6,8 @@ import android.opengl.Matrix;
 import com.acidspacecompany.epicwallpaperfight.Configs.BicycleDebugger;
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
 import com.acidspacecompany.epicwallpaperfight.Geometry.Rectangle;
-import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Shaders.*;
-import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Shaders.Generators.FontHandler;
-import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Shaders.Generators.TextureGenerator;
+import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Shaders.*;
+import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Shaders.Generators.TextureGenerator;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;
@@ -116,7 +115,7 @@ public class Graphic {
         fillBitmapShader = new FillBitmapShader(context);
         fillBitmapShader.validate();
 
-        FontHandler.loadFont(context.getResources());
+        Font.loadFont(context.getResources());
 
         //Создаем VBO для вершин прямоугольника
         int[] buffers = new int[1];
@@ -426,73 +425,8 @@ public class Graphic {
 
     }
 
-
-    /*//Отрисовка шрифтов
-
-    private static int fontTexture;
-    private static FontShader fontShader;*/
-
-    /**
-     * Задание шрифта для отрисовки текста
-     * @param fontTextureInitialize Итентификатор текстуры шрифта
-     */
-   /* public static void initFont(int fontTextureInitialize) {
-        fontTexture = fontTextureInitialize;
-    }
-
-    //ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#%*()-+={}[]<>'\|/:;
-    //Карта шрифтов, должна совпадать с картой в текстуре шрифта
-    private static final String map = "ABCDEFGHIJKLMNOPQRSTUVWXYZ0123456789!@#%*()-+={}[]<>\'\\|/:;";  */
-
-    /**
-     * Создание контекста для рисования текста
-     */
-    /*private static void initText() {
-            fontShader.use();
-            glBindBuffer(GL_ARRAY_BUFFER, vboId);
-            //Определяем местонахождение всех атрибутов
-            final int aPosition = fontShader.get_aPosition();
-            final int aTexturePosition = fontShader.get_aTextureCoordinates();
-            glEnableVertexAttribArray(aPosition);
-            glVertexAttribPointer(aPosition, POSITION_COMPONENT_COUNT, GL_FLOAT, false, 0, 0);
-            glEnableVertexAttribArray(aTexturePosition);
-            glVertexAttribPointer(aTexturePosition, UV_COMPONENT_COUNT, GL_FLOAT, false, 0, 0);
-            //Освобождаем VBO
-            glBindBuffer(GL_ARRAY_BUFFER, 0);
-
-            //Задаем текстуру шрифта
-            glActiveTexture(GL_TEXTURE0);
-            fontShader.setTexture(0);
-            glBindTexture(GL_TEXTURE_2D, fontTexture);
-
-            //Задаем размер одного символа
-            fontShader.setSymbolDimensions(1.0f / 8, 1.0f / 8);
-    }
-
-    public static final float symbolSpaceCoef=0.55f;  */
-
     public static void drawText(float x, float y, float size, float r, float g, float b, float a, String text) {
-        /*if (currentMode != Mode.DRAW_TEXT) {
-            BicycleDebugger.e(TAG, "Incorrect drawing mode");
-        } else {
-            final int textLength = text.length();
-            fontShader.setColor(r, g, b, a);
-            for (int i = 0; i < textLength; i++) {
-                if (text.charAt(i) != ' ') {
-                    createRectangle(x, y, size, size);
-                    fontShader.setMatrix(resultMatrix, 0);
-                    int posX = map.indexOf(text.charAt(i));
-                    int posY = posX / 8;
-                    posX %= 8;
-                    //Переводим в текстурную систему координат и отправляем в шейдер
-                    fontShader.setCharPosition(posX, posY);
-                    //Отрисовываем
-                    drawOneRectangle();
-                }
-                x += symbolSpaceCoef * size;
-            }
-        } */
-        FontHandler.drawString(text, size, x, y, r, g, b, a);
+        Font.drawString(text, size, x, y, r, g, b, a);
     }
 
 }

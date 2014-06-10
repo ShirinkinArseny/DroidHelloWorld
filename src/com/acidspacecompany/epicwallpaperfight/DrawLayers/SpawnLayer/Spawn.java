@@ -2,7 +2,7 @@ package com.acidspacecompany.epicwallpaperfight.DrawLayers.SpawnLayer;
 
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
 import com.acidspacecompany.epicwallpaperfight.Geometry.Rectangle;
-import com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Graphic;
+import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Graphic;
 import com.acidspacecompany.epicwallpaperfight.TimeFunctions.LinearTimeFunction;
 
 public class Spawn extends Rectangle{

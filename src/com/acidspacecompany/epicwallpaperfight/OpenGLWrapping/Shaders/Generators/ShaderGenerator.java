@@ -1,4 +1,4 @@
-package com.acidspacecompany.epicwallpaperfight.OpenGLIntegration.Shaders.Generators;
+package com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Shaders.Generators;
 
 import android.content.Context;
 import com.acidspacecompany.epicwallpaperfight.Configs.BicycleDebugger;
