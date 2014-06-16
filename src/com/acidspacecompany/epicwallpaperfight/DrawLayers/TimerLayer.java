@@ -17,9 +17,9 @@ public class TimerLayer {
     private static int scoreHeight;
     private static float bigSize, smallSize;
 
-    private static NiceMoveTimeFunction timePosition =new NiceMoveTimeFunction(0, 0, 2f);
-    private static NiceMoveTimeFunction score1Position =new NiceMoveTimeFunction(0, 0, 2f);
-    private static NiceMoveTimeFunction score2Position =new NiceMoveTimeFunction(0, 0, 2f);
+    private static NiceMoveTimeFunction timePosition =new NiceMoveTimeFunction(0, 0, 10f);
+    private static NiceMoveTimeFunction score1Position =new NiceMoveTimeFunction(0, 0, 10f);
+    private static NiceMoveTimeFunction score2Position =new NiceMoveTimeFunction(0, 0, 10f);
 
     private static String time="";
     private static String s1="";
@@ -63,9 +63,9 @@ public class TimerLayer {
             seconds %= 60;
             time = minutes + ":" + (seconds > 9 ? seconds : "0" + seconds);
             float mid=getMiddleXUnits();
-            float s1width_15=1.5f*getStringWidth(smallSize, s1);
+            float s1width_15=1.2f*getStringWidth(smallSize, s1);
             score1Position.setAim(mid-s1width_15);
-            score2Position.setAim(score1Position.getValue()+s1width_15+getStringWidth(smallSize, s2)/2);
+            score2Position.setAim(score1Position.getValue()+s1width_15+getStringWidth(smallSize, s2)*0.2f);
             timePosition.setAim(mid - getStringWidth(bigSize, time) / 2);
             lastTime = seconds;
         }

@@ -7,7 +7,7 @@ import com.acidspacecompany.epicwallpaperfight.Configs.BicycleDebugger;
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
 import com.acidspacecompany.epicwallpaperfight.Geometry.Rectangle;
 import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Shaders.*;
-import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Shaders.Generators.TextureGenerator;
+import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Generators.TextureGenerator;
 
 import java.nio.ByteBuffer;
 import java.nio.ByteOrder;

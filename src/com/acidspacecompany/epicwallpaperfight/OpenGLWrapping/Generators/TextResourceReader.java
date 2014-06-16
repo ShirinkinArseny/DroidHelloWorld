@@ -1,4 +1,4 @@
-package com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Shaders.Generators;
+package com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Generators;
 
 import android.content.Context;
 import android.content.res.Resources;
