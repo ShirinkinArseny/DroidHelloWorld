@@ -179,7 +179,8 @@ public class Graphic {
     public enum Mode {
         FILL_BITMAP,
         DRAW_RECTANGLES,
-        DRAW_BITMAPS
+        DRAW_BITMAPS,
+        DRAW_LINES
     }
 
     private static Mode currentMode;
@@ -244,9 +245,9 @@ public class Graphic {
                 break;
             case DRAW_BITMAPS:    initBitmaps();
                 break;
-           // case DRAW_TEXT: initText();
-           //     break;
             case FILL_BITMAP: initFillBitmap();
+                break;
+            case DRAW_LINES: initLines();
                 break;
         }
     }
@@ -388,7 +389,12 @@ public class Graphic {
         lineBuffer.position(0);
         glEnableVertexAttribArray(aPosition);
         glVertexAttribPointer(aPosition, POSITION_COMPONENT_COUNT, GL_FLOAT, false, 0, lineBuffer);
+        //Задаем цвет
         fillColorShader.setColor(r,g,b,a);
+        //Ширина линии задается не в шейдере так как
+        //она используется на этапе растеризации,
+        //а не на этапе шейдера
+        glLineWidth(width);
         useMatrix(fillColorShader);
         glDrawArrays(GL_LINES, 0, 2);
     }
