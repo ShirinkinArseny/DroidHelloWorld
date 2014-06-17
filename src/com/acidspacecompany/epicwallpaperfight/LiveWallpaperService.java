@@ -52,7 +52,6 @@ public class LiveWallpaperService extends OpenGLES20LiveWallpaperService {
 
         @Override
         public void onSurfaceCreated(GL10 gl, EGLConfig config) {
-
             Graphic.init(getBaseContext());
             World.init();
         }
