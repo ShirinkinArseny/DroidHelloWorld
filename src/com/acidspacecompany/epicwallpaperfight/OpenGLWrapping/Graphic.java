@@ -96,6 +96,7 @@ public class Graphic {
     private static TextureShader textureShader;
     //Шейдер для замощения всего одним битмапом
     private static FillBitmapShader fillBitmapShader;
+    //Шейдер для отрисовки прямых
 
     //Итентификатор VBO
     private static int vboId;
@@ -179,7 +180,7 @@ public class Graphic {
         FILL_BITMAP,
         DRAW_RECTANGLES,
         DRAW_BITMAPS,
-        DRAW_TEXT
+        DRAW_LINES
     }
 
     private static Mode currentMode;
@@ -244,9 +245,9 @@ public class Graphic {
                 break;
             case DRAW_BITMAPS:    initBitmaps();
                 break;
-           // case DRAW_TEXT: initText();
-           //     break;
             case FILL_BITMAP: initFillBitmap();
+                break;
+            case DRAW_LINES: initLines();
                 break;
         }
     }
@@ -326,6 +327,13 @@ public class Graphic {
             1,1,    1,1
     });
 
+    private static void initLines() {
+        //Используем шейдер для заливки цветом
+        //Так как фактически OpenGL без разницы что заливать цветом
+        //Прямоугольник или трекгольник
+        fillColorShader.use();
+    }
+
     private static void initFillBitmap() {
         //Используем верную программу
         fillBitmapShader.use();
@@ -372,6 +380,25 @@ public class Graphic {
         drawOneRectangle();
         glBindTexture(GL_TEXTURE_2D, 0);
         glUseProgram(0);
+    }
+
+    //Буффер для хранения координат вершин линии
+    private static FloatBuffer lineBuffer = createFloatBuffer(4);
+    public static void drawLine(float x1, float y1, float x2, float y2, float width, float r, float g, float b, float a) {
+        putValuesIntoFloatBuffer(new float[]{x1,y1,x2,y2}, lineBuffer);
+        //Передаем позицию линии в шейдер
+        final int aPosition = fillColorShader.get_aPosition();
+        lineBuffer.position(0);
+        glEnableVertexAttribArray(aPosition);
+        glVertexAttribPointer(aPosition, POSITION_COMPONENT_COUNT, GL_FLOAT, false, 0, lineBuffer);
+        //Задаем цвет
+        fillColorShader.setColor(r,g,b,a);
+        //Ширина линии задается не в шейдере так как
+        //она используется на этапе растеризации,
+        //а не на этапе шейдера
+        glLineWidth(width);
+        useMatrix(fillColorShader);
+        glDrawArrays(GL_LINES, 0, 2);
     }
 
 
