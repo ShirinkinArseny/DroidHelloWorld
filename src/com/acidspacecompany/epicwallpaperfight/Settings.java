@@ -92,6 +92,7 @@ public class Settings extends PreferenceActivity {
     private static void destroySettings() {
         PreferenceManager.getDefaultSharedPreferences(me).edit().clear().commit();
         PreferenceManager.setDefaultValues(me, R.xml.preferences, false);
+        LocalConfigs.applySettings();
         exit();
 
     }

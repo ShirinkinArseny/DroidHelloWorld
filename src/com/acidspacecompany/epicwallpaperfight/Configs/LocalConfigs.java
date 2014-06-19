@@ -50,10 +50,11 @@ public class LocalConfigs {
     public static final int worldVerticalTopBorders=getNum();
     public static final int worldVerticalBottomBorders=getNum();
 
+    private static SharedPreferences settings;
     private static SharedPreferences.OnSharedPreferenceChangeListener settingsListener;
 
     public static void init(Context context) {
-        SharedPreferences settings = PreferenceManager.getDefaultSharedPreferences(context);
+        settings = PreferenceManager.getDefaultSharedPreferences(context);
         settingsListener = new SharedPreferences.OnSharedPreferenceChangeListener() {
             @Override
             public void onSharedPreferenceChanged(SharedPreferences sharedPreferences, String key) {
@@ -98,6 +99,10 @@ public class LocalConfigs {
         fields.add(new IntegerField("worldVerticalBottomBorders"));
         settingsListener.onSharedPreferenceChanged(settings, null);
         BicycleDebugger.i("Configs", "Loaded successfully");
+    }
+
+    public static void applySettings() {
+        settingsListener.onSharedPreferenceChanged(settings, null);
     }
 
     public static ArrayList<ConfigField> getFields() {
