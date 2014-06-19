@@ -97,7 +97,7 @@ public class World {
         Unit.init(menTextureIDs, sizes);
 
         Bitmap canva=getScaledBitmap(BitmapFactory.decodeResource(res, R.drawable.grid), power2nearest(getScaledValue(256)));
-        CanvaLayer.init(Graphic.genInfinityTexture(canva), (int) (getScaledValue(canva.getWidth())));
+        CanvaLayer.init(Graphic.genInfinityTexture(canva), (int) (getScaledValue(canva.getWidth())), LocalConfigs.getPaintingType());
 
         Bitmap blood1=getScaledResource(res, R.drawable.blood, 80);
         Bitmap blood2=getScaledResource(res, R.drawable.coal, 80);

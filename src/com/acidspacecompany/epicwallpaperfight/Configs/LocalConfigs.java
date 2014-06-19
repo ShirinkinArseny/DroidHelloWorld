@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.SharedPreferences;
 import android.preference.PreferenceManager;
 import android.util.Log;
+import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Graphic;
 import com.acidspacecompany.epicwallpaperfight.World;
 
 import java.util.ArrayList;
@@ -17,6 +18,8 @@ public class LocalConfigs {
 
 
     private static boolean isListening = true;
+    private static Graphic.PaintingType paintingType;
+
     public static void setListening(boolean value) {
         isListening = value;
     }
@@ -166,4 +169,7 @@ public class LocalConfigs {
     private static int displayWidth;
     private static int displayHeight;
 
+    public static Graphic.PaintingType getPaintingType() {
+        return paintingType;
+    }
 }

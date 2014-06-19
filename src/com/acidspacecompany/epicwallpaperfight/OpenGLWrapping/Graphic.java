@@ -345,13 +345,15 @@ public class Graphic {
 
     }
 
+    public enum PaintingType {Tile, Fill}
+
     /**
      * Замощение битмапом (подробнее:http://cs539402.vk.me/u41272716/docs/d973cab3e84b/22.png?extra=Z-300gQW1h269BKGF0Rqg1ikgVy-GqIjf7NxXPS62Da0YORXmbgp3H6EU2RBjH1gJNFQfN7Gvl5DjQwClt036Mm1QM1rur0)
      * @param texture Текстура для замощения
      * @param width Ширина текстуры
      * @param dx Смещение
      */
-    public static void fillBitmap(int texture, float width, float dx) {
+    public static void fillBitmap(int texture, float width, float dx, PaintingType ft) {
         //Получаем ширину экрана
         final int screenWidth = LocalConfigs.getDisplayWidth(), screenHeight = LocalConfigs.getDisplayHeight();
         //Переводим смещение в систему координат OpenGL
