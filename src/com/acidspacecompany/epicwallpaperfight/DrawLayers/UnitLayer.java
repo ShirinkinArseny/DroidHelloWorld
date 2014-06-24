@@ -1,5 +1,6 @@
 package com.acidspacecompany.epicwallpaperfight.DrawLayers;
 
+import android.util.Log;
 import com.acidspacecompany.epicwallpaperfight.AI.AI;
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.BloodLayer.BloodLayer;
@@ -61,16 +62,17 @@ public class UnitLayer{
             float wNew = width - 2 *sideBoard;
             float hNew = height - topBoard-bottomBoard;
 
-
         synchroniser.waitForUnlockAndLock();
             for (int i = 0; i < 6; i++)
                 for (Unit u : dividedUnits[i]) {
 
-                    float posX = (u.getX() - sideBoard)
-                            / wOld * wNew +sideBoard;
+                    float posOtnX = (u.getX() - sideBoard)/ wOld;
 
-                    float posY = (u.getY() - topBoard)
-                            / hOld * hNew + topBoard;
+                    float posOtnY = (u.getY() - topBoard)/ hOld;
+
+                    float posX = posOtnY * wNew +sideBoard;
+
+                    float posY = posOtnX * hNew + topBoard;
                     u.setPosition(posX, posY);
                 }
         synchroniser.unlock();

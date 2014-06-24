@@ -150,12 +150,14 @@ public class World {
     }
 
     public void setSurface(int width, int height) {
-        TerritoryLayer.resize(width, height);
-        UnitLayer.resize(width, height);
-        TimerLayer.resize(width, height);
-        LocalConfigs.resize(width, height);
-        Graphic.resize(width, height);
-        TimerLayer.resize(width, height);
+        if (LocalConfigs.getDisplayWidth()!=width && LocalConfigs.getDisplayHeight()!=height) {
+            TerritoryLayer.resize(width, height);
+            UnitLayer.resize(width, height);
+            TimerLayer.resize(width, height);
+            Graphic.resize(width, height);
+            TimerLayer.resize(width, height);
+            LocalConfigs.resize(width, height);
+        }
     }
 
     private void update(float dt) {
