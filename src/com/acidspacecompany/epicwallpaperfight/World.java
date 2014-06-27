@@ -104,7 +104,7 @@ public class World {
         Blood.init(new int[]{Graphic.genTexture(blood1), Graphic.genTexture(blood2)}, blood1.getWidth(), blood1.getHeight());
 
         Bitmap spawn=getScaledResource(res, R.drawable.spawn, 74);
-        SpawnsLayer.init(Graphic.genTexture(spawn), spawn.getWidth()/2, spawn.getHeight()/2);
+        SpawnsLayer.init(Graphic.genTexture(spawn), spawn.getWidth(), spawn.getHeight());
     }
 
     public static void reInit() {

@@ -63,6 +63,7 @@ public class Unit extends ControlledUnit {
     }
 
     public void drawShadow() {
+        if (getType()!=Type.Bullet)
         Graphic.drawBitmap(getShadow(), shadow);
     }
 
@@ -72,11 +73,12 @@ public class Unit extends ControlledUnit {
 
 
     public void drawHealth() {
+        if (getType()!=Type.Bullet){
         float health=Math.max(0, this.health);
         float w2=getWidth() * health/2;
         Graphic.drawRect(getX()-w2, getY0()-5,
                 getX()+w2 * health, getY0()-3,
-                1 - health, 0.75f *health, 0, 1);
+                1 - health, 0.75f *health, 0, 1);  }
     }
 
     public void kill() {

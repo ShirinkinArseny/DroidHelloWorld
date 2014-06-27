@@ -1,6 +1,5 @@
 package com.acidspacecompany.epicwallpaperfight.DrawLayers;
 
-import android.util.Log;
 import com.acidspacecompany.epicwallpaperfight.AI.AI;
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.BloodLayer.BloodLayer;
@@ -10,8 +9,7 @@ import com.acidspacecompany.epicwallpaperfight.Geometry.Point;
 import com.acidspacecompany.epicwallpaperfight.TimeFunctions.LoopedTicker;
 import com.acidspacecompany.epicwallpaperfight.Units.*;
 
-import java.util.LinkedList;
-import java.util.Random;
+import java.util.*;
 
 public class UnitLayer{
 
@@ -22,7 +20,7 @@ public class UnitLayer{
     private static final LinkedList<NotControlledUnit>[] uncontrolledUnits=
             new LinkedList[]{new LinkedList(), new LinkedList()}; //Lists of units to send in AI
     private static final LinkedList<Unit>[] dividedUnits=
-            new LinkedList[]{new LinkedList(), new LinkedList(), new LinkedList(), new LinkedList(), new LinkedList(), new LinkedList()}; //Lists of units to send in AI
+            new LinkedList[]{new LinkedList(), new LinkedList()}; //Lists of units to send in AI
     private static int[] kills=new int[]{0, 0};
     private static Synchroniser synchroniser;
     private static LoopedTicker updateSpawnAndIntersection;
@@ -41,6 +39,7 @@ public class UnitLayer{
             @Override
             public void run() {
                 synchroniser.waitForUnlockAndLock();
+                sortPeople();
                 updateIntersections();
                 updateAI();
                 autoSpawn();
@@ -63,7 +62,7 @@ public class UnitLayer{
             float hNew = height - topBoard-bottomBoard;
 
         synchroniser.waitForUnlockAndLock();
-            for (int i = 0; i < 6; i++)
+            for (int i = 0; i < 2; i++)
                 for (Unit u : dividedUnits[i]) {
 
                     float posOtnX = (u.getX() - sideBoard)/ wOld;
@@ -87,12 +86,9 @@ public class UnitLayer{
 
         for (int i=0; i<2; i++) {
             for (Unit u : dividedUnits[i]) {
+                if (u.getType()!= NotControlledUnit.Type.Bullet) {
                 controlledUnits[i].add(u);
-                uncontrolledUnits[i].add(u);
-            }
-            for (Unit u : dividedUnits[i+2]) {
-                controlledUnits[i].add(u);
-                uncontrolledUnits[i].add(u);
+                uncontrolledUnits[i].add(u);   }
             }
         }
 
@@ -120,54 +116,42 @@ public class UnitLayer{
         }
     }
 
+    private static final ArrayList<Unit> additionals=new ArrayList<>();
     private static void moveUnits(float dt) {
-        for (int i=0; i<6; i++)
-            for (Unit aMen : dividedUnits[i]) {
+        for (LinkedList<Unit> u2: dividedUnits)
+            for (Unit aMen : u2) {
                 aMen.move(dt);
                 if (aMen.getType()== NotControlledUnit.Type.Tower) {
                     Unit u = ((Tower) aMen).getAddition();
                     if (u != null) {
-                        spawn(u);
+                        additionals.add(u);
                     }
                     ((Tower) aMen).clearAddition();
                 }
             }
+        for (Unit u: additionals)
+            spawn(u);
+        additionals.clear();
     }
 
     private static void spawn(Unit m) {
         SpawnsLayer.addSpawn(m.getX(), m.getY());
-        if (m.getType()== NotControlledUnit.Type.Bullet)
-            dividedUnits[m.getTeam()+4].add(m);
-        else
-        if (m.getType()== NotControlledUnit.Type.Tower)
-            dividedUnits[m.getTeam()+2].add(m);
-        else
-            dividedUnits[m.getTeam()].add(m);
-    }
-
-
-    private static void doRegeneration(float dt) {
-        for (int i=0; i<4; i++)
-            for (Unit unit : dividedUnits[i]) {
-                unit.changeHealth(0.1f*dt);
-            }
+        dividedUnits[m.getTeam()].add(m);
     }
 
     private static void updateIntersections() {
-        for (Unit u1: dividedUnits[0])
-        for (Unit u2 : dividedUnits[1])
-            fightUnits(u1, u2);
 
         for (int i=0; i<2; i++) {
-            int enemyTeam=Math.abs(i-1);
+            int enemyTeam=i==0?1:0;
             for (Unit unit: dividedUnits[i]) {
-                //check for intersection with towers
-                for (Unit enemy : dividedUnits[enemyTeam + 2]) {
-                    fightUnits(enemy, unit);
-                }
-                //check for intersection with bullets
-                for (Unit enemy : dividedUnits[enemyTeam + 4]) {
-                    fightUnits(enemy, unit);
+
+                int startIndex=getNearestMenIndex(unit.getX0(), enemyTeam);
+                int endIndex=getNearestMenIndex(unit.getX1(), enemyTeam)+1;
+                if (endIndex>=dividedUnits[enemyTeam].size())
+                    endIndex=dividedUnits[enemyTeam].size();
+
+                for (int j=startIndex; j<endIndex; j++) {
+                    fightUnits(dividedUnits[enemyTeam].get(j), unit);
                 }
             }
         }
@@ -175,10 +159,6 @@ public class UnitLayer{
 
     public static void killEverybody() {
         synchroniser.waitForUnlockAndLock();
-        for (int i=0; i<4; i++) {
-            for (Unit u: dividedUnits[i])
-                u.kill();
-        }
         for (LinkedList<Unit> llu: dividedUnits)  {
             for (Unit u: llu)
             {
@@ -288,9 +268,33 @@ public class UnitLayer{
         return x/size;
     }
 
+    private static int getNearestMenIndex(float x, int arrayIndex) {
+        int leftIndex = 0;
+        int rightIndex = dividedUnits[arrayIndex].size() - 1;
+        while (rightIndex - leftIndex > 1) {
+            int midIndex = (leftIndex + rightIndex) / 2;
+            if (dividedUnits[arrayIndex].get(midIndex).getX() < x)
+                leftIndex = midIndex;
+            else rightIndex = midIndex;
+        }
+        return leftIndex;
+    }
+
+    private static final Comparator<Unit> c=new Comparator<Unit>() {
+        @Override
+        public int compare(Unit unit, Unit unit2) {
+            return Float.compare(unit.getX(), unit2.getX());
+        }
+    };
+
+    private static void sortPeople() {
+        for (int k=0; k<2; k++) {
+             Collections.sort(dividedUnits[k], c);
+        }
+    }
+
     public static void update(float dt) {
         synchroniser.waitForUnlockAndLock();
-        doRegeneration(dt);
         updateDeath();
         moveUnits(dt);
         synchroniser.unlock();
@@ -299,7 +303,7 @@ public class UnitLayer{
 
     public static void drawRectangles() {
         synchroniser.waitForUnlockAndLock();
-        for (int i=0; i<4; i++)
+        for (int i=0; i<2; i++)
             for (Unit m : dividedUnits[i])
                 m.drawHealth();
         synchroniser.unlock();
@@ -307,10 +311,10 @@ public class UnitLayer{
 
     public static void draw() {
         synchroniser.waitForUnlockAndLock();
-        for (int i=0; i<4; i++)
+        for (int i=0; i<2; i++)
             for (Unit m : dividedUnits[i])
                 m.drawShadow();
-        for (int i=0; i<6; i++)
+        for (int i=0; i<2; i++)
             for (Unit m : dividedUnits[i])
                 m.drawBase();
         synchroniser.unlock();

@@ -1,5 +1,7 @@
 package com.acidspacecompany.epicwallpaperfight.DrawLayers;
 
+import android.util.Log;
+
 public class Synchroniser {
 
     private boolean lock =false;
