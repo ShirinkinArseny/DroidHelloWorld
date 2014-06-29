@@ -1,5 +1,7 @@
 package com.acidspacecompany.epicwallpaperfight.Units;
 
+import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Graphic;
+
 import static com.acidspacecompany.epicwallpaperfight.World.getScaledValue;
 
 public class Bullet extends Unit{

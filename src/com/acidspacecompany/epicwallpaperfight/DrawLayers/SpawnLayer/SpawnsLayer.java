@@ -2,6 +2,7 @@ package com.acidspacecompany.epicwallpaperfight.DrawLayers.SpawnLayer;
 
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.Synchroniser;
+import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Graphic;
 
 import java.util.LinkedList;
 
@@ -39,8 +40,12 @@ public class SpawnsLayer{
     public static void draw() {
         if (LocalConfigs.getBooleanValue(LocalConfigs.spawnsDraw)) {
             synchroniser.waitForUnlockAndLock();
-            for (Spawn f : spawns) {
-                f.draw();
+            if (!spawns.isEmpty()) {
+                spawns.get(0).prepareDraw();
+                for (Spawn f : spawns) {
+                    f.draw();
+                }
+                Graphic.unBindMatrices();
             }
             synchroniser.unlock();
         }

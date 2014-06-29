@@ -2,6 +2,7 @@ package com.acidspacecompany.epicwallpaperfight.Units;
 
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
 import com.acidspacecompany.epicwallpaperfight.Geometry.Point;
+import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Graphic;
 import com.acidspacecompany.epicwallpaperfight.TimeFunctions.LoopedTicker;
 
 public class Tower extends Unit{
@@ -9,6 +10,8 @@ public class Tower extends Unit{
     private float aimX, aimY;
     private final LoopedTicker shot;
     private Unit addBuffer;
+    private float[] resultMatrixTexture;
+    private float[] resultMatrixShadow;
 
     public Tower(Point p, int team) {
         super(p, team, 10f, 3f, Type.Tower);
@@ -20,6 +23,9 @@ public class Tower extends Unit{
                     addBuffer=dropTheBomb();
             }
         });
+        resultMatrixTexture =Graphic.generateResultMatrix(getX0(), getY0(), getWidth(), getHeight());
+        resultMatrixShadow =Graphic.generateResultMatrix(getShadowX0(), getShadowY0(),
+                getShadowWidth(), getShadowHeight());
     }
 
     public float getPower() {
@@ -45,5 +51,21 @@ public class Tower extends Unit{
     public void setWay(float x, float y) {
         aimX=x;
         aimY=y;
+    }
+
+    public void drawShadow() {
+        Graphic.bindResultMatrix(resultMatrixShadow);
+        Graphic.drawBitmap();
+    }
+
+    public void drawBase() {
+        Graphic.bindResultMatrix(resultMatrixTexture);
+        Graphic.drawBitmap();
+    }
+
+    public void reMatrix() {
+        resultMatrixTexture =Graphic.generateResultMatrix(getX0(), getY0(), getWidth(), getHeight());
+        resultMatrixShadow =Graphic.generateResultMatrix(getShadowX0(), getShadowY0(),
+                getShadowWidth(), getShadowHeight());
     }
 }

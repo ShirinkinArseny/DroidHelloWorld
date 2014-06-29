@@ -12,11 +12,14 @@ public class Blood extends Rectangle {
     private LinearTimeFunction timing;
     private boolean noNeedMore = false;
     private static int dustTexture[];//blood texture
+    private static float[] scaleMatrix;
+    private float[] resultMatrix;
 
     public static void init(int[] pics, int w, int h) {
         dustTexture = pics;
         Blood.w = w;
         Blood.h = h;
+        scaleMatrix=Graphic.generateScaleMatrix(w, h);
     }
 
     public boolean getUseless() {
@@ -36,10 +39,16 @@ public class Blood extends Rectangle {
                 noNeedMore = true;
             }
         });
+        resultMatrix =Graphic.generateResultMatrix(getX0(), getY0(), w, h);
     }
 
     public void draw() {
-        Graphic.drawBitmap(dustTexture[type], this, timing.getValue());
+        Graphic.bindResultMatrix(resultMatrix);
+        Graphic.drawBitmap(timing.getValue());
     }
 
+    public void prepareDraw() {
+        Graphic.bindScaleMatrix(scaleMatrix);
+        Graphic.bindBitmap(dustTexture[type]);
+    }
 }

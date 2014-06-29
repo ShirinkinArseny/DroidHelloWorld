@@ -5,7 +5,6 @@ import android.graphics.Bitmap;
 import android.opengl.Matrix;
 import com.acidspacecompany.epicwallpaperfight.Configs.BicycleDebugger;
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
-import com.acidspacecompany.epicwallpaperfight.Geometry.Rectangle;
 import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Shaders.*;
 import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Generators.TextureGenerator;
 
@@ -21,20 +20,7 @@ public class Graphic {
 
     private static final String TAG = "OpenGLES20Engine";
 
-    //Создание матрицы преобразования для вывода на экран с использованием абсолютной системы координат
-    //Собственно матрица (матрица проекции)
-    private static FloatBuffer projectionMatrixBuffer;
     private static float[] orthoMatrix = new float[16];
-
-    /**
-     * Включает использование матрицы преобразования в шейдере
-     * @param shader Программа шейдера
-     */
-    private static void useMatrix(Shader shader) {
-        //Задаем матрицу для того чтобы отойти от экранной СК
-        projectionMatrixBuffer.position(0);
-        shader.setMatrix(projectionMatrixBuffer);
-    }
 
     /**
      * Обновление параметров матрицы преобразования. Должна быть вызвана при изменении параметров экрана
@@ -45,7 +31,7 @@ public class Graphic {
         glViewport(0,0,width,height);
         Matrix.orthoM(orthoMatrix, 0, 0,width,height,0,-1,1);
 
-        projectionMatrixBuffer = createNativeFloatArray(orthoMatrix);
+        FloatBuffer projectionMatrixBuffer = createNativeFloatArray(orthoMatrix);
         projectionMatrixBuffer.position(0);
 
     }
@@ -75,19 +61,6 @@ public class Graphic {
                         asFloatBuffer().
                 //Добавляем значения из массива
                         put(javaFloatArray);
-    }
-    private static FloatBuffer createFloatBuffer(int length) {
-        return  ByteBuffer.
-                //Теперь задаем размер таким, чтобы влезли все величины
-                        allocateDirect(length * BYTES_PER_FLOAT).
-                //Задаем порядок, родной для машины (прямой (0x01) или перевернутый (0x10))
-                        order(ByteOrder.nativeOrder()).
-                //Храним его как массив значений float
-                        asFloatBuffer();
-    }
-    private static void putValuesIntoFloatBuffer(float[] values, FloatBuffer floatBuffer) {
-        floatBuffer.clear();
-        floatBuffer.put(values);
     }
 
     //Шейдер, который просто заливает всё цветом
@@ -126,18 +99,10 @@ public class Graphic {
         vboId = buffers[0];
         //Создаем вершины
         FloatBuffer vboBufferVertexes = createNativeFloatArray(new float[]{
-                //Левый нижний угол
                 0,0,
-                //Правый верхний угол
-                1,1,
-                //Левый верхний угол
-                0,1,
-                //Правый нижний угол
                 1,0,
-                //Правый верхний угол
                 1,1,
-                //Левый нижний угол
-                0,0
+                0,1
         });
         //Задаем указатель на начало массива
         vboBufferVertexes.position(0);
@@ -179,8 +144,7 @@ public class Graphic {
     public enum Mode {
         FILL_BITMAP,
         DRAW_RECTANGLES,
-        DRAW_BITMAPS,
-        DRAW_LINES
+        DRAW_BITMAPS
     }
 
     private static Mode currentMode;
@@ -247,8 +211,6 @@ public class Graphic {
                 break;
             case FILL_BITMAP: initFillBitmap();
                 break;
-            case DRAW_LINES: initLines();
-                break;
         }
     }
 
@@ -306,11 +268,6 @@ public class Graphic {
         Matrix.multiplyMM(resultMatrix, 0, orthoMatrix, 0, resultMatrix, 0);
     }
 
-    private static void drawOneRectangle() {
-        //Отрисовываем 6 вершин одного прямоугольника
-        glDrawArrays(GL_TRIANGLES, 0, 6);
-    }
-
     //Вершины для заливки экрана (не зависят от его размера совсем)
     private static final FloatBuffer fillBitmapVertexesBuffer = createNativeFloatArray(new float[] {
             //Левый нижний угол
@@ -326,13 +283,6 @@ public class Graphic {
             //Правый верхний угол
             1,1,    1,1
     });
-
-    private static void initLines() {
-        //Используем шейдер для заливки цветом
-        //Так как фактически OpenGL без разницы что заливать цветом
-        //Прямоугольник или трекгольник
-        fillColorShader.use();
-    }
 
     private static void initFillBitmap() {
         //Используем верную программу
@@ -377,85 +327,126 @@ public class Graphic {
 
 
         //Рисуем к херам
-        drawOneRectangle();
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
         glBindTexture(GL_TEXTURE_2D, 0);
         glUseProgram(0);
     }
 
-    //Буффер для хранения координат вершин линии
-    private static FloatBuffer lineBuffer = createFloatBuffer(4);
-    public static void drawLine(float x1, float y1, float x2, float y2, float width, float r, float g, float b, float a) {
-        putValuesIntoFloatBuffer(new float[]{x1,y1,x2,y2}, lineBuffer);
-        //Передаем позицию линии в шейдер
-        final int aPosition = fillColorShader.get_aPosition();
-        lineBuffer.position(0);
-        glEnableVertexAttribArray(aPosition);
-        glVertexAttribPointer(aPosition, POSITION_COMPONENT_COUNT, GL_FLOAT, false, 0, lineBuffer);
-        //Задаем цвет
+    /*
+    ------------------------------ OPTIMISATION START LINE -------------------------------------------
+    */
+    public static void unBindMatrices() {
+        scaleMatrix=new float[16];
+        translateMatrix=new float[16];
+        resultMatrix=new float[16];
+    }
+
+    public static void bindBitmap(int id) {
+        glBindTexture(GL_TEXTURE_2D, id);
+    }
+
+    public static void bindScaleMatrix(float[] scaleMatrix) {
+        Graphic.scaleMatrix=scaleMatrix;
+    }
+
+    public static void bindTranslationMatrix(float[] translateMatrix) {
+        Graphic.translateMatrix=translateMatrix;
+    }
+
+    public static void bindResultMatrix(float[] resultMatrix) {
+        Graphic.resultMatrix=resultMatrix;
+    }
+
+    public static float[] generateTranslationMatrix(float x, float y) {
+        float [] m=new float[16];
+        Matrix.setIdentityM(m, 0);
+        Matrix.translateM(m, 0, x, y, 0);
+        Matrix.multiplyMM(m, 0, orthoMatrix, 0, m, 0);
+        return m;
+    }
+
+    public static float[] generateScaleMatrix(float w, float h) {
+        float [] m=new float[16];
+        Matrix.setIdentityM(m, 0);
+        Matrix.scaleM(m, 0, w, h, 1);
+        return m;
+    }
+
+    public static float[] generateResultMatrix(float x, float y, float w, float h) {
+        float [] m=new float[16];
+        Matrix.multiplyMM(m, 0, generateTranslationMatrix(x, y), 0, generateScaleMatrix(w, h), 0);
+        return m;
+    }
+
+    private static void setTranslationMatrix(float x, float y) {
+        Matrix.setIdentityM(translateMatrix, 0);
+        Matrix.translateM(translateMatrix, 0, x, y, 0);
+        Matrix.multiplyMM(translateMatrix, 0, orthoMatrix, 0, translateMatrix, 0);
+    }
+
+    private static void applyTranslationAndScale() {
+        Matrix.multiplyMM(resultMatrix, 0, translateMatrix, 0, scaleMatrix, 0);
+    }
+
+    public static void bindColor(float r, float g, float b, float a) {
+        textureShader.setColor(r, g, b, a);
+    }
+
+    public static void drawBitmap(float x0, float y0, float r, float g, float b, float a) {
+        drawBindedBitmap(x0, y0, r, g, b, a);
+    }
+
+    public static void drawBitmap(float x0, float y0) {
+        drawBindedBitmap(x0, y0);
+    }
+
+    public static void drawBitmap(float a) {
+        bindColor(1, 1, 1, a);
+        drawBindedBitmap();
+    }
+
+    public static void drawBitmap() {
+        drawBindedBitmap();
+    }
+
+    private static void drawBindedBitmap() {
+        textureShader.setMatrix(resultMatrix, 0);
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+    }
+
+    private static void drawBindedBitmap(float x, float y) {
+        setTranslationMatrix(x, y);
+        applyTranslationAndScale();
+        drawBindedBitmap();
+    }
+
+    private static void drawBindedBitmap(float x, float y, float r, float g, float b, float a) {
+        bindColor(r, g, b, a);
+        drawBindedBitmap(x, y);
+    }
+
+    public static void drawRect(float r, float g, float b, float a) {
+        fillColorShader.setMatrix(resultMatrix,0);
         fillColorShader.setColor(r,g,b,a);
-        //Ширина линии задается не в шейдере так как
-        //она используется на этапе растеризации,
-        //а не на этапе шейдера
-        glLineWidth(width);
-        useMatrix(fillColorShader);
-        glDrawArrays(GL_LINES, 0, 2);
+        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     }
-
-
-    public static void drawBitmap(int texture, Rectangle rectangle) {
-        drawBitmap(texture, rectangle.getX0(), rectangle.getY0(), rectangle.getWidth(), rectangle.getHeight(), 1,1,1, 1.0f);
-    }
-
-    public static void drawBitmap(int texture, Rectangle rectangle, float a) {
-        drawBitmap(texture, rectangle.getX0(), rectangle.getY0(), rectangle.getWidth(), rectangle.getHeight(), 1,1,1, a);
-    }
-
-    public static void drawBitmap(int texture, Rectangle rectangle, float r, float g, float b) {
-        drawBitmap(texture, rectangle.getX0(), rectangle.getY0(), rectangle.getWidth(), rectangle.getHeight(),r,g,b, 1.0f);
-    }
-
-    public static void drawBitmap(int texture, Rectangle rectangle,float r, float g, float b, float a) {
-        drawBitmap(texture, rectangle.getX0(), rectangle.getY0(), rectangle.getWidth(), rectangle.getHeight(),r,g,b, a);
-    }
-
-    public static void drawBitmap(int bitmap, float x, float y, float width, float height,float r, float g, float b, float a) {
-
-        if (currentMode!=Mode.DRAW_BITMAPS)
-            BicycleDebugger.e(TAG, "Incorrect drawing mode");
-        else {
-            createRectangle(x,y,width,height);
-            textureShader.setMatrix(resultMatrix,0);
-            textureShader.setColor(r, g, b, a);
-            glBindTexture(GL_TEXTURE_2D, bitmap);
-            drawOneRectangle();
-        }
-
-    }
+    /*
+    ------------------------------ OPTIMISATION END LINE -------------------------------------------
+    */
 
     public static void drawRect(float x, float y, float x1, float y1, float r, float g, float b, float a) {
         drawRectInside(x, y, x1 - x, y1 - y, r, g, b, a);
     }
 
     private static void drawRectInside(float x, float y, float width, float height, float r, float g, float b, float a) {
-        //Будем рисовать только в том случае, если режим рисовки -- прямоугольники
-        if (currentMode!=Mode.DRAW_RECTANGLES)
-            BicycleDebugger.e(TAG, "Incorrect drawing mode");
-        else {
             //Задаем матрицы, которые преобразуют прямоугольник из VBO к необходимому прямоугольнику
             createRectangle(x,y,width,height);
             //Задаем матрицу для шейдера
             fillColorShader.setMatrix(resultMatrix,0);
             //Задаем цвет
             fillColorShader.setColor(r,g,b,a);
-
             //Рисуем
-            drawOneRectangle();
-        }
-
-    }
-
-    public static void drawText(float x, float y, float size, float r, float g, float b, float a, String text) {
-        Font.drawString(text, size, x, y, r, g, b, a);
+            glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     }
 
 }

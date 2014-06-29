@@ -4,6 +4,7 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.*;
 import android.util.DisplayMetrics;
+import android.util.Log;
 import com.acidspacecompany.epicwallpaperfight.AI.AI;
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.BloodLayer.Blood;
@@ -53,7 +54,6 @@ public class World {
         BloodLayer.init();
         MessagesLayer.init();
         Bullet.init();
-
         reInit();
     }
 
@@ -149,7 +149,7 @@ public class World {
         }, 0, 10);
     }
 
-    public void setSurface(int width, int height) {
+    public static void resize(int width, int height) {
         if (LocalConfigs.getDisplayWidth()!=width && LocalConfigs.getDisplayHeight()!=height) {
             TerritoryLayer.resize(width, height);
             UnitLayer.resize(width, height);
@@ -160,7 +160,11 @@ public class World {
         }
     }
 
+    private static float lastFPS=0;
+
     private void update(float dt) {
+        lastFPS=(lastFPS+1/dt)/2;
+        Log.i("FPS", String.valueOf(lastFPS));
         TimerLayer.update(dt);
         UnitLayer.update(dt);
         SpawnsLayer.update(dt);

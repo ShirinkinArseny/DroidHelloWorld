@@ -1,27 +1,35 @@
 package com.acidspacecompany.epicwallpaperfight.DrawLayers;
 
+import android.util.Log;
 import com.acidspacecompany.epicwallpaperfight.AI.AI;
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.BloodLayer.BloodLayer;
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.MessagesLayer.MessagesLayer;
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.SpawnLayer.SpawnsLayer;
 import com.acidspacecompany.epicwallpaperfight.Geometry.Point;
+import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Graphic;
 import com.acidspacecompany.epicwallpaperfight.TimeFunctions.LoopedTicker;
 import com.acidspacecompany.epicwallpaperfight.Units.*;
 
 import java.util.*;
 
-public class UnitLayer{
+public class UnitLayer {
 
     private static final Random rnd = new Random();
     private static AI ai;
-    private static final LinkedList<ControlledUnit>[] controlledUnits=
+    private static final LinkedList<Unit>[] sortedByTextureUnits = new LinkedList[]{
+            new LinkedList<ControlledUnit>(), new LinkedList<ControlledUnit>(),
+            new LinkedList<ControlledUnit>(), new LinkedList<ControlledUnit>(),
+            new LinkedList<ControlledUnit>(), new LinkedList<ControlledUnit>(),
+            new LinkedList<ControlledUnit>(), new LinkedList<ControlledUnit>()
+    };
+    private static final LinkedList<ControlledUnit>[] controlledUnits =
             new LinkedList[]{new LinkedList<ControlledUnit>(), new LinkedList<ControlledUnit>()}; //Lists of units to send in AI
-    private static final LinkedList<NotControlledUnit>[] uncontrolledUnits=
+    private static final LinkedList<NotControlledUnit>[] uncontrolledUnits =
             new LinkedList[]{new LinkedList(), new LinkedList()}; //Lists of units to send in AI
-    private static final LinkedList<Unit>[] dividedUnits=
+    private static final LinkedList<Unit>[] dividedUnits =
             new LinkedList[]{new LinkedList(), new LinkedList()}; //Lists of units to send in AI
-    private static int[] kills=new int[]{0, 0};
+    private static int[] kills = new int[]{0, 0};
     private static Synchroniser synchroniser;
     private static LoopedTicker updateSpawnAndIntersection;
     private static int topBoard;
@@ -33,9 +41,9 @@ public class UnitLayer{
     }
 
     public static void init() {
-        synchroniser =new Synchroniser("UnitLayerSync");
-        ai=new AI();
-        updateSpawnAndIntersection=new LoopedTicker(0.2f, new Runnable() {
+        synchroniser = new Synchroniser("UnitLayerSync");
+        ai = new AI();
+        updateSpawnAndIntersection = new LoopedTicker(0.2f, new Runnable() {
             @Override
             public void run() {
                 synchroniser.waitForUnlockAndLock();
@@ -50,30 +58,31 @@ public class UnitLayer{
 
     public static void resize(int width, int height) {
 
-        topBoard= LocalConfigs.getIntValue(LocalConfigs.worldVerticalTopBorders);
-        bottomBoard= LocalConfigs.getIntValue(LocalConfigs.worldVerticalBottomBorders);
-        sideBoard=LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders);
+        topBoard = LocalConfigs.getIntValue(LocalConfigs.worldVerticalTopBorders);
+        bottomBoard = LocalConfigs.getIntValue(LocalConfigs.worldVerticalBottomBorders);
+        sideBoard = LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders);
 
-            float wOld = LocalConfigs.getDisplayWidth() - 2 * sideBoard;
-            float hOld = LocalConfigs.getDisplayHeight()
-                    - topBoard - bottomBoard;
+        float wOld = LocalConfigs.getDisplayWidth() - 2 * sideBoard;
+        float hOld = LocalConfigs.getDisplayHeight()
+                - topBoard - bottomBoard;
 
-            float wNew = width - 2 *sideBoard;
-            float hNew = height - topBoard-bottomBoard;
+        float wNew = width - 2 * sideBoard;
+        float hNew = height - topBoard - bottomBoard;
 
         synchroniser.waitForUnlockAndLock();
-            for (int i = 0; i < 2; i++)
-                for (Unit u : dividedUnits[i]) {
+        for (int i = 0; i < 2; i++)
+            for (Unit u : dividedUnits[i]) {
 
-                    float posOtnX = (u.getX() - sideBoard)/ wOld;
+                float posOtnX = (u.getX() - sideBoard) / wOld;
 
-                    float posOtnY = (u.getY() - topBoard)/ hOld;
+                float posOtnY = (u.getY() - topBoard) / hOld;
 
-                    float posX = posOtnY * wNew +sideBoard;
+                float posX = posOtnY * wNew + sideBoard;
 
-                    float posY = posOtnX * hNew + topBoard;
-                    u.setPosition(posX, posY);
-                }
+                float posY = posOtnX * hNew + topBoard;
+                u.setPosition(posX, posY);
+                //u.reMatrix();
+            }
         synchroniser.unlock();
     }
 
@@ -84,11 +93,12 @@ public class UnitLayer{
         uncontrolledUnits[1].clear();
 
 
-        for (int i=0; i<2; i++) {
+        for (int i = 0; i < 2; i++) {
             for (Unit u : dividedUnits[i]) {
-                if (u.getType()!= NotControlledUnit.Type.Bullet) {
-                controlledUnits[i].add(u);
-                uncontrolledUnits[i].add(u);   }
+                if (u.getType() != NotControlledUnit.Type.Bullet) {
+                    controlledUnits[i].add(u);
+                    uncontrolledUnits[i].add(u);
+                }
             }
         }
 
@@ -98,7 +108,7 @@ public class UnitLayer{
 
     private static void applyDamages(Unit unit, Unit enemy) {
         float attack1 = -0.2f * unit.getPower() * rnd.nextFloat();
-        int att = (int) (attack1 * 50000/unit.getPower());
+        int att = (int) (attack1 * 50000 / unit.getPower());
 
         if (att < -9991) {
             attack1 *= att + 10000;
@@ -116,12 +126,13 @@ public class UnitLayer{
         }
     }
 
-    private static final ArrayList<Unit> additionals=new ArrayList<>();
+    private static final ArrayList<Unit> additionals = new ArrayList<>();
+
     private static void moveUnits(float dt) {
-        for (LinkedList<Unit> u2: dividedUnits)
+        for (LinkedList<Unit> u2 : dividedUnits)
             for (Unit aMen : u2) {
                 aMen.move(dt);
-                if (aMen.getType()== NotControlledUnit.Type.Tower) {
+                if (aMen.getType() == NotControlledUnit.Type.Tower) {
                     Unit u = ((Tower) aMen).getAddition();
                     if (u != null) {
                         additionals.add(u);
@@ -129,28 +140,36 @@ public class UnitLayer{
                     ((Tower) aMen).clearAddition();
                 }
             }
-        for (Unit u: additionals)
+        for (Unit u : additionals)
             spawn(u);
         additionals.clear();
+    }
+
+    private static int getTextureUnitID(Unit u) {
+        int delta = 0;
+        if (u.getTeam() == 1)
+            delta = 1;
+        return u.getTypeNumber() * 2 + delta;
     }
 
     private static void spawn(Unit m) {
         SpawnsLayer.addSpawn(m.getX(), m.getY());
         dividedUnits[m.getTeam()].add(m);
+        sortedByTextureUnits[getTextureUnitID(m)].add(m);
     }
 
     private static void updateIntersections() {
 
-        for (int i=0; i<2; i++) {
-            int enemyTeam=i==0?1:0;
-            for (Unit unit: dividedUnits[i]) {
+        for (int i = 0; i < 2; i++) {
+            int enemyTeam = i == 0 ? 1 : 0;
+            for (Unit unit : dividedUnits[i]) {
 
-                int startIndex=getNearestMenIndex(unit.getX0(), enemyTeam);
-                int endIndex=getNearestMenIndex(unit.getX1(), enemyTeam)+1;
-                if (endIndex>=dividedUnits[enemyTeam].size())
-                    endIndex=dividedUnits[enemyTeam].size();
+                int startIndex = getNearestMenIndex(unit.getX0(), enemyTeam);
+                int endIndex = getNearestMenIndex(unit.getX1(), enemyTeam) + 1;
+                if (endIndex >= dividedUnits[enemyTeam].size())
+                    endIndex = dividedUnits[enemyTeam].size();
 
-                for (int j=startIndex; j<endIndex; j++) {
+                for (int j = startIndex; j < endIndex; j++) {
                     fightUnits(dividedUnits[enemyTeam].get(j), unit);
                 }
             }
@@ -159,51 +178,57 @@ public class UnitLayer{
 
     public static void killEverybody() {
         synchroniser.waitForUnlockAndLock();
-        for (LinkedList<Unit> llu: dividedUnits)  {
-            for (Unit u: llu)
-            {
+        for (LinkedList<Unit> llu : dividedUnits) {
+            for (Unit u : llu) {
                 u.kill();
                 startBlood(u);
             }
             llu.clear();
         }
+        for (LinkedList<Unit> llu : sortedByTextureUnits)
+            llu.clear();
         synchroniser.unlock();
-        kills[0]=0;
-        kills[1]=0;
+        kills[0] = 0;
+        kills[1] = 0;
     }
 
     private static void startBlood(Unit u) {
         int tx;
-        if (u.getType()!= NotControlledUnit.Type.Tower && u.getType()!= NotControlledUnit.Type.Bullet)
-            tx=0;
-        else tx=1;
-        for (int j=0; j< LocalConfigs.getIntValue(LocalConfigs.bloodCount); j++)
+        if (u.getType() != NotControlledUnit.Type.Tower && u.getType() != NotControlledUnit.Type.Bullet)
+            tx = 0;
+        else tx = 1;
+        for (int j = 0; j < LocalConfigs.getIntValue(LocalConfigs.bloodCount); j++)
             BloodLayer.add(u.getX(), u.getY(),
-                    j* 0.5f, tx);
+                    j * 0.5f, tx);
     }
 
     private static void updateDeath() {
-        for (LinkedList<Unit> units: dividedUnits )
-        for (int i=0; i<units.size(); i++) {
-            Unit c=units.get(i);
-            if (c.getHealth() <= 0) {
+        for (LinkedList<Unit> units : dividedUnits)
+            for (int i = 0; i < units.size(); i++) {
+                Unit c = units.get(i);
+                if (c.getHealth() <= 0) {
 
-                if (c.getType()== NotControlledUnit.Type.Giant)
-                    MessagesLayer.showMessage(c.getX(),c.getY(), "GIANT DEATH!", c.getTeam());
-                else
-                if (c.getType()== NotControlledUnit.Type.Tower)
-                    MessagesLayer.showMessage(c.getX(), c.getY(), "TOWER DESTROYED!", c.getTeam());
-                else
-                if (c.getType()== NotControlledUnit.Type.Man)
-                    MessagesLayer.showMessage(c.getX(), c.getY(), "-1", c.getTeam());
+                    if (c.getType() == NotControlledUnit.Type.Giant)
+                        MessagesLayer.showMessage(c.getX(), c.getY(), "GIANT DEATH!", c.getTeam());
+                    else if (c.getType() == NotControlledUnit.Type.Tower)
+                        MessagesLayer.showMessage(c.getX(), c.getY(), "TOWER DESTROYED!", c.getTeam());
+                    else if (c.getType() == NotControlledUnit.Type.Man)
+                        MessagesLayer.showMessage(c.getX(), c.getY(), "-1", c.getTeam());
 
-                startBlood(c);
+                    startBlood(c);
 
-                if (c.getType()!= NotControlledUnit.Type.Bullet)
-                kills[c.getTeam()]++;
-                units.remove(c);
+                    if (c.getType() != NotControlledUnit.Type.Bullet)
+                        kills[c.getTeam()]++;
+                    units.remove(c);
+                }
             }
-        }
+
+        for (LinkedList<Unit> units : sortedByTextureUnits)
+            for (int i = 0; i < units.size(); i++) {
+                if (units.get(i).getHealth() <= 0) {
+                    units.remove(i);
+                }
+            }
     }
 
 
@@ -258,14 +283,15 @@ public class UnitLayer{
     }
 
     public static float getMiddleXUnits() {
-        float x=LocalConfigs.getDisplayWidth()/2;
-        int size=1;
-        for (LinkedList<Unit> u: dividedUnits)
-        for (Unit u2: u) {
-            x += u2.getX();
-            size++;
-        }
-        return x/size;
+        float x = LocalConfigs.getDisplayWidth() / 2;
+        int size = 0;
+        for (LinkedList<Unit> u : dividedUnits)
+            for (Unit u2 : u) {
+                x += u2.getX();
+                size++;
+            }
+        if (size==0) return 0;
+        return x / size;
     }
 
     private static int getNearestMenIndex(float x, int arrayIndex) {
@@ -280,7 +306,7 @@ public class UnitLayer{
         return leftIndex;
     }
 
-    private static final Comparator<Unit> c=new Comparator<Unit>() {
+    private static final Comparator<Unit> xAxisComparator = new Comparator<Unit>() {
         @Override
         public int compare(Unit unit, Unit unit2) {
             return Float.compare(unit.getX(), unit2.getX());
@@ -288,8 +314,8 @@ public class UnitLayer{
     };
 
     private static void sortPeople() {
-        for (int k=0; k<2; k++) {
-             Collections.sort(dividedUnits[k], c);
+        for (int k = 0; k < 2; k++) {
+            Collections.sort(dividedUnits[k], xAxisComparator);
         }
     }
 
@@ -303,20 +329,40 @@ public class UnitLayer{
 
     public static void drawRectangles() {
         synchroniser.waitForUnlockAndLock();
-        for (int i=0; i<2; i++)
-            for (Unit m : dividedUnits[i])
-                m.drawHealth();
+        for (LinkedList<Unit> u : sortedByTextureUnits) {
+            if (!u.isEmpty()) {
+                if (u.get(0).getType()!= NotControlledUnit.Type.Bullet && u.get(0).getType()!= NotControlledUnit.Type.Tower)
+                for (Unit m : u)
+                    m.drawHealth();
+            }
+        }
         synchroniser.unlock();
     }
 
     public static void draw() {
         synchroniser.waitForUnlockAndLock();
-        for (int i=0; i<2; i++)
-            for (Unit m : dividedUnits[i])
-                m.drawShadow();
-        for (int i=0; i<2; i++)
-            for (Unit m : dividedUnits[i])
-                m.drawBase();
+        Graphic.bindColor(1, 1, 1, 1);
+
+        for (LinkedList<Unit> u : sortedByTextureUnits) {
+            if (!u.isEmpty()) {
+                if (u.get(0).getType()!= NotControlledUnit.Type.Bullet) {
+                    u.get(0).prepareDrawShadow();
+                    for (Unit m : u)
+                        m.drawShadow();
+                }
+            }
+            Graphic.unBindMatrices();
+        }
+
+        for (LinkedList<Unit> u : sortedByTextureUnits) {
+            if (!u.isEmpty()) {
+                u.get(0).prepareDrawBase();
+                for (Unit m : u)
+                    m.drawBase();
+            }
+            Graphic.unBindMatrices();
+        }
+
         synchroniser.unlock();
     }
 }

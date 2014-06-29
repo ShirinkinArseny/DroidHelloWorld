@@ -11,11 +11,14 @@ public class Spawn extends Rectangle{
     private final LinearTimeFunction timing;
     private boolean noNeedMore=false;
     private static int spawnTexture;//spawn texture
+    private static float[] scaleMatrix;
+    private float[] translateMatrix;
 
     public static void init(int pic, int w, int h) {
         spawnTexture=pic;
         Spawn.w=w;
         Spawn.h=h;
+        scaleMatrix=Graphic.generateScaleMatrix(w, h);
     }
 
     public boolean getUseless() {
@@ -36,10 +39,16 @@ public class Spawn extends Rectangle{
                     }
                 }
         );
+        translateMatrix=Graphic.generateResultMatrix(getX0(), getY0(), w, h);
     }
 
     public void draw() {
-        Graphic.drawBitmap(spawnTexture, this, timing.getValue());
+        Graphic.bindResultMatrix(translateMatrix);
+        Graphic.drawBitmap(timing.getValue());
     }
 
+    public void prepareDraw() {
+        Graphic.bindScaleMatrix(scaleMatrix);
+        Graphic.bindBitmap(spawnTexture);
+    }
 }

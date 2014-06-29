@@ -8,10 +8,15 @@ public class TerritoryLayer{
     private static float[]  border;
     private static float[]  bg;
     private static float top, bottom, horizontal1, horizontal2;
+    private static float[] resultMatrix1;
+    private static float[] resultMatrix2;
 
     public static void reInit() {
         border= LocalConfigs.getWorldBoardersColor();
         bg= LocalConfigs.getWorldBGColor();
+        resultMatrix1=Graphic.generateResultMatrix(0, 0,
+                LocalConfigs.getDisplayWidth(), LocalConfigs.getDisplayHeight());
+        resultMatrix2=Graphic.generateResultMatrix(horizontal1, top, bottom-top, horizontal2);
     }
 
     public static void resize(int w, int h) {
@@ -19,17 +24,17 @@ public class TerritoryLayer{
         bottom=h- LocalConfigs.getIntValue(LocalConfigs.worldVerticalBottomBorders);
         horizontal1= LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders);
         horizontal2=w-LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders);
+        resultMatrix1=Graphic.generateResultMatrix(0, 0, w, h);
+        resultMatrix2=Graphic.generateResultMatrix(horizontal1, top, bottom-top, horizontal2);
     }
 
     public static void draw() {
+        Graphic.bindResultMatrix(resultMatrix1);
+        Graphic.drawRect(bg[0], bg[1], bg[2], bg[3]) ;
 
-        Graphic.drawRect(0, 0,
-            LocalConfigs.getDisplayWidth(),
-            LocalConfigs.getDisplayHeight(),
-                bg[0], bg[1], bg[2], bg[3]) ;
+        Graphic.bindResultMatrix(resultMatrix2);
+        Graphic.drawRect(border[0], border[1], border[2], border[3]);
 
-        Graphic.drawRect(horizontal1,
-                top, horizontal2, bottom,
-                border[0], border[1], border[2], border[3]);
+        Graphic.unBindMatrices();
     }
 }

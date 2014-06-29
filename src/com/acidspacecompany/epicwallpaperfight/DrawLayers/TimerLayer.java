@@ -1,6 +1,7 @@
 package com.acidspacecompany.epicwallpaperfight.DrawLayers;
 
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
+import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Font;
 import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Graphic;
 import com.acidspacecompany.epicwallpaperfight.TimeFunctions.LoopedTicker;
 import com.acidspacecompany.epicwallpaperfight.TimeFunctions.NiceMoveTimeFunction;
@@ -20,6 +21,9 @@ public class TimerLayer {
     private static NiceMoveTimeFunction timePosition =new NiceMoveTimeFunction(0, 0, 10f);
     private static NiceMoveTimeFunction score1Position =new NiceMoveTimeFunction(0, 0, 10f);
     private static NiceMoveTimeFunction score2Position =new NiceMoveTimeFunction(0, 0, 10f);
+
+    private static Font big;
+    private static Font small;
 
     private static String time="";
     private static String s1="";
@@ -44,6 +48,8 @@ public class TimerLayer {
         smallSize=w/6;
         clockHeight =h/4;
         scoreHeight = (int) (clockHeight +bigSize);
+        big=new Font(bigSize);
+        small=new Font(smallSize);
     }
 
     public static void update(float dt) {
@@ -75,15 +81,17 @@ public class TimerLayer {
         if (LocalConfigs.getBooleanValue(LocalConfigs.timerDraw)) {
 
             int[] kills = UnitLayer.getTeamSizes();
-            Graphic.drawText(timePosition.getValue(), clockHeight, bigSize, pBig[0], pBig[1], pBig[2], pBig[3], time);
+            big.prepareDraw();
+            big.drawString(time, timePosition.getValue(), clockHeight, pBig[0], pBig[1], pBig[2], pBig[3]);
 
             s1=String.valueOf(kills[1]);
             s2=String.valueOf(kills[0]);
 
-            Graphic.drawText(score1Position.getValue(), scoreHeight, smallSize,
-                    pSmallRed[0], pSmallRed[1], pSmallRed[2], pSmallRed[3], s1);
-            Graphic.drawText(score2Position.getValue(), scoreHeight, smallSize,
-                    pSmallBlue[0], pSmallBlue[1], pSmallBlue[2], pSmallBlue[3], s2);
+            small.prepareDraw();
+            small.drawString(s1, score1Position.getValue(), scoreHeight,
+                    pSmallRed[0], pSmallRed[1], pSmallRed[2], pSmallRed[3]);
+            small.drawString(s2, score2Position.getValue(), scoreHeight,
+                    pSmallBlue[0], pSmallBlue[1], pSmallBlue[2], pSmallBlue[3]);
         }
     }
 }

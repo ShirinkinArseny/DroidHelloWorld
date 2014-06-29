@@ -58,7 +58,7 @@ public class LiveWallpaperService extends OpenGLES20LiveWallpaperService {
 
         @Override
         public void onSurfaceChanged(GL10 gl, int width, int height) {
-            world.setSurface(width, height);
+            World.resize(width, height);
         }
 
         @Override

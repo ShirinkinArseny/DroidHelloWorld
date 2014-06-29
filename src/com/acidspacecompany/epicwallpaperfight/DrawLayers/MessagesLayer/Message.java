@@ -1,6 +1,7 @@
 package com.acidspacecompany.epicwallpaperfight.DrawLayers.MessagesLayer;
 
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
+import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Font;
 import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Graphic;
 import com.acidspacecompany.epicwallpaperfight.TimeFunctions.LinearTimeFunction;
 
@@ -17,6 +18,7 @@ public class Message {
     private final float g;
     private final float b;
     private static float size;
+    private static Font font;
     private static float deltaHeight;
 
     public boolean getUseless() {
@@ -48,11 +50,16 @@ public class Message {
     }
 
     public void draw() {
-            Graphic.drawText(x, coordinates.getValue(), size, r, g, b, alpha.getValue(), text);
+        font.drawString(text, x, coordinates.getValue(), r, g, b, alpha.getValue());
+    }
+
+    public void prepareDraw() {
+        font.prepareDraw();
     }
 
     public static void init() {
         size=getScaledValue(50);
         deltaHeight=getScaledValue(65);
+        font=new Font(size);
     }
 }

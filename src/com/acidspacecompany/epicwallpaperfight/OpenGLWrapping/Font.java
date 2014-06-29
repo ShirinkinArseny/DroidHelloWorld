@@ -12,6 +12,10 @@ public class Font {
 
     private static final int[] dimensions = {152,137,140,141,131,131,145,145,67,127,142,124,169,145,147,138,147,139,142,140,141,150,186,143,143,135,130,92,131,130,137,127,131,132,133,132,67,198,144,169,120,93,94,91,139,120,100,100,83,93,121,123,65,112,77,110,71,71};
     private static int[] textures = new int[dimensions.length];
+    private final float scaleFactor;
+    private float[] scaleMatrix;
+    private float size;
+    private float[] sizedDimensions;
 
     public static void loadFont(Resources res) {
 
@@ -80,24 +84,38 @@ public class Font {
         textures = Graphic.genTextures(bitmaps);
     }
 
-    public static void drawString(String string, float size, float x, float y, float r, float g, float b, float a) {
+    public void drawString(String string, float x, float y, float r, float g, float b, float a) {
         int position;
+        int lastPosition=-1;
         //Узнаем, на сколько нужно масштабировать
-        float scaleFactor = size / 256f;
-        float scaledWidth;
         for (int i = 0; i < string.length(); i++) {
             if (string.charAt(i) != ' ') {
                 //Позиция символа в карте
                 position = map.indexOf(string.charAt(i));
-                scaledWidth = dimensions[position] * scaleFactor;
-                Graphic.drawBitmap(textures[position], x, y, size, size, r, g, b, a);
-                x += scaledWidth;
+                if (lastPosition!=position)
+                    Graphic.bindBitmap(textures[position]);
+                Graphic.drawBitmap(x, y, r, g, b, a);
+                x += sizedDimensions[position];
+                lastPosition=position;
             } else {
                 x += size;
             }
         }
     }
 
+    public void prepareDraw() {
+        Graphic.bindScaleMatrix(scaleMatrix);
+    }
+
+    public Font(float size) {
+        scaleMatrix=Graphic.generateScaleMatrix(size, size);
+        this.size=size;
+        scaleFactor = size / 256f;
+        sizedDimensions=new float[dimensions.length];
+        for (int i=0; i<dimensions.length; i++) {
+            sizedDimensions[i]=dimensions[i]*scaleFactor;
+        }
+    }
 
     public static float getStringWidth(float size, String string) {
         float x = 0.0f;

@@ -6,36 +6,36 @@ import com.acidspacecompany.epicwallpaperfight.Geometry.Point;
 
 import java.util.LinkedList;
 
-public class MessagesLayer{
+public class MessagesLayer {
 
-    private static final LinkedList<Message> messages=new LinkedList<>();//coordinates of messages
-    private static final LinkedList<Message> messagesAddBuffer=new LinkedList<>();//coordinates of messages
+    private static final LinkedList<Message> messages = new LinkedList<>();//coordinates of messages
+    private static final LinkedList<Message> messagesAddBuffer = new LinkedList<>();//coordinates of messages
     private static float[] pBlue; //Blue paint
     private static float[] pRed; //Red paint
     private static Synchroniser synchroniser;
 
     public static void init() {
 
-        pBlue= LocalConfigs.getBlueFontColor();
+        pBlue = LocalConfigs.getBlueFontColor();
 
-        pRed= LocalConfigs.getRedFontColor();
+        pRed = LocalConfigs.getRedFontColor();
 
-        synchroniser =new Synchroniser("MessagesLayerSync");
+        synchroniser = new Synchroniser("MessagesLayerSync");
         Message.init();
     }
 
     public static void reInit() {
-        pBlue= LocalConfigs.getBlueFontColor();
-        pRed= LocalConfigs.getRedFontColor();
+        pBlue = LocalConfigs.getBlueFontColor();
+        pRed = LocalConfigs.getRedFontColor();
     }
 
     public static void showMessage(float x, float y, String text, int color) {
         if (LocalConfigs.getBooleanValue(LocalConfigs.messageDraw)) {
-        synchroniser.waitForUnlockAndLock();
+            synchroniser.waitForUnlockAndLock();
             messagesAddBuffer.add(
                     new Message(text, x, y, color == 0 ? pRed : pBlue)
             );
-        synchroniser.unlock();
+            synchroniser.unlock();
         }
     }
 
@@ -62,9 +62,12 @@ public class MessagesLayer{
     public static void draw() {
         if (LocalConfigs.getBooleanValue(LocalConfigs.messageDraw)) {
             synchroniser.waitForUnlockAndLock();
-        for (Message f : messages)
-            f.draw();
-        synchroniser.unlock();
+            if (!messages.isEmpty()) {
+                messages.get(0).prepareDraw();
+                for (Message f : messages)
+                    f.draw();
+            }
+            synchroniser.unlock();
         }
     }
 }
