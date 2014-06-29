@@ -34,7 +34,6 @@ public class Graphic {
 
         FloatBuffer projectionMatrixBuffer = createNativeFloatArray(orthoMatrix);
         projectionMatrixBuffer.position(0);
-
     }
 
 
@@ -244,29 +243,6 @@ public class Graphic {
     private static float[] translateMatrix = new float[16];
     private static float[] resultMatrix = new float[16];
 
-    /**
-     * Создание матрицы для преобразования "единичного" прямоугольника к необходимому виду
-     * @param x X для левого нижнего угла
-     * @param y Y для левого нижнего угла
-     * @param width Ширина прямоугольника
-     * @param height Высота прямоугольника
-     */
-    @Deprecated
-    private static void createRectangle(float x, float y, float width, float height) {
-        //Создаем матрицу
-        //Задаем масштабирование
-        Matrix.setIdentityM(scaleMatrix, 0);
-        Matrix.setIdentityM(translateMatrix,0);
-        Matrix.setIdentityM(resultMatrix,0);
-        Matrix.scaleM(scaleMatrix, 0, width, height, 1);
-        //Задаем перенос
-        Matrix.translateM(translateMatrix, 0, x,y,0);
-        //Сначала масштабируем, потом переносим
-        Matrix.multiplyMM(resultMatrix, 0, translateMatrix, 0, scaleMatrix, 0);
-        //Переносим в экранную систему координат
-        Matrix.multiplyMM(resultMatrix, 0, orthoMatrix, 0, resultMatrix, 0);
-    }
-
     //Вершины для заливки экрана (не зависят от его размера совсем)
     private static final FloatBuffer fillBitmapVertexesBuffer = createNativeFloatArray(new float[] {
             //Левый нижний угол
@@ -470,8 +446,5 @@ public class Graphic {
         applyTranslationAndScale();
         drawRect(r, g, b, a);
     }
-    /*
-    ------------------------------ OPTIMISATION END LINE -------------------------------------------
-    */
 
 }

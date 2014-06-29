@@ -54,13 +54,17 @@ public class Tower extends Unit{
     }
 
     public void drawShadow() {
+        if (health>0) {
         Graphic.bindResultMatrix(resultMatrixShadow);
         Graphic.drawBitmap();
+        }
     }
 
     public void drawBase() {
-        Graphic.bindResultMatrix(resultMatrixTexture);
-        Graphic.drawBitmap();
+        if (health>0) {
+            Graphic.bindResultMatrix(resultMatrixTexture);
+            Graphic.drawBitmap();
+        }
     }
 
     public void setPosition(float x, float y) {
