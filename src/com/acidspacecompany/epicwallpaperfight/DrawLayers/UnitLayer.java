@@ -1,6 +1,5 @@
 package com.acidspacecompany.epicwallpaperfight.DrawLayers;
 
-import android.util.Log;
 import com.acidspacecompany.epicwallpaperfight.AI.AI;
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.BloodLayer.BloodLayer;
@@ -81,7 +80,6 @@ public class UnitLayer {
 
                 float posY = posOtnX * hNew + topBoard;
                 u.setPosition(posX, posY);
-                //u.reMatrix();
             }
         synchroniser.unlock();
     }
@@ -219,6 +217,7 @@ public class UnitLayer {
 
                     if (c.getType() != NotControlledUnit.Type.Bullet)
                         kills[c.getTeam()]++;
+                    c.kill();
                     units.remove(c);
                 }
             }
@@ -349,9 +348,9 @@ public class UnitLayer {
                     u.get(0).prepareDrawShadow();
                     for (Unit m : u)
                         m.drawShadow();
+                    Graphic.unBindMatrices();
                 }
             }
-            Graphic.unBindMatrices();
         }
 
         for (LinkedList<Unit> u : sortedByTextureUnits) {
@@ -359,10 +358,9 @@ public class UnitLayer {
                 u.get(0).prepareDrawBase();
                 for (Unit m : u)
                     m.drawBase();
+                Graphic.unBindMatrices();
             }
-            Graphic.unBindMatrices();
         }
-
         synchroniser.unlock();
     }
 }

@@ -3,6 +3,7 @@ package com.acidspacecompany.epicwallpaperfight.OpenGLWrapping;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.opengl.Matrix;
+import android.util.Log;
 import com.acidspacecompany.epicwallpaperfight.Configs.BicycleDebugger;
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
 import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Shaders.*;
@@ -147,8 +148,6 @@ public class Graphic {
         DRAW_BITMAPS
     }
 
-    private static Mode currentMode;
-
     /**
      * Задаем режим отрисовки прямоугольников
      */
@@ -203,7 +202,6 @@ public class Graphic {
     }
 
     public static void begin(Mode drawMode) {
-        currentMode = drawMode;
         switch (drawMode) {
             case DRAW_RECTANGLES: initRectangles();
                 break;
@@ -253,6 +251,7 @@ public class Graphic {
      * @param width Ширина прямоугольника
      * @param height Высота прямоугольника
      */
+    @Deprecated
     private static void createRectangle(float x, float y, float width, float height) {
         //Создаем матрицу
         //Задаем масштабирование
@@ -323,7 +322,7 @@ public class Graphic {
         //Задаем параметры для фрагментного шейдера
         fillBitmapShader.setDX(dx);
         fillBitmapShader.setTextureDimensions(width,height);
-        glBindTexture(GL_TEXTURE_2D,texture);
+        glBindTexture(GL_TEXTURE_2D, texture);
 
 
         //Рисуем к херам
@@ -335,6 +334,9 @@ public class Graphic {
     /*
     ------------------------------ OPTIMISATION START LINE -------------------------------------------
     */
+    private static ArrayList<float[]> scaleMatrices=new ArrayList<>();
+    private static ArrayList<float[]> resultMatrices=new ArrayList<>();
+
     public static void unBindMatrices() {
         scaleMatrix=new float[16];
         translateMatrix=new float[16];
@@ -345,19 +347,15 @@ public class Graphic {
         glBindTexture(GL_TEXTURE_2D, id);
     }
 
-    public static void bindScaleMatrix(float[] scaleMatrix) {
-        Graphic.scaleMatrix=scaleMatrix;
+    public static void bindScaleMatrix(int id) {
+        Graphic.scaleMatrix=scaleMatrices.get(id);
     }
 
-    public static void bindTranslationMatrix(float[] translateMatrix) {
-        Graphic.translateMatrix=translateMatrix;
+    public static void bindResultMatrix(int id) {
+        Graphic.resultMatrix=resultMatrices.get(id);
     }
 
-    public static void bindResultMatrix(float[] resultMatrix) {
-        Graphic.resultMatrix=resultMatrix;
-    }
-
-    public static float[] generateTranslationMatrix(float x, float y) {
+    private static float [] generateTranslationMatrix(float x, float y) {
         float [] m=new float[16];
         Matrix.setIdentityM(m, 0);
         Matrix.translateM(m, 0, x, y, 0);
@@ -365,17 +363,50 @@ public class Graphic {
         return m;
     }
 
-    public static float[] generateScaleMatrix(float w, float h) {
+    private static float[] generateScaleMatrix(float w, float h) {
         float [] m=new float[16];
         Matrix.setIdentityM(m, 0);
         Matrix.scaleM(m, 0, w, h, 1);
         return m;
     }
 
-    public static float[] generateResultMatrix(float x, float y, float w, float h) {
+    private static float [] generateResultMatrix(float x, float y, float w, float h) {
         float [] m=new float[16];
         Matrix.multiplyMM(m, 0, generateTranslationMatrix(x, y), 0, generateScaleMatrix(w, h), 0);
         return m;
+    }
+
+    public static int getScaleMatrixID(float w, float h) {
+        for (int i=0; i<scaleMatrices.size(); i++)
+            if (scaleMatrices.get(i)==null) {
+                scaleMatrices.set(i, generateScaleMatrix(w, h));
+                return i;
+            }
+        scaleMatrices.add(generateScaleMatrix(w, h));
+        return scaleMatrices.size()-1;
+    }
+
+    public static int getResultMatrixID(float x, float y, float w, float h) {
+        for (int i=0; i<resultMatrices.size(); i++)
+            if (resultMatrices.get(i)==null) {
+                resultMatrices.set(i, generateResultMatrix(x, y, w, h));
+                return i;
+            }
+        resultMatrices.add(generateResultMatrix(x, y, w, h));
+        return resultMatrices.size()-1;
+    }
+
+    public static void cleanScaleMatrixID(int id) {
+        scaleMatrices.set(id, null);
+    }
+
+    public static void cleanResultMatrixID(int id) {
+        resultMatrices.set(id, null);
+    }
+
+    private static void setScaleMatrix(float w, float h) {
+        Matrix.setIdentityM(scaleMatrix, 0);
+        Matrix.scaleM(scaleMatrix, 0, w, h, 1);
     }
 
     private static void setTranslationMatrix(float x, float y) {
@@ -409,6 +440,7 @@ public class Graphic {
         drawBindedBitmap();
     }
 
+    //main
     private static void drawBindedBitmap() {
         textureShader.setMatrix(resultMatrix, 0);
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
@@ -430,23 +462,16 @@ public class Graphic {
         fillColorShader.setColor(r,g,b,a);
         glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
     }
+
+    public static void drawRect(float x, float y, float width, float height,
+                                 float r, float g, float b, float a) {
+        setScaleMatrix(width, height);
+        setTranslationMatrix(x, y);
+        applyTranslationAndScale();
+        drawRect(r, g, b, a);
+    }
     /*
     ------------------------------ OPTIMISATION END LINE -------------------------------------------
     */
-
-    public static void drawRect(float x, float y, float x1, float y1, float r, float g, float b, float a) {
-        drawRectInside(x, y, x1 - x, y1 - y, r, g, b, a);
-    }
-
-    private static void drawRectInside(float x, float y, float width, float height, float r, float g, float b, float a) {
-            //Задаем матрицы, которые преобразуют прямоугольник из VBO к необходимому прямоугольнику
-            createRectangle(x,y,width,height);
-            //Задаем матрицу для шейдера
-            fillColorShader.setMatrix(resultMatrix,0);
-            //Задаем цвет
-            fillColorShader.setColor(r,g,b,a);
-            //Рисуем
-            glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-    }
 
 }

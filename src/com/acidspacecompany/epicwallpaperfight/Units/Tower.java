@@ -10,8 +10,8 @@ public class Tower extends Unit{
     private float aimX, aimY;
     private final LoopedTicker shot;
     private Unit addBuffer;
-    private float[] resultMatrixTexture;
-    private float[] resultMatrixShadow;
+    private int resultMatrixTexture;
+    private int resultMatrixShadow;
 
     public Tower(Point p, int team) {
         super(p, team, 10f, 3f, Type.Tower);
@@ -23,8 +23,8 @@ public class Tower extends Unit{
                     addBuffer=dropTheBomb();
             }
         });
-        resultMatrixTexture =Graphic.generateResultMatrix(getX0(), getY0(), getWidth(), getHeight());
-        resultMatrixShadow =Graphic.generateResultMatrix(getShadowX0(), getShadowY0(),
+        resultMatrixTexture =Graphic.getResultMatrixID(getX0(), getY0(), getWidth(), getHeight());
+        resultMatrixShadow =Graphic.getResultMatrixID(getShadowX0(), getShadowY0(),
                 getShadowWidth(), getShadowHeight());
     }
 
@@ -63,9 +63,16 @@ public class Tower extends Unit{
         Graphic.drawBitmap();
     }
 
-    public void reMatrix() {
-        resultMatrixTexture =Graphic.generateResultMatrix(getX0(), getY0(), getWidth(), getHeight());
-        resultMatrixShadow =Graphic.generateResultMatrix(getShadowX0(), getShadowY0(),
+    public void setPosition(float x, float y) {
+        super.setPosition(x, y);
+        resultMatrixTexture =Graphic.getResultMatrixID(getX0(), getY0(), getWidth(), getHeight());
+        resultMatrixShadow =Graphic.getResultMatrixID(getShadowX0(), getShadowY0(),
                 getShadowWidth(), getShadowHeight());
+    }
+
+    public void kill() {
+        super.kill();
+            Graphic.cleanResultMatrixID(resultMatrixTexture);
+            Graphic.cleanResultMatrixID(resultMatrixShadow);
     }
 }

@@ -11,9 +11,10 @@ public class Unit extends ControlledUnit {
     private static int[][] menTexture;
     private static int[][] textureSizes;
     private static int[][] shadowSizes;
-    private static float[][] texturesScaleMatrices;
-    private static float[][] shadowScaleMatrices;
+    private static int[] texturesScaleMatrices;
+    private static int[] shadowScaleMatrices;
     private float widthHealth;
+    private float redHealth;
 
     protected float getShadowX0() {
         return shadow.getX0();
@@ -39,11 +40,11 @@ public class Unit extends ControlledUnit {
         return menTexture[getTeam()][getTypeNumber()];
     }
 
-    private float[] getTextureScaleMatrix() {
+    private int getTextureScaleMatrix() {
         return texturesScaleMatrices[getTypeNumber()];
     }
 
-    private float[] getShadowScaleMatrix() {
+    private int getShadowScaleMatrix() {
         return shadowScaleMatrices[getTypeNumber()];
     }
 
@@ -55,11 +56,11 @@ public class Unit extends ControlledUnit {
             shadowSizes[i][0] = sizes[i][0] * 4;
             shadowSizes[i][1] = sizes[i][1] * 4;
         }
-        texturesScaleMatrices = new float[4][];
-        shadowScaleMatrices = new float[4][];
+        texturesScaleMatrices = new int[4];
+        shadowScaleMatrices = new int[4];
         for (int i = 0; i < 4; i++) {
-            texturesScaleMatrices[i] = Graphic.generateScaleMatrix(textureSizes[i][0], textureSizes[i][1]);
-            shadowScaleMatrices[i] = Graphic.generateScaleMatrix(shadowSizes[i][0], shadowSizes[i][1]);
+            texturesScaleMatrices[i] = Graphic.getScaleMatrixID(textureSizes[i][0], textureSizes[i][1]);
+            shadowScaleMatrices[i] = Graphic.getScaleMatrixID(shadowSizes[i][0], shadowSizes[i][1]);
         }
     }
 
@@ -88,6 +89,7 @@ public class Unit extends ControlledUnit {
         health += getHealthCoef() * h;
         if (health > 1f) health = 1f;
         widthHealth=getWidth() * health;
+        redHealth=0.75f*health;
     }
 
     public void setPosition(float x, float y) {
@@ -123,15 +125,11 @@ public class Unit extends ControlledUnit {
 
     public void drawHealth() {
             float health = Math.max(0, this.health);
-            Graphic.drawRect(getX0(), getY0() - 5,
-                    getX0() + widthHealth, getY0() - 3,
-                    1 - health, 0.75f * health, 0, 1);
+            Graphic.drawRect(getX0(), getY0() - 5, widthHealth, 2,
+                    1 - health, redHealth, 0, 1);
     }
 
     public void kill() {
         health = -1;
-    }
-
-    public void reMatrix() {
     }
 }

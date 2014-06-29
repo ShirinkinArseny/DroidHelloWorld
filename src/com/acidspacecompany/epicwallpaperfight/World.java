@@ -151,20 +151,16 @@ public class World {
 
     public static void resize(int width, int height) {
         if (LocalConfigs.getDisplayWidth()!=width && LocalConfigs.getDisplayHeight()!=height) {
+            Graphic.resize(width, height);
             TerritoryLayer.resize(width, height);
             UnitLayer.resize(width, height);
             TimerLayer.resize(width, height);
-            Graphic.resize(width, height);
             TimerLayer.resize(width, height);
             LocalConfigs.resize(width, height);
         }
     }
 
-    private static float lastFPS=0;
-
     private void update(float dt) {
-        lastFPS=(lastFPS+1/dt)/2;
-        Log.i("FPS", String.valueOf(lastFPS));
         TimerLayer.update(dt);
         UnitLayer.update(dt);
         SpawnsLayer.update(dt);

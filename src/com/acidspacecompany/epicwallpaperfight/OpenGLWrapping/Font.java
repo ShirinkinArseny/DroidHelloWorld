@@ -12,8 +12,8 @@ public class Font {
 
     private static final int[] dimensions = {152,137,140,141,131,131,145,145,67,127,142,124,169,145,147,138,147,139,142,140,141,150,186,143,143,135,130,92,131,130,137,127,131,132,133,132,67,198,144,169,120,93,94,91,139,120,100,100,83,93,121,123,65,112,77,110,71,71};
     private static int[] textures = new int[dimensions.length];
-    private final float scaleFactor;
-    private float[] scaleMatrix;
+    private float scaleFactor;
+    private int scaleMatrix=-1;
     private float size;
     private float[] sizedDimensions;
 
@@ -108,7 +108,13 @@ public class Font {
     }
 
     public Font(float size) {
-        scaleMatrix=Graphic.generateScaleMatrix(size, size);
+        resize(size);
+    }
+
+    public void resize(float size) {
+        if (scaleMatrix!=-1)
+            Graphic.cleanScaleMatrixID(scaleMatrix);
+        scaleMatrix=Graphic.getScaleMatrixID(size, size);
         this.size=size;
         scaleFactor = size / 256f;
         sizedDimensions=new float[dimensions.length];

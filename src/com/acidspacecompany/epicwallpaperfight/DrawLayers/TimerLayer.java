@@ -22,8 +22,8 @@ public class TimerLayer {
     private static NiceMoveTimeFunction score1Position =new NiceMoveTimeFunction(0, 0, 10f);
     private static NiceMoveTimeFunction score2Position =new NiceMoveTimeFunction(0, 0, 10f);
 
-    private static Font big;
-    private static Font small;
+    private static Font big=new Font(10f);
+    private static Font small=new Font(10f);
 
     private static String time="";
     private static String s1="";
@@ -48,8 +48,8 @@ public class TimerLayer {
         smallSize=w/6;
         clockHeight =h/4;
         scoreHeight = (int) (clockHeight +bigSize);
-        big=new Font(bigSize);
-        small=new Font(smallSize);
+        big.resize(bigSize);
+        small.resize(smallSize);
     }
 
     public static void update(float dt) {

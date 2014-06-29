@@ -8,15 +8,15 @@ public class TerritoryLayer{
     private static float[]  border;
     private static float[]  bg;
     private static float top, bottom, horizontal1, horizontal2;
-    private static float[] resultMatrix1;
-    private static float[] resultMatrix2;
+    private static int resultMatrix1;
+    private static int resultMatrix2;
 
     public static void reInit() {
         border= LocalConfigs.getWorldBoardersColor();
         bg= LocalConfigs.getWorldBGColor();
-        resultMatrix1=Graphic.generateResultMatrix(0, 0,
+        resultMatrix1=Graphic.getResultMatrixID(0, 0,
                 LocalConfigs.getDisplayWidth(), LocalConfigs.getDisplayHeight());
-        resultMatrix2=Graphic.generateResultMatrix(horizontal1, top, bottom-top, horizontal2);
+        resultMatrix2=Graphic.getResultMatrixID(horizontal1, top, bottom-top, horizontal2);
     }
 
     public static void resize(int w, int h) {
@@ -24,8 +24,8 @@ public class TerritoryLayer{
         bottom=h- LocalConfigs.getIntValue(LocalConfigs.worldVerticalBottomBorders);
         horizontal1= LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders);
         horizontal2=w-LocalConfigs.getIntValue(LocalConfigs.worldHorizontalBorders);
-        resultMatrix1=Graphic.generateResultMatrix(0, 0, w, h);
-        resultMatrix2=Graphic.generateResultMatrix(horizontal1, top, bottom-top, horizontal2);
+        resultMatrix1=Graphic.getResultMatrixID(0, 0, w, h);
+        resultMatrix2=Graphic.getResultMatrixID(horizontal1, top, horizontal2-horizontal1, bottom-top);
     }
 
     public static void draw() {
