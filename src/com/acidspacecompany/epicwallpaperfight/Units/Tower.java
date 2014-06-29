@@ -67,6 +67,15 @@ public class Tower extends Unit{
         }
     }
 
+
+    public void prepareDrawBase() {
+        Graphic.bindBitmap(getTextureBitmap());
+    }
+
+    public void prepareDrawShadow() {
+        Graphic.bindBitmap(getShadowBitmap());
+    }
+
     public void setPosition(float x, float y) {
         super.setPosition(x, y);
         resultMatrixTexture =Graphic.getResultMatrixID(getX0(), getY0(), getWidth(), getHeight());

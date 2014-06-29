@@ -7,14 +7,11 @@ import android.util.DisplayMetrics;
 import android.util.Log;
 import com.acidspacecompany.epicwallpaperfight.AI.AI;
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
+import com.acidspacecompany.epicwallpaperfight.DrawLayers.*;
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.BloodLayer.Blood;
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.BloodLayer.BloodLayer;
-import com.acidspacecompany.epicwallpaperfight.DrawLayers.CanvaLayer;
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.MessagesLayer.MessagesLayer;
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.SpawnLayer.SpawnsLayer;
-import com.acidspacecompany.epicwallpaperfight.DrawLayers.TerritoryLayer;
-import com.acidspacecompany.epicwallpaperfight.DrawLayers.TimerLayer;
-import com.acidspacecompany.epicwallpaperfight.DrawLayers.UnitLayer;
 import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Graphic;
 import com.acidspacecompany.epicwallpaperfight.Units.*;
 
@@ -53,6 +50,7 @@ public class World {
         UnitLayer.init();
         BloodLayer.init();
         MessagesLayer.init();
+        StatisticLayer.init();
         Bullet.init();
         reInit();
     }
@@ -128,15 +126,40 @@ public class World {
         active = false;
     }
 
+    private static long lastDeltaTime=0;
+    private static float lowpassedTPU=0;
+    private static long fps=0;
+    private static float lowpassedFPS=0;
+    private static float delta;
     public void updateAndDraw() {
         if (active) {
             long cTime = System.currentTimeMillis();
-            float delta = (cTime - lastTime) / 1000f;
+            delta = (cTime - lastTime) / 1000f;
             lastTime = cTime;
             update(delta);
             Graphic.startDraw();
             draw();
+            lastDeltaTime=System.currentTimeMillis()-cTime;
+            lowpassedTPU=0.99f*lowpassedTPU+0.01f*lastDeltaTime;
+            fps= (long) (1/delta);
+            lowpassedFPS=0.99f*lowpassedFPS+0.01f*fps;
         }
+    }
+
+    public static long getFPS() {
+        return fps;
+    }
+
+    public static long getLowPassedFPS() {
+        return (long) lowpassedFPS;
+    }
+
+    public static long getLowPassedTPU() {
+        return (long) lowpassedTPU;
+    }
+
+    public static long getTPU() {
+        return lastDeltaTime;
     }
 
     public void run() {
@@ -179,10 +202,11 @@ public class World {
         BloodLayer.draw();
         TimerLayer.draw();
         MessagesLayer.draw();
-        Graphic.begin(Graphic.Mode.DRAW_BITMAPS);
         UnitLayer.draw();
         Graphic.begin(Graphic.Mode.DRAW_RECTANGLES);
         UnitLayer.drawRectangles();
+        Graphic.begin(Graphic.Mode.DRAW_BITMAPS);
+        StatisticLayer.draw();
     }
 }
         

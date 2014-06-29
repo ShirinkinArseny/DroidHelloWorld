@@ -85,6 +85,11 @@ public class Font {
     }
 
     public void drawString(String string, float x, float y, float r, float g, float b, float a) {
+        Graphic.bindColor(r, g, b, a);
+        drawString(string, x, y);
+    }
+
+    public void drawString(String string, float x, float y) {
         int position;
         int lastPosition=-1;
         //Узнаем, на сколько нужно масштабировать
@@ -94,13 +99,18 @@ public class Font {
                 position = map.indexOf(string.charAt(i));
                 if (lastPosition!=position)
                     Graphic.bindBitmap(textures[position]);
-                Graphic.drawBitmap(x, y, r, g, b, a);
+                Graphic.drawBitmap(x, y);
                 x += sizedDimensions[position];
                 lastPosition=position;
             } else {
                 x += size;
             }
         }
+    }
+
+    public void prepareDraw(float r, float g, float b, float a) {
+        Graphic.bindColor(r, g, b, a);
+        Graphic.bindScaleMatrix(scaleMatrix);
     }
 
     public void prepareDraw() {

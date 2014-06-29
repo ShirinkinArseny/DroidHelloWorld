@@ -310,8 +310,26 @@ public class Graphic {
     /*
     ------------------------------ OPTIMISATION START LINE -------------------------------------------
     */
+    public static int getScaleMatricesCount() {
+        return scaleMatrices.size();
+    }
+
+    public static int getResultMatricesCount() {
+        return resultMatrices.size();
+    }
+
+    public static int getUsedScaleMatricesCount() {
+        return notNullScaleMatrices;
+    }
+
+    public static int getUsedResultMatricesCount() {
+        return notNullResultMatrices;
+    }
+
     private static ArrayList<float[]> scaleMatrices=new ArrayList<>();
+    private static int notNullScaleMatrices=0;
     private static ArrayList<float[]> resultMatrices=new ArrayList<>();
+    private static int notNullResultMatrices=0;
 
     public static void unBindMatrices() {
         scaleMatrix=new float[16];
@@ -353,6 +371,7 @@ public class Graphic {
     }
 
     public static int getScaleMatrixID(float w, float h) {
+        notNullScaleMatrices++;
         for (int i=0; i<scaleMatrices.size(); i++)
             if (scaleMatrices.get(i)==null) {
                 scaleMatrices.set(i, generateScaleMatrix(w, h));
@@ -363,6 +382,7 @@ public class Graphic {
     }
 
     public static int getResultMatrixID(float x, float y, float w, float h) {
+        notNullResultMatrices++;
         for (int i=0; i<resultMatrices.size(); i++)
             if (resultMatrices.get(i)==null) {
                 resultMatrices.set(i, generateResultMatrix(x, y, w, h));
@@ -374,10 +394,12 @@ public class Graphic {
 
     public static void cleanScaleMatrixID(int id) {
         scaleMatrices.set(id, null);
+        notNullScaleMatrices--;
     }
 
     public static void cleanResultMatrixID(int id) {
         resultMatrices.set(id, null);
+        notNullResultMatrices--;
     }
 
     private static void setScaleMatrix(float w, float h) {

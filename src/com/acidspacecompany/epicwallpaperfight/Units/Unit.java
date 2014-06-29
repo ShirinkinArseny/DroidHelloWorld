@@ -32,11 +32,11 @@ public class Unit extends ControlledUnit {
         return shadow.getHeight();
     }
 
-    private int getShadowBitmap() {
+    protected int getShadowBitmap() {
         return menTexture[getTeam() + 2][getTypeNumber()];
     }
 
-    private int getTextureBitmap() {
+    protected int getTextureBitmap() {
         return menTexture[getTeam()][getTypeNumber()];
     }
 
