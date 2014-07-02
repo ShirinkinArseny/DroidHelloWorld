@@ -111,6 +111,16 @@ public class LocalConfigs {
         return configs;
     }
 
+    public static void setField(String name, String value) {
+        for (ConfigField cf: fields) {
+            if (cf.getName().toLowerCase().equals(name.toLowerCase())) {
+                cf.setValue(value);
+                break;
+            }
+        }
+        World.reInit();
+    }
+
     public static void setFields(ArrayList<ConfigField> fields) {
         LocalConfigs.fields=fields;
     }

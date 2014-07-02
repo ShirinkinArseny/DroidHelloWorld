@@ -1,5 +1,6 @@
 package com.acidspacecompany.epicwallpaperfight.DrawLayers;
 
+import android.util.Log;
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
 import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Graphic;
 
@@ -14,9 +15,6 @@ public class TerritoryLayer{
     public static void reInit() {
         border= LocalConfigs.getWorldBoardersColor();
         bg= LocalConfigs.getWorldBGColor();
-        resultMatrix1=Graphic.getResultMatrixID(0, 0,
-                LocalConfigs.getDisplayWidth(), LocalConfigs.getDisplayHeight());
-        resultMatrix2=Graphic.getResultMatrixID(horizontal1, top, bottom-top, horizontal2);
     }
 
     public static void resize(int w, int h) {

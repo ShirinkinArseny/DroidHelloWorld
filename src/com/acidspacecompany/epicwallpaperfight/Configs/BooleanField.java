@@ -13,7 +13,12 @@ public class BooleanField extends ConfigField{
     }
 
     public void setValue(Object value) {
-         this.value=(boolean)value;
+        try {
+            this.value = (boolean) value;
+        }
+        catch (Exception e) {
+            this.value = Boolean.valueOf(value.toString());
+        }
     }
 
     public BooleanField(String name) {

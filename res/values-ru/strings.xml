@@ -6,6 +6,8 @@
     <string name="bloodVisibleTime">Время сокрытия крови</string>
     <string name="bloodCount">Количество пятен крови на убийство</string>
     <string name="bloodDraw">Отрисовывать кровь</string>
+    <string name="bloodCanva">Фоновая картинка</string>
+    <string name="canvaSpeed">Скорость движения фона</string>
     <string name="messageShowTime">Время сокрытия сообщений</string>
     <string name="messageDraw">Отрисовывать сообщения</string>
     <string name="spawnsShowTime">Время сокрытия мест спавна</string>
@@ -22,6 +24,8 @@
     <string name="bloodVisibleTime_description"           >Как долго видна кровь?</string>
     <string name="bloodCount_description"                 >Сколько пятен крови появится на каждое убийство?</string>
     <string name="bloodDraw_description"                  >Видна ли кровь?</string>
+    <string name="bloodCanva_description"                 >Видна ли фоновая картинка?</string>
+    <string name="canvaSpeed_description"                 >В пикселях в секунду.</string>
     <string name="messageShowTime_description"            >Как долго видны сообщения?</string>
     <string name="messageDraw_description"                >Видны ли сообщения?</string>
     <string name="spawnsShowTime_description"             >Как долго видны места спавна?</string>

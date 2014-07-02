@@ -12,8 +12,10 @@ public class CanvaLayer {
     private static Graphic.PaintingType fillType;
 
     public static void init(int w, int id, Graphic.PaintingType pt) {
+        bg=id;
         width = w;
         dx = 0;
+        fillType=pt;
     }
 
     public static void setTextureID(int id) {

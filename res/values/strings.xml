@@ -7,7 +7,7 @@
     <string name="bloodCount"                             >Less blood or more blood?</string>
     <string name="bloodDraw"                              >Blood</string>
     <string name="bloodCanva"                             >Background</string>
-    <string name="canvaSpeed"                             >Canva speed</string>
+    <string name="canvaSpeed"                             >Background motion speed</string>
     <string name="messageShowTime"                        >The time of message disappearance</string>
     <string name="messageDraw"                            >Messages</string>
     <string name="spawnsShowTime"                         >The time of spawn-places disappearance</string>
@@ -24,6 +24,8 @@
     <string name="bloodVisibleTime_description"           >For how long does blood stay visible?</string>
     <string name="bloodCount_description"                 >The number of spots of blood for one murder</string>
     <string name="bloodDraw_description"                  >Do you wanna have blood on your screen or not?</string>
+    <string name="bloodCanva_description"                 >Do you wanna have background picture or not?</string>
+    <string name="canvaSpeed_description"                 >In pixel per second</string>
     <string name="messageShowTime_description"            >The time when messages disappear</string>
     <string name="messageDraw_description"                >Do you wanna see messages on your screen or not?</string>
     <string name="spawnsShowTime_description"             >The time when spawn-places disappear</string>
@@ -48,11 +50,11 @@
     <string name="loadingProgress">Please wait, loading settings and their names O_o</string>
     <string name="loadingToast">Please wait, loading may take some time</string>
 
-    <string name="googlePlayReviewTitle">Отзыв Google Play</string>
-    <string name="googlePlayReviewSummary">Пожалуйста, оцените наше приложение на Google Play</string>
-    <string name="googlePlayGoReview">Оценить</string>
-    <string name="googlePlayLaterReview">Позже</string>
-    <string name="googlePlayDeclineReview">Никогда</string>
+    <string name="googlePlayReviewTitle">Google Play Review</string>
+    <string name="googlePlayReviewSummary">Please, rate our app in Google Play</string>
+    <string name="googlePlayGoReview">Rate</string>
+    <string name="googlePlayLaterReview">Remind me later</string>
+    <string name="googlePlayDeclineReview">Never remind me</string>
 
     <string name="thankyou">Thank you!</string>
 

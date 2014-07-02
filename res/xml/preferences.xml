@@ -27,15 +27,9 @@
             android:defaultValue="true"
         />
     <CheckBoxPreference
-            android:key="bloodDraw"
-            android:title="@string/bloodDraw"
-            android:summary="@string/bloodDraw_description"
-            android:icon="@drawable/doing"
-            android:defaultValue="true"
-            />
-    <CheckBoxPreference
             android:key="canvaDraw"
             android:title="@string/bloodCanva"
+            android:summary="@string/bloodCanva_description"
             android:icon="@drawable/doing"
             android:defaultValue="true"
             />
@@ -43,6 +37,7 @@
             android:key="canvasSpeed"
             android:inputType="number"
             android:title="@string/canvaSpeed"
+            android:summary="@string/canvaSpeed_description"
             android:defaultValue="50"
             min="0"
             max="100"

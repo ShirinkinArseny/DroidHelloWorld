@@ -13,7 +13,12 @@ public class IntegerField extends ConfigField{
     }
 
     public void setValue(Object value) {
-         this.value=(int)value;
+        try {
+            this.value = (int) value;
+        }
+        catch (Exception e) {
+            this.value = Integer.valueOf(value.toString());
+        }
     }
 
     public IntegerField(String name) {

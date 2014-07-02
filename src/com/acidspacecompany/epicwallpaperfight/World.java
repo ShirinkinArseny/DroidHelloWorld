@@ -4,7 +4,6 @@ import android.content.Context;
 import android.content.res.Resources;
 import android.graphics.*;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import com.acidspacecompany.epicwallpaperfight.AI.AI;
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.*;
@@ -12,6 +11,7 @@ import com.acidspacecompany.epicwallpaperfight.DrawLayers.BloodLayer.Blood;
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.BloodLayer.BloodLayer;
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.MessagesLayer.MessagesLayer;
 import com.acidspacecompany.epicwallpaperfight.DrawLayers.SpawnLayer.SpawnsLayer;
+import com.acidspacecompany.epicwallpaperfight.Network.NetworkDebugger;
 import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Graphic;
 import com.acidspacecompany.epicwallpaperfight.Units.*;
 
@@ -20,9 +20,15 @@ import java.util.*;
 public class World {
 
     private boolean active = true;//is working
+    private static boolean physicIsWorking = true;
     private long lastTime;
     private static Resources res;
     private static float pictureSizeCoef;
+    private static NetworkDebugger nwd=new NetworkDebugger();
+
+    public static void setPhysicIsWorking(boolean physicIsWorking) {
+        World.physicIsWorking = physicIsWorking;
+    }
 
     private static Bitmap getScaledBitmap(Bitmap b, int size) {
         return Bitmap.createScaledBitmap(b, size, size, true);
@@ -95,7 +101,7 @@ public class World {
         Unit.init(menTextureIDs, sizes);
 
         Bitmap canva=getScaledBitmap(BitmapFactory.decodeResource(res, R.drawable.grid), power2nearest(getScaledValue(256)));
-        CanvaLayer.init(Graphic.genInfinityTexture(canva), (int) (getScaledValue(canva.getWidth())), LocalConfigs.getPaintingType());
+        CanvaLayer.init((int) (getScaledValue(canva.getWidth())), Graphic.genInfinityTexture(canva), LocalConfigs.getPaintingType());
 
         Bitmap blood1=getScaledResource(res, R.drawable.blood, 80);
         Bitmap blood2=getScaledResource(res, R.drawable.coal, 80);
@@ -136,7 +142,8 @@ public class World {
             long cTime = System.currentTimeMillis();
             delta = (cTime - lastTime) / 1000f;
             lastTime = cTime;
-            update(delta);
+            if (physicIsWorking)
+                update(delta);
             Graphic.startDraw();
             draw();
             lastDeltaTime=System.currentTimeMillis()-cTime;
@@ -175,11 +182,11 @@ public class World {
     public static void resize(int width, int height) {
         if (LocalConfigs.getDisplayWidth()!=width && LocalConfigs.getDisplayHeight()!=height) {
             Graphic.resize(width, height);
-            TerritoryLayer.resize(width, height);
             UnitLayer.resize(width, height);
             TimerLayer.resize(width, height);
             TimerLayer.resize(width, height);
             LocalConfigs.resize(width, height);
+            TerritoryLayer.resize(width, height);
         }
     }
 
@@ -205,8 +212,8 @@ public class World {
         UnitLayer.draw();
         Graphic.begin(Graphic.Mode.DRAW_RECTANGLES);
         UnitLayer.drawRectangles();
-        Graphic.begin(Graphic.Mode.DRAW_BITMAPS);
-        StatisticLayer.draw();
+        //Graphic.begin(Graphic.Mode.DRAW_BITMAPS);
+        //StatisticLayer.draw();
     }
 }
         

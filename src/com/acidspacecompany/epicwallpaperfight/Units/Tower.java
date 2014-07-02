@@ -67,7 +67,6 @@ public class Tower extends Unit{
         }
     }
 
-
     public void prepareDrawBase() {
         Graphic.bindBitmap(getTextureBitmap());
     }
@@ -85,7 +84,7 @@ public class Tower extends Unit{
 
     public void kill() {
         super.kill();
-            Graphic.cleanResultMatrixID(resultMatrixTexture);
-            Graphic.cleanResultMatrixID(resultMatrixShadow);
+        Graphic.cleanResultMatrixID(resultMatrixTexture);
+        Graphic.cleanResultMatrixID(resultMatrixShadow);
     }
 }

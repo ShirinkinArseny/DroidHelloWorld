@@ -62,6 +62,15 @@ public class TimerLayer {
         updateTime();
     }
 
+    public static void setTimer(float time) {
+        round=new LoopedTicker(time, new Runnable() {
+            @Override
+            public void run() {
+                UnitLayer.killEverybody();
+            }
+        });
+    }
+
     private static void updateTime() {
         int seconds= (int)(round.getValue());
         if (lastTime!=seconds) {

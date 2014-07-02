@@ -1,5 +1,6 @@
 package com.acidspacecompany.epicwallpaperfight.AI;
 
+import android.util.Log;
 import com.acidspacecompany.epicwallpaperfight.Units.ControlledUnit;
 import com.acidspacecompany.epicwallpaperfight.Units.NotControlledUnit;
 
@@ -90,6 +91,15 @@ public class AI {
                 } else if (theirMen.size()>0) {
                     x=theirMen.get(0).getX();
                     y=theirMen.get(0).getY();
+                    float lastHP=theirMen.get(0).getHealth();
+
+                    for (NotControlledUnit t: theirMen) {
+                        if (t.getHealth()<lastHP) {
+                            lastHP=t.getHealth();
+                            x = t.getX();
+                            y = t.getY();
+                        }
+                    }
                 }
                 else {
                     x=enemies.get(0).getX();

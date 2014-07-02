@@ -13,7 +13,12 @@ public class FloatField extends ConfigField{
     }
 
     public void setValue(Object value) {
-         this.value=(float)value;
+        try {
+            this.value = (float) value;
+        }
+        catch (Exception e) {
+            this.value = Float.valueOf(value.toString());
+        }
     }
 
     public FloatField(String name) {
