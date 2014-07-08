@@ -4,9 +4,11 @@ import android.app.Activity;
 import android.content.Context;
 import android.graphics.*;
 import android.graphics.drawable.BitmapDrawable;
+import android.hardware.display.DisplayManager;
 import android.os.Bundle;
 import android.preference.Preference;
 import android.util.AttributeSet;
+import android.util.DisplayMetrics;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -37,6 +39,14 @@ public class ChooseTextureActivity extends Activity {
     }
 
     private class ImageAdapter extends BaseAdapter {
+        private int getLandDiv2() {
+            DisplayMetrics displayMetrics = new DisplayMetrics();
+            getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+            final int width = displayMetrics.widthPixels;
+            final int height = displayMetrics.heightPixels;
+            return (width<height) ? width / 2 : width / 3;
+        }
+
         private Context mContext;
 
         protected ImageAdapter(Context context) {
@@ -58,37 +68,13 @@ public class ChooseTextureActivity extends Activity {
             return 0;
         }
 
-        private View getImageCanvas(int position) {
-            ImageView imageView;
-
-            Bitmap allBitmap = Bitmap.createBitmap(520, 520, Bitmap.Config.ARGB_8888);
-
-            Canvas canvas = new Canvas(allBitmap);
-            final float[] borders = LocalConfigs.getWorldBoardersColor();
-            canvas.drawARGB((int)(borders[3]*255), (int)(borders[0]*255), (int)(borders[1]*255), (int)(borders[2]*255));
-            final float[] background = LocalConfigs.getWorldBGColor();
-            Paint color = new Paint();
-            color.setARGB((int)(background[3]*255), (int)(background[0]*255), (int)(background[1]*255), (int)(background[2]*255));
-            canvas.drawRect(8, 8, 512, 512, color);
-
-            Bitmap b = Bitmap.createBitmap(BitmapFactory.decodeResource(getResources(), images[position]),0,0,512,512);
-            canvas.drawBitmap(b,8,8, new Paint());
-
-
-            imageView = new ImageView(mContext);
-            imageView.setLayoutParams(new GridView.LayoutParams(368,368));
-            imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
-
-            imageView.setImageDrawable(new BitmapDrawable(getResources(), allBitmap));
-
-            return imageView;
-        }
-
-        private View getImageBackground(int position, View convertView) {
+        @Override
+        public View getView(int position, View convertView, ViewGroup parent) {
             ImageView imageView;
             if (convertView==null) {
                 imageView = new ImageView(mContext);
-                imageView.setLayoutParams(new GridView.LayoutParams(360, 360));
+                int size = getLandDiv2();
+                imageView.setLayoutParams(new GridView.LayoutParams(size, size));
                 imageView.setScaleType(ImageView.ScaleType.CENTER_CROP);
                 final float[] borders = LocalConfigs.getWorldBoardersColor();
                 imageView.setBackgroundColor(Color.argb((int)(borders[3]*255), (int)(borders[0]*255), (int)(borders[1]*255), (int)(borders[2]*255)));
@@ -98,11 +84,6 @@ public class ChooseTextureActivity extends Activity {
             }
             imageView.setImageResource(images[position]);
             return imageView;
-        }
-
-        @Override
-        public View getView(int position, View convertView, ViewGroup parent) {
-            return getImageBackground(position,convertView);
         }
     }
 }
