@@ -124,6 +124,7 @@ public class ChooseTextureActivity extends Activity implements AbsListView.OnScr
                 this.position = position;
             }
 
+             private float startX,startY;
 
             @Override
             public boolean onTouch(final View v, MotionEvent event) {
@@ -139,10 +140,13 @@ public class ChooseTextureActivity extends Activity implements AbsListView.OnScr
                         });
                         valueAnimator.start();
                         setScrollListen();
+                        startX = event.getX();
+                        startY = event.getY();
                         break;
                     case MotionEvent.ACTION_UP:
                     case MotionEvent.ACTION_CANCEL:
-                        if (getIsScrolled()) {
+                        float x=event.getX(), y = event.getY();
+                        if (getIsScrolled() | Math.abs(x-startX)>10 | Math.abs(y-startY)>10) {
                             animator = ValueAnimator.ofFloat(1,0);
                             animator.setDuration(100);
                             animator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
@@ -154,7 +158,8 @@ public class ChooseTextureActivity extends Activity implements AbsListView.OnScr
                             animator.start();
                         }
                         else {
-                            Toast.makeText(ChooseTextureActivity.this, "Texture " + position, 1).show();
+                            if (Math.abs(x-startX)<10 & Math.abs(y-startY)<10)
+                                Toast.makeText(ChooseTextureActivity.this, "Texture " + position, 1).show();
                         }
                         break;
                 }
