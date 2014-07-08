@@ -33,6 +33,14 @@
             android:icon="@drawable/doing"
             android:defaultValue="true"
             />
+    <Preference
+            android:key="canvaTexture"
+            android:title="@string/canvaImage"
+            android:summary="@string/canvaImage_description"
+            android:icon="@drawable/doing">
+
+            <intent android:action=".Configs.Preference.ChooseTextureActivity"/>
+    </Preference>
     <com.acidspacecompany.epicwallpaperfight.Configs.Preference.IntegerValuePreference
             android:key="canvasSpeed"
             android:inputType="number"
