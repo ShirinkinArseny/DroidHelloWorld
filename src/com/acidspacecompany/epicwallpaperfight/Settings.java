@@ -48,7 +48,7 @@ public class Settings extends PreferenceActivity {
                 @Override
                 public void onClick(DialogInterface dialog, int which) {
                     //Говорим пользователю "спасибо"
-                    Toast.makeText(getBaseContext(), R.string.thankyou, 5).show();
+                    Toast.makeText(getBaseContext(), R.string.thankyou, Toast.LENGTH_LONG).show();
 
                     //Значит, всё-таки пользователь оставляет отзыв
                     //Создаем переход на страницу Google Play
