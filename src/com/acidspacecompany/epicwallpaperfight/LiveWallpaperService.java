@@ -3,6 +3,7 @@ package com.acidspacecompany.epicwallpaperfight;
 import android.content.Context;
 import android.preference.PreferenceManager;
 import com.acidspacecompany.epicwallpaperfight.Ads.AdBuilder;
+import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
 import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Graphic;
 import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.LifecycleRenderer;
 import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.OpenGLES20LiveWallpaperService;
@@ -20,6 +21,7 @@ public class LiveWallpaperService extends OpenGLES20LiveWallpaperService {
     public LifecycleRenderer getRenderer() {
         //Загружаем стандартные значения настроек, если пользователь ещё не зашел в настройки
         PreferenceManager.setDefaultValues(getBaseContext(), R.xml.preferences, false);
+        LocalConfigs.setFolderName(getFilesDir());
         //Создаем рекламу
         AdBuilder.initAd(getBaseContext());
         return new MyRenderer();

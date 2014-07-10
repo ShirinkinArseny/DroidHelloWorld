@@ -59,5 +59,7 @@
     <string name="googlePlayDeclineReview">Никогда</string>
 
     <string name="thankyou">Спасибо!</string>
+
+    <string name="not_enough_free_memory">Недостаточно свободной памяти.</string>
     
 </resources>

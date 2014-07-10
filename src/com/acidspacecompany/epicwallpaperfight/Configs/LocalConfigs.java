@@ -2,16 +2,45 @@ package com.acidspacecompany.epicwallpaperfight.Configs;
 
 import android.content.Context;
 import android.content.SharedPreferences;
+import android.graphics.Bitmap;
+import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
 import android.util.Log;
 import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Graphic;
+import com.acidspacecompany.epicwallpaperfight.R;
 import com.acidspacecompany.epicwallpaperfight.World;
 
+import java.io.File;
 import java.util.ArrayList;
 
 public class LocalConfigs {
 
     public static final String PACKAGE_NAME = "com.acidspacecompany.epicwallpaperfight";
+    public static final String BACKGROUND_FILE_NAME = "backgroung.png";
+    public static final String BACKGROUNG_PREFERENCE_NAME = "background_preference";
+
+    private static File FOLDER;
+    public static void setFolderName(File name) {
+        FOLDER = name;
+    }
+
+    public static Bitmap loadBitmapFromFile(String fileName) {
+        File bitmapFile = new File(FOLDER, fileName);
+        return BitmapFactory.decodeFile(bitmapFile.getAbsolutePath());
+    }
+
+    /**
+     * Обновление фона приложения
+     */
+    public static void updateBackground() {
+        //Получаем текущий фон и тип замощения
+        //Формат строки
+        //<Тип картинки>:<Доступ>:<Тип рисовки>
+        //<Тип картинки> -- FILE или RESOURCE
+        //<Доступ> -- имя файла (для FILE), номер ресурса (для RESOURCE)
+        //<Тип рисовки> -- TILE или FILL
+        String background = settings.getString(BACKGROUNG_PREFERENCE_NAME, "RESOURCE:"+ R.drawable.grid+":TILE");
+    }
 
 
     private static final String TAG = "LocalConfigs";

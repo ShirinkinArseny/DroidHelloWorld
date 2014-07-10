@@ -1,10 +1,16 @@
 package com.acidspacecompany.epicwallpaperfight.Configs.Preference;
 
+
+
 import android.animation.ValueAnimator;
 import android.app.Activity;
 import android.content.Context;
+import android.content.Intent;
+import android.content.res.Configuration;
 import android.graphics.*;
+import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
@@ -14,6 +20,8 @@ import android.widget.*;
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
 import com.acidspacecompany.epicwallpaperfight.R;
 
+import java.io.*;
+
 public class ChooseTextureActivity extends Activity implements AbsListView.OnScrollListener {
     //Массив id картинок
     private static final int[] images = new int[] {
@@ -22,14 +30,110 @@ public class ChooseTextureActivity extends Activity implements AbsListView.OnScr
             R.drawable.bottom, R.drawable.bluetower
     };
 
-    @Override
-    public void onCreate(Bundle savedInstanceBundle) {
-        super.onCreate(savedInstanceBundle);
+    private static final int PICTURE_REQUEST_CODE = 1;
+    private static final int TILE_FILL_REQUEST_CODE = 2;
+    private byte[] picture;
+    private int resourceId;
 
+    private void createLayout() {
         setContentView(R.layout.choose_texture_preference);
 
         GridView gridview = (GridView) findViewById(R.id.gridview);
 
+        gridview.setBackgroundColor(colorBackground);
+
+        gridview.setAdapter(new ImageAdapter(this));
+
+        gridview.setOnScrollListener(this);
+    }
+
+    @Override
+    public void onConfigurationChanged(Configuration newConfiguration) {
+        createLayout();
+    }
+
+    private byte[] getBytes(InputStream inputStream) throws IOException {
+        ByteArrayOutputStream byteBuffer = new ByteArrayOutputStream();
+        int bufferSize = 1024;
+        byte[] buffer = new byte[bufferSize];
+
+        int len = 0;
+        while ((len = inputStream.read(buffer)) != -1) {
+            byteBuffer.write(buffer, 0, len);
+        }
+        return byteBuffer.toByteArray();
+    }
+
+    private boolean isLoading;
+    @Override
+    public void onActivityResult(int requestCode, int resultCode, Intent data) {
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode==PICTURE_REQUEST_CODE) {
+                Uri result = null;
+                try {
+                    result = data.getData();
+                InputStream stream = getContentResolver().openInputStream(result);
+                Bitmap bmpPicture = BitmapFactory.decodeStream(stream);
+
+                    ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
+                    bmpPicture.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
+                    picture = outputStream.toByteArray();
+
+                stream.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                Intent chooseTileFillActivityIntent = new Intent(this, ChooseTileFillActivity.class);
+                chooseTileFillActivityIntent.putExtra(EXTRA_TYPE, true);
+                chooseTileFillActivityIntent.setData(result);
+                startActivityForResult(chooseTileFillActivityIntent, TILE_FILL_REQUEST_CODE);
+            }
+
+            if (requestCode==TILE_FILL_REQUEST_CODE) {
+
+                String result;
+                if (isLoading) {
+                    result="FILE:";
+                    //Сохраняем в память картинку
+                    FileOutputStream file;
+                    try {
+                        file = openFileOutput(LocalConfigs.BACKGROUND_FILE_NAME, Context.MODE_PRIVATE);
+                        file.write(picture);
+                    } catch (FileNotFoundException e) {
+                        //Не удалось создать файл
+                        e.printStackTrace();
+                    } catch (IOException e) {
+                        //Нет места
+                        Toast.makeText(this, R.string.not_enough_free_memory, Toast.LENGTH_LONG).show();
+                        e.printStackTrace();
+                    }
+                    result+=LocalConfigs.BACKGROUND_FILE_NAME;
+                }
+                else {
+                   result="RESOURCE:"+resourceId;
+                }
+                result+=":"+data.getStringExtra(ChooseTileFillActivity.RESULT_EXTRA_NAME);
+
+                PreferenceManager.getDefaultSharedPreferences(this).edit()
+                        .putString(LocalConfigs.BACKGROUNG_PREFERENCE_NAME, result)
+                        .apply();
+                LocalConfigs.updateBackground();
+
+                finish();
+
+            }
+        }
+        super.onActivityResult(requestCode, resultCode, data);
+
+    }
+
+    @Override
+    public void onCreate(Bundle savedInstanceBundle) {
+        super.onCreate(savedInstanceBundle);
+        picture = null;
+        resourceId = -1;
 
         final float[] background = LocalConfigs.getWorldBGColor();
         colorBackground =  Color.argb((int)(background[3]*255), (int)(background[0]*255), (int)(background[1]*255), (int)(background[2]*255));
@@ -37,12 +141,30 @@ public class ChooseTextureActivity extends Activity implements AbsListView.OnScr
         final float[] borders = LocalConfigs.getWorldBoardersColor();
         colorBorder = Color.argb((int)(borders[3]*255), (int)(borders[0]*255), (int)(borders[1]*255), (int)(borders[2]*255));
 
-        gridview.setBackgroundColor(colorBackground);
+        createLayout();
+    }
 
-        gridview.setAdapter(new ImageAdapter(this));
-
-        gridview.setOnScrollListener(this);
-
+    public static final String EXTRA = LocalConfigs.PACKAGE_NAME + ".Configs.Preference.ChooseTextureActivity";
+    public static final String EXTRA_TYPE = EXTRA + ".TYPE";
+    public static final String EXTRA_RESOURCE = EXTRA + ".RESOURCE";
+    private void chooseTexture(int position) {
+        //Загруженная картинка не была получена из вне, а представляет из себя ресурс
+        if (position!=images.length-1) {
+            resourceId=images[position];
+            Intent chooseTileFillActivityIntent = new Intent(this, ChooseTileFillActivity.class);
+            chooseTileFillActivityIntent.putExtra(EXTRA_TYPE, false);
+            chooseTileFillActivityIntent.putExtra(EXTRA_RESOURCE, resourceId);
+            startActivityForResult(chooseTileFillActivityIntent, TILE_FILL_REQUEST_CODE);
+            isLoading = false;
+        }
+        else {
+            Intent pickImage = new Intent();
+            pickImage.setType("image/jpeg");
+            pickImage.setAction(Intent.ACTION_GET_CONTENT);
+            pickImage.addFlags(Intent.FLAG_GRANT_READ_URI_PERMISSION);
+            startActivityForResult(pickImage, PICTURE_REQUEST_CODE);
+            isLoading = true;
+        }
     }
 
     int colorBackground;
@@ -158,8 +280,16 @@ public class ChooseTextureActivity extends Activity implements AbsListView.OnScr
                             animator.start();
                         }
                         else {
-                            if (Math.abs(x-startX)<10 & Math.abs(y-startY)<10)
-                                Toast.makeText(ChooseTextureActivity.this, "Texture " + position, 1).show();
+                            valueAnimator = ValueAnimator.ofFloat(1,0);
+                            valueAnimator.setDuration(100);
+                            valueAnimator.addUpdateListener(new ValueAnimator.AnimatorUpdateListener() {
+                                @Override
+                                public void onAnimationUpdate(ValueAnimator animation) {
+                                    animate(animation, v);
+                                }
+                            });
+                            valueAnimator.start();
+                            chooseTexture(position);
                         }
                         break;
                 }
