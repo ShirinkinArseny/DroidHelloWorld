@@ -252,6 +252,8 @@ public class Settings extends PreferenceActivity {
         if (toooooooooOld)
 
             removeAd((ViewGroup)findViewById(android.R.id.list).getParent().getParent().getParent());
+
+        LocalConfigs.updateBackground();
         super.onDestroy();
     }
 

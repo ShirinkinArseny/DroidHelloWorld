@@ -206,7 +206,7 @@ public class Graphic {
                 break;
             case DRAW_BITMAPS:    initBitmaps();
                 break;
-            case FILL_BITMAP: initFillBitmap();
+            case FILL_BITMAP: //initFillBitmap();
                 break;
         }
     }
@@ -233,10 +233,26 @@ public class Graphic {
         return id;
     }
 
+    private static Bitmap rotate(Bitmap b) {
+        android.graphics.Matrix bitmapRotation = new android.graphics.Matrix();
+        bitmapRotation.postRotate(180);
+        bitmapRotation.postScale(-1,1);
+        return Bitmap.createBitmap(b , 0, 0, b.getWidth(), b.getHeight(), bitmapRotation, true);
+    }
+
+    public static int genTextureBackground(Bitmap b) {
+        return genTexture(b);
+    }
+
+
     public static int genInfinityTexture(Bitmap b) {
         final int id = TextureGenerator.loadTexture(b,true);
         textures.add(id);
         return id;
+    }
+
+    public static int genInfinityTextureBackgroung(Bitmap b) {
+        return genInfinityTexture(rotate(b));
     }
 
     private static float[] scaleMatrix = new float[16];
@@ -287,24 +303,32 @@ public class Graphic {
      * @param dx Смещение
      */
     public static void fillBitmap(int texture, float width, float dx, PaintingType ft) {
-        //Получаем ширину экрана
-        final int screenWidth = LocalConfigs.getDisplayWidth(), screenHeight = LocalConfigs.getDisplayHeight();
-        //Переводим смещение в систему координат OpenGL
-        dx /= screenWidth;
+        if (ft == PaintingType.Tile) {
+            initFillBitmap();
+            //Получаем ширину экрана
+            final int screenWidth = LocalConfigs.getDisplayWidth(), screenHeight = LocalConfigs.getDisplayHeight();
+            //Переводим смещение в систему координат OpenGL
+            dx /= screenWidth;
 
-        final float height = width / screenHeight;
-        width /= screenWidth;
+            final float height = width / screenHeight;
+            width /= screenWidth;
 
-        //Задаем параметры для фрагментного шейдера
-        fillBitmapShader.setDX(dx);
-        fillBitmapShader.setTextureDimensions(width,height);
-        glBindTexture(GL_TEXTURE_2D, texture);
+            //Задаем параметры для фрагментного шейдера
+            fillBitmapShader.setDX(dx);
+            fillBitmapShader.setTextureDimensions(width, height);
+            glBindTexture(GL_TEXTURE_2D, texture);
 
 
-        //Рисуем к херам
-        glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
-        glBindTexture(GL_TEXTURE_2D, 0);
-        glUseProgram(0);
+            //Рисуем к херам
+            glDrawArrays(GL_TRIANGLE_FAN, 0, 4);
+            glBindTexture(GL_TEXTURE_2D, 0);
+            glUseProgram(0);
+        }
+        else {
+            initBitmaps();
+            bindBitmap(texture);
+            drawRect(0,0, LocalConfigs.getDisplayWidth(), LocalConfigs.getDisplayHeight(), 1,1,1,1);
+        }
     }
 
     /*

@@ -78,6 +78,7 @@ public class ChooseTextureActivity extends Activity implements AbsListView.OnScr
                     ByteArrayOutputStream outputStream = new ByteArrayOutputStream();
                     bmpPicture.compress(Bitmap.CompressFormat.PNG, 100, outputStream);
                     picture = outputStream.toByteArray();
+                    bmpPicture.recycle();
 
                 stream.close();
                 } catch (FileNotFoundException e) {

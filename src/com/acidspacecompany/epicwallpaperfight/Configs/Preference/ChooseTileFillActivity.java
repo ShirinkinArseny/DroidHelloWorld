@@ -110,8 +110,8 @@ public class ChooseTileFillActivity extends Activity implements View.OnClickList
         super.onCreate(savedInstanceBundle);
         Intent parcel = getIntent();
 
-        //final float[] background = LocalConfigs.getWorldBGColor();
-        //backgroundColor = Color.argb((int) (background[3] * 255), (int) (background[0] * 255), (int) (background[1] * 255), (int) (background[2] * 255));
+        float[] background = LocalConfigs.getWorldBGColor();
+        backgroundColor = Color.argb((int) (background[3] * 255), (int) (background[0] * 255), (int) (background[1] * 255), (int) (background[2] * 255));
 
         if (parcel.getBooleanExtra(ChooseTextureActivity.EXTRA_TYPE, false)) {
             Uri access = parcel.getData();
@@ -149,6 +149,7 @@ public class ChooseTileFillActivity extends Activity implements View.OnClickList
                 break;
         }
         setResult(Activity.RESULT_OK, result);
+        rawPicture.recycle();
         finish();
     }
 }

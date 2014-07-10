@@ -17,7 +17,7 @@ public class LocalConfigs {
 
     public static final String PACKAGE_NAME = "com.acidspacecompany.epicwallpaperfight";
     public static final String BACKGROUND_FILE_NAME = "backgroung.png";
-    public static final String BACKGROUNG_PREFERENCE_NAME = "background_preference";
+    public static final String BACKGROUNG_PREFERENCE_NAME = "canvaTexture";
 
     private static File FOLDER;
     public static void setFolderName(File name) {
@@ -33,13 +33,25 @@ public class LocalConfigs {
      * Обновление фона приложения
      */
     public static void updateBackground() {
+
         //Получаем текущий фон и тип замощения
         //Формат строки
         //<Тип картинки>:<Доступ>:<Тип рисовки>
         //<Тип картинки> -- FILE или RESOURCE
         //<Доступ> -- имя файла (для FILE), номер ресурса (для RESOURCE)
         //<Тип рисовки> -- TILE или FILL
-        String background = settings.getString(BACKGROUNG_PREFERENCE_NAME, "RESOURCE:"+ R.drawable.grid+":TILE");
+        BicycleDebugger.d(TAG, "Updating background");
+        String background = settings.getString(BACKGROUNG_PREFERENCE_NAME, "RESOURCE:" + R.drawable.grid + ":TILE");
+        String[] params = background.split(":");
+        paintingType = params[2].equals("FILL") ? Graphic.PaintingType.Fill : Graphic.PaintingType.Tile;
+        if (params[0].equals("RESOURCE")) {
+            int resourceId = Integer.parseInt(params[1]);
+            World.setBackgroung(resourceId, paintingType);
+        } else {
+            Bitmap file = loadBitmapFromFile(params[1]);
+            World.setBackgroung(file, paintingType);
+        }
+
     }
 
 
@@ -104,6 +116,7 @@ public class LocalConfigs {
                                 break;
                         }
                     }
+                    updateBackground();
                     World.reInit();
                 }
             }
@@ -128,6 +141,8 @@ public class LocalConfigs {
         fields.add(new IntegerField("worldVerticalBottomBorders"));
         settingsListener.onSharedPreferenceChanged(settings, null);
         BicycleDebugger.i("Configs", "Loaded successfully");
+
+        updateBackground();
     }
 
     public static void applySettings() {

@@ -30,8 +30,12 @@ public class World {
         World.physicIsWorking = physicIsWorking;
     }
 
-    private static Bitmap getScaledBitmap(Bitmap b, int size) {
+    public static Bitmap getScaledBitmap(Bitmap b, int size) {
         return Bitmap.createScaledBitmap(b, size, size, true);
+    }
+
+    private static Bitmap getBitmapFromResource(int resourceId) {
+        return BitmapFactory.decodeResource(res, resourceId);
     }
 
     private static Bitmap getScaledResource(Resources res, int id, int size) {
@@ -100,8 +104,9 @@ public class World {
 
         Unit.init(menTextureIDs, sizes);
 
-        Bitmap canva=getScaledBitmap(BitmapFactory.decodeResource(res, R.drawable.grid), power2nearest(getScaledValue(256)));
-        CanvaLayer.init((int) (getScaledValue(canva.getWidth())), Graphic.genInfinityTexture(canva), LocalConfigs.getPaintingType());
+        //Bitmap canva=getScaledBitmap(BitmapFactory.decodeResource(res, R.drawable.grid), power2nearest(getScaledValue(256)));
+        //CanvaLayer.init((int) (getScaledValue(canva.getWidth())), Graphic.genInfinityTexture(canva), LocalConfigs.getPaintingType());
+        CanvaLayer.init((int)getScaledValue(512));
 
         Bitmap blood1=getScaledResource(res, R.drawable.blood, 80);
         Bitmap blood2=getScaledResource(res, R.drawable.coal, 80);
@@ -197,6 +202,15 @@ public class World {
         BloodLayer.update(dt);
         MessagesLayer.update(dt);
         CanvaLayer.update(dt);
+    }
+
+    public static void setBackgroung(Bitmap backgroung, Graphic.PaintingType paintingType)
+    {
+        CanvaLayer.setDrawingBitmap(backgroung, paintingType);
+    }
+    public static void setBackgroung(int resourceId, Graphic.PaintingType paintingType)
+    {
+        setBackgroung(getBitmapFromResource(resourceId), paintingType);
     }
 
     private void draw() {

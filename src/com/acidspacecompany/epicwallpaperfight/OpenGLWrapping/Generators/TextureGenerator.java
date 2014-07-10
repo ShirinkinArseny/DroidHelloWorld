@@ -41,9 +41,7 @@ public class TextureGenerator {
         //Генерирем Mipmap
         glGenerateMipmap(GL_TEXTURE_2D);
 
-        //Битмап не нужен больше ни кому
         bitmap.recycle();
-
 
         //Сбрасываем текстуру так как действия с ней пока закончились
         glBindTexture(GL_TEXTURE_2D, 0);
