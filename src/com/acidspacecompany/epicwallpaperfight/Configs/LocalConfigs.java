@@ -92,6 +92,9 @@ public class LocalConfigs {
     public static final int worldVerticalBottomBorders=getNum();
 
     private static SharedPreferences settings;
+    public static SharedPreferences getSettings() {
+        return settings;
+    }
     private static SharedPreferences.OnSharedPreferenceChangeListener settingsListener;
 
     public static void init(Context context) {
@@ -141,8 +144,6 @@ public class LocalConfigs {
         fields.add(new IntegerField("worldVerticalBottomBorders"));
         settingsListener.onSharedPreferenceChanged(settings, null);
         BicycleDebugger.i("Configs", "Loaded successfully");
-
-        updateBackground();
     }
 
     public static void applySettings() {

@@ -49,6 +49,7 @@ public class LiveWallpaperService extends OpenGLES20LiveWallpaperService {
 
         @Override
         public void onResume() {
+            LocalConfigs.updateBackground();
             world.resumePainting();
         }
 

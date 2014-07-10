@@ -327,7 +327,12 @@ public class Graphic {
         else {
             initBitmaps();
             bindBitmap(texture);
-            drawRect(0,0, LocalConfigs.getDisplayWidth(), LocalConfigs.getDisplayHeight(), 1,1,1,1);
+            int error = glGetError();
+            if (error!=GL_NO_ERROR)
+                BicycleDebugger.d(TAG, error+"");
+            setScaleMatrix(LocalConfigs.getDisplayWidth(), LocalConfigs.getDisplayHeight());
+            drawBindedBitmap(0,0);
+           // drawRect(0,0, LocalConfigs.getDisplayWidth(), LocalConfigs.getDisplayHeight(), 1,1,1,1);
         }
     }
 

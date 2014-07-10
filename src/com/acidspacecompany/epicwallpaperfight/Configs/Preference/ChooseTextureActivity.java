@@ -117,11 +117,12 @@ public class ChooseTextureActivity extends Activity implements AbsListView.OnScr
                 }
                 result+=":"+data.getStringExtra(ChooseTileFillActivity.RESULT_EXTRA_NAME);
 
-                PreferenceManager.getDefaultSharedPreferences(this).edit()
-                        .putString(LocalConfigs.BACKGROUNG_PREFERENCE_NAME, result)
-                        .apply();
-                LocalConfigs.updateBackground();
+                LocalConfigs.getSettings().edit().putString(LocalConfigs.BACKGROUNG_PREFERENCE_NAME, result).apply();
+                //LocalConfigs.updateBackground();
 
+                //Intent resultIntent = new Intent();
+                //resultIntent.putExtra("result", result);
+                //setResult(Activity.RESULT_OK, resultIntent);
                 finish();
 
             }

@@ -9,6 +9,7 @@ import android.content.SharedPreferences;
 import android.net.Uri;
 import android.os.Build;
 import android.os.Bundle;
+import android.preference.Preference;
 import android.preference.PreferenceActivity;
 import android.preference.PreferenceFragment;
 import android.preference.PreferenceManager;
@@ -21,6 +22,7 @@ import android.widget.Toast;
 import com.acidspacecompany.epicwallpaperfight.Ads.AdBuilder;
 import com.acidspacecompany.epicwallpaperfight.Configs.ConfigField;
 import com.acidspacecompany.epicwallpaperfight.Configs.LocalConfigs;
+import com.acidspacecompany.epicwallpaperfight.Configs.Preference.ChooseTextureActivity;
 
 import java.util.ArrayList;
 import java.util.zip.Inflater;
@@ -29,6 +31,8 @@ public class Settings extends PreferenceActivity {
     public Settings() {
 
     }
+
+
 
     /**
      * Создает всплывающее уведомление о просьбе оставить отзыв,
@@ -252,8 +256,6 @@ public class Settings extends PreferenceActivity {
         if (toooooooooOld)
 
             removeAd((ViewGroup)findViewById(android.R.id.list).getParent().getParent().getParent());
-
-        LocalConfigs.updateBackground();
         super.onDestroy();
     }
 
@@ -301,6 +303,5 @@ public class Settings extends PreferenceActivity {
             linearLayout.addView(AdBuilder.getAdView());
             return linearLayout;
         }
-
     }
 }
