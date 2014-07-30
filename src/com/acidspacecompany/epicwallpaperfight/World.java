@@ -204,13 +204,13 @@ public class World {
         CanvaLayer.update(dt);
     }
 
-    public static void setBackgroung(Bitmap backgroung, Graphic.PaintingType paintingType)
+    public static void setBackgroung(Bitmap backgroung, Graphic.PaintingType paintingType, int width)
     {
-        CanvaLayer.setDrawingBitmap(backgroung, paintingType);
+        CanvaLayer.setDrawingBitmap(backgroung, paintingType, width);
     }
-    public static void setBackgroung(int resourceId, Graphic.PaintingType paintingType)
+    public static void setBackgroung(int resourceId, Graphic.PaintingType paintingType, int width)
     {
-        setBackgroung(getBitmapFromResource(resourceId), paintingType);
+        setBackgroung(getBitmapFromResource(resourceId), paintingType,width);
     }
 
     private void draw() {

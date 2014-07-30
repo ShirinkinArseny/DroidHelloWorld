@@ -10,9 +10,7 @@ import android.content.res.Configuration;
 import android.graphics.*;
 import android.net.Uri;
 import android.os.Bundle;
-import android.preference.PreferenceManager;
 import android.util.DisplayMetrics;
-import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 import android.view.ViewGroup;
@@ -117,7 +115,7 @@ public class ChooseTextureActivity extends Activity implements AbsListView.OnScr
                 }
                 result+=":"+data.getStringExtra(ChooseTileFillActivity.RESULT_EXTRA_NAME);
 
-                LocalConfigs.getSettings().edit().putString(LocalConfigs.BACKGROUNG_PREFERENCE_NAME, result).apply();
+                LocalConfigs.getSettings().edit().putString(LocalConfigs.BACKGROUND_PREFERENCE_NAME, result).apply();
                 //LocalConfigs.updateBackground();
 
                 //Intent resultIntent = new Intent();

@@ -5,7 +5,6 @@ import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
 import android.preference.PreferenceManager;
-import android.util.Log;
 import com.acidspacecompany.epicwallpaperfight.OpenGLWrapping.Graphic;
 import com.acidspacecompany.epicwallpaperfight.R;
 import com.acidspacecompany.epicwallpaperfight.World;
@@ -17,7 +16,7 @@ public class LocalConfigs {
 
     public static final String PACKAGE_NAME = "com.acidspacecompany.epicwallpaperfight";
     public static final String BACKGROUND_FILE_NAME = "backgroung.png";
-    public static final String BACKGROUNG_PREFERENCE_NAME = "canvaTexture";
+    public static final String BACKGROUND_PREFERENCE_NAME = "canvaTexture";
 
     private static File FOLDER;
     public static void setFolderName(File name) {
@@ -27,6 +26,27 @@ public class LocalConfigs {
     public static Bitmap loadBitmapFromFile(String fileName) {
         File bitmapFile = new File(FOLDER, fileName);
         return BitmapFactory.decodeFile(bitmapFile.getAbsolutePath());
+    }
+
+    private static final String BACKGROUND_SCALE_PARAM_NAME = "backgroundScale";
+    private static final float defaultBackgroundScale = 64;
+    private static final float backgroundScaleMin = 32;
+    public static float getBackgroundScaleMin() {return backgroundScaleMin;}
+    private static final float backgroundScaleMax = 512;
+    public static float getBackgroundScaleMax() {return backgroundScaleMax;}
+    public static float getBackgroundScale() {
+        return settings.getFloat(BACKGROUND_SCALE_PARAM_NAME,defaultBackgroundScale);
+    }
+    public static void setBackgroundScale(float scale) {
+        settings.edit().putFloat(BACKGROUND_SCALE_PARAM_NAME, scale).apply();
+    }
+
+    private static final String BACKGROUND_OPACITY_PARAM_NAME = "backgroundOpacity";
+    public static float getBackgroundOpacity() {
+        return settings.getFloat(BACKGROUND_OPACITY_PARAM_NAME, 1.0f);
+    }
+    public static void setBackgroundOpacity(float opacity) {
+        settings.edit().putFloat(BACKGROUND_OPACITY_PARAM_NAME, opacity).apply();
     }
 
     /**
@@ -41,15 +61,15 @@ public class LocalConfigs {
         //<Доступ> -- имя файла (для FILE), номер ресурса (для RESOURCE)
         //<Тип рисовки> -- TILE или FILL
         BicycleDebugger.d(TAG, "Updating background");
-        String background = settings.getString(BACKGROUNG_PREFERENCE_NAME, "RESOURCE:" + R.drawable.grid + ":TILE");
+        String background = settings.getString(BACKGROUND_PREFERENCE_NAME, "RESOURCE:" + R.drawable.grid + ":TILE");
         String[] params = background.split(":");
         paintingType = params[2].equals("FILL") ? Graphic.PaintingType.Fill : Graphic.PaintingType.Tile;
         if (params[0].equals("RESOURCE")) {
             int resourceId = Integer.parseInt(params[1]);
-            World.setBackgroung(resourceId, paintingType);
+            World.setBackgroung(resourceId, paintingType, (int)getBackgroundScale());
         } else {
             Bitmap file = loadBitmapFromFile(params[1]);
-            World.setBackgroung(file, paintingType);
+            World.setBackgroung(file, paintingType, (int)getBackgroundScale());
         }
 
     }

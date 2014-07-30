@@ -297,7 +297,7 @@ public class Graphic {
     public enum PaintingType {Tile, Fill}
 
     /**
-     * Замощение битмапом (подробнее:http://cs539402.vk.me/u41272716/docs/d973cab3e84b/22.png?extra=Z-300gQW1h269BKGF0Rqg1ikgVy-GqIjf7NxXPS62Da0YORXmbgp3H6EU2RBjH1gJNFQfN7Gvl5DjQwClt036Mm1QM1rur0)
+     * Замощение битмапом
      * @param texture Текстура для замощения
      * @param width Ширина текстуры
      * @param dx Смещение

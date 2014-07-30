@@ -21,6 +21,7 @@ import com.acidspacecompany.epicwallpaperfight.R;
 
 public class ChooseTileFillActivity extends Activity implements View.OnClickListener {
 
+
     ImageView fillImage, tileImage;
     Drawable fillDrawable, tileDrawable;
     int backgroundColor;
@@ -32,9 +33,6 @@ public class ChooseTileFillActivity extends Activity implements View.OnClickList
         int tileCount = 5;
         int size = pictureToTile.getHeight();
         float step = (float)size / tileCount;
-
-        DisplayMetrics displayMetrics = new DisplayMetrics();
-        getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
         Bitmap result = Bitmap.createBitmap(size,size, Bitmap.Config.ARGB_8888);
 
 
@@ -71,6 +69,7 @@ public class ChooseTileFillActivity extends Activity implements View.OnClickList
     }
 
     private static final int PICTURE_REQUEST_CODE = 1;
+    private static final int SCALE_OPACITY_REQUEST_CODE = 2;
     private Bitmap rawPicture = null;
 
     private void preparePictures(Bitmap rawPicture) {
@@ -88,22 +87,33 @@ public class ChooseTileFillActivity extends Activity implements View.OnClickList
 
     @Override
     public void onActivityResult(int requestCode, int resultCode, Intent data) {
-        if (requestCode == PICTURE_REQUEST_CODE & resultCode == Activity.RESULT_OK) {
-            try {
-                InputStream stream = getContentResolver().openInputStream(data.getData());
-                rawPicture = BitmapFactory.decodeStream(stream);
-                stream.close();
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            } catch (IOException e) {
-                e.printStackTrace();
+        if (resultCode == Activity.RESULT_OK) {
+            if (requestCode == PICTURE_REQUEST_CODE) {
+                try {
+                    InputStream stream = getContentResolver().openInputStream(data.getData());
+                    rawPicture = BitmapFactory.decodeStream(stream);
+                    stream.close();
+                } catch (FileNotFoundException e) {
+                    e.printStackTrace();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+                preparePictures(rawPicture);
+                recreateLayout();
             }
-            preparePictures(rawPicture);
-            recreateLayout();
-
+            if (requestCode == SCALE_OPACITY_REQUEST_CODE) {
+                Intent result = new Intent();
+                result.putExtra(RESULT_EXTRA_NAME, TILE_RESULT);
+                setResult(Activity.RESULT_OK, result);
+                finish();
+            }
         }
         super.onActivityResult(requestCode, resultCode, data);
     }
+
+    private boolean textureType;
+    private int resourceNo;
+    private Uri resource;
 
     @Override
     public void onCreate(Bundle savedInstanceBundle) {
@@ -113,17 +123,21 @@ public class ChooseTileFillActivity extends Activity implements View.OnClickList
         float[] background = LocalConfigs.getWorldBGColor();
         backgroundColor = Color.argb((int) (background[3] * 255), (int) (background[0] * 255), (int) (background[1] * 255), (int) (background[2] * 255));
 
-        if (parcel.getBooleanExtra(ChooseTextureActivity.EXTRA_TYPE, false)) {
-            Uri access = parcel.getData();
+        textureType = parcel.getBooleanExtra(ChooseTextureActivity.EXTRA_TYPE, false);
+
+        if (textureType) {
+            resource = parcel.getData();
             try {
-                rawPicture = BitmapFactory.decodeStream(getContentResolver().openInputStream(access));
+                rawPicture = BitmapFactory.decodeStream(getContentResolver().openInputStream(resource));
             } catch (FileNotFoundException e) {
                 e.printStackTrace();
             }
         }
-        else
+        else {
+            resourceNo = parcel.getIntExtra(ChooseTextureActivity.EXTRA_RESOURCE, -1);
             rawPicture = BitmapFactory.decodeResource(getResources(),
-                    parcel.getIntExtra(ChooseTextureActivity.EXTRA_RESOURCE, -1));
+                    resourceNo);
+        }
 
             preparePictures(rawPicture);
 
@@ -139,17 +153,23 @@ public class ChooseTileFillActivity extends Activity implements View.OnClickList
 
     @Override
     public void onClick(View v) {
-        Intent result = new Intent();
         switch (v.getId()) {
             case R.id.fill_example:
+                Intent result = new Intent();
                 result.putExtra(RESULT_EXTRA_NAME, FILL_RESULT);
+                setResult(Activity.RESULT_OK, result);
+                rawPicture.recycle();
+                finish();
                 break;
             case R.id.tile_example:
-                result.putExtra(RESULT_EXTRA_NAME, TILE_RESULT);
+                Intent getScaleOpacity = new Intent(this, ChooseScaleOpacity.class);
+                getScaleOpacity.putExtra(ChooseTextureActivity.EXTRA_TYPE, textureType);
+                if (textureType)
+                    getScaleOpacity.setData(resource);
+                else
+                    getScaleOpacity.putExtra(ChooseTextureActivity.EXTRA_RESOURCE, resourceNo);
+                startActivityForResult(getScaleOpacity, SCALE_OPACITY_REQUEST_CODE);
                 break;
         }
-        setResult(Activity.RESULT_OK, result);
-        rawPicture.recycle();
-        finish();
     }
 }

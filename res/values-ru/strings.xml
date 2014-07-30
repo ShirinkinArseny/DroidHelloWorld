@@ -61,5 +61,9 @@
     <string name="thankyou">Спасибо!</string>
 
     <string name="not_enough_free_memory">Недостаточно свободной памяти</string>
+
+
+    <string name="scale_param">Масштаб</string>
+    <string name="opacity_param">Прозрачность</string>
     
 </resources>

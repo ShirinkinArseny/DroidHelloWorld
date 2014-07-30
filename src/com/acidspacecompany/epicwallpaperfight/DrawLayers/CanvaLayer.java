@@ -47,13 +47,14 @@ public class CanvaLayer {
         fillType=pt;
     }
 
-    public static void setDrawingBitmap(Bitmap drawingBitmap, Graphic.PaintingType paintingType) {
+    public static void setDrawingBitmap(Bitmap drawingBitmap, Graphic.PaintingType paintingType, int newWidth) {
         isBackgroungLoaded = false;
         bitmapToLoad = drawingBitmap;
         fillType = paintingType;
         if (paintingType == Graphic.PaintingType.Tile)
             //Необходимо отрескейлить битмап так, чтобы он был квадратом со стороной кратной степени двойки
             resizeBitmapToFill();
+        width = newWidth;
     }
 
     private static void resizeBitmapToFill() {

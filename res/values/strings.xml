@@ -58,5 +58,10 @@
 
     <string name="thankyou">Thank you!</string>
 
+    <string name="not_enough_free_memory">There is not enough free memory</string>
+
+    <string name="scale_param">Scale</string>
+    <string name="opacity_param">Opacity</string>
+
 
 </resources>

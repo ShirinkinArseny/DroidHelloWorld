@@ -1,0 +1,48 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<RelativeLayout
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent" xmlns:android="http://schemas.android.com/apk/res/android">
+    <ImageView
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:id="@+id/tilingImageView" android:layout_centerInParent="true" android:src="@drawable/horizontal"
+            android:scaleType="centerCrop"/>
+    <RelativeLayout
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_alignParentStart="false" android:layout_alignBottom="@+id/tilingImageView"
+            android:background="#998c947b">
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/scale_param"
+                android:id="@+id/textView" android:layout_alignParentStart="true"/>
+        <SeekBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/scaleSeekBar" android:max="100"
+                android:layout_alignParentStart="false" android:layout_alignParentEnd="true"
+                android:minWidth="150dp"/>
+        <TextView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:textAppearance="?android:attr/textAppearanceLarge"
+                android:text="@string/opacity_param"
+                android:id="@+id/textView2"
+                android:layout_alignParentEnd="false" android:layout_alignParentStart="true"
+                android:layout_below="@+id/textView"/>
+        <SeekBar
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:id="@+id/opacitySeekBar" android:layout_alignParentStart="false" android:layout_alignParentEnd="true"
+                android:layout_below="@+id/scaleSeekBar" android:max="100" android:minWidth="150dp"/>
+        <Button
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:text="@string/applySettings"
+                android:id="@+id/applyButton" android:singleLine="false" android:layout_below="@+id/textView2"
+                android:layout_centerHorizontal="true"/>
+    </RelativeLayout>
+</RelativeLayout>

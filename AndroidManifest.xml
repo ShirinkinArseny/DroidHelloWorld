@@ -45,6 +45,8 @@
         <activity android:name=".Configs.Preference.ChooseTileFillActivity"
                   android:parentActivityName=".Configs.Preference.ChooseTextureActivity"
                     android:configChanges="orientation|screenSize"/>
+        <activity android:name=".Configs.Preference.ChooseScaleOpacity"
+                  android:parentActivityName=".Configs.Preference.ChooseTileFillActivity"/>
 
         <activity android:name="com.google.android.gms.ads.AdActivity"
                   android:configChanges="keyboard|keyboardHidden|orientation|screenLayout|uiMode|screenSize|smallestScreenSize"/>
