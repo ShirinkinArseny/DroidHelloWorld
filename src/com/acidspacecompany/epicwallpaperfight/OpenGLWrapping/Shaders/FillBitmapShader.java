@@ -21,6 +21,11 @@ public class FillBitmapShader {
     private int uDX;
     public void setDX(float dx) {GLES20.glUniform1f(uDX, dx);}
 
+    private int uOpacity;
+    public void setOpacity(float opacity) {
+        GLES20.glUniform1f(uOpacity, opacity);
+    }
+
     private int uTextureUnit;
     public void setTexture(int textureUnit) {
         GLES20.glUniform1i(uTextureUnit, textureUnit);
@@ -44,6 +49,7 @@ public class FillBitmapShader {
         aTexturePosition = GLES20.glGetAttribLocation(programId, "a_TexturePosition");
         uTextureUnit = GLES20.glGetUniformLocation(programId, "u_TextureUnit");
         uTextureDimensions = GLES20.glGetUniformLocation(programId, "u_TextureDimensions");
+        uOpacity = GLES20.glGetUniformLocation(programId, "u_Opacity");
         uDX = GLES20.glGetUniformLocation(programId, "u_DX");
 
     }

@@ -11,6 +11,7 @@ public class CanvaLayer {
     private static int bg;
     private static float dx;
     private static int width;
+    private static float opacity;
     private static int speed;
     private static Graphic.PaintingType fillType;
 
@@ -22,12 +23,14 @@ public class CanvaLayer {
         width = w;
         dx = 0;
         fillType=pt;
+        opacity = 1;
         isBackgroungLoaded = true;
     }
 
     public static void init(int w) {
         width = w;
         dx = 0;
+        opacity = 1;
         isBackgroungLoaded = false;
     }
 
@@ -47,7 +50,7 @@ public class CanvaLayer {
         fillType=pt;
     }
 
-    public static void setDrawingBitmap(Bitmap drawingBitmap, Graphic.PaintingType paintingType, int newWidth) {
+    public static void setDrawingBitmap(Bitmap drawingBitmap, Graphic.PaintingType paintingType, int newWidth, float newOpacity) {
         isBackgroungLoaded = false;
         bitmapToLoad = drawingBitmap;
         fillType = paintingType;
@@ -55,6 +58,7 @@ public class CanvaLayer {
             //Необходимо отрескейлить битмап так, чтобы он был квадратом со стороной кратной степени двойки
             resizeBitmapToFill();
         width = newWidth;
+        opacity = newOpacity;
     }
 
     private static void resizeBitmapToFill() {
@@ -87,6 +91,6 @@ public class CanvaLayer {
         if (!isBackgroungLoaded)
             loadBitmap();
         if (LocalConfigs.getBooleanValue(LocalConfigs.canvaDraw))
-        Graphic.fillBitmap(bg, width, dx, fillType);
+        Graphic.fillBitmap(bg, width, dx, opacity, fillType);
     }
 }

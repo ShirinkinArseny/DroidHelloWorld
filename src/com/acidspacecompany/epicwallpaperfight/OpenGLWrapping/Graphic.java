@@ -302,7 +302,7 @@ public class Graphic {
      * @param width Ширина текстуры
      * @param dx Смещение
      */
-    public static void fillBitmap(int texture, float width, float dx, PaintingType ft) {
+    public static void fillBitmap(int texture, float width, float dx,float opacity, PaintingType ft) {
         if (ft == PaintingType.Tile) {
             initFillBitmap();
             //Получаем ширину экрана
@@ -316,6 +316,7 @@ public class Graphic {
             //Задаем параметры для фрагментного шейдера
             fillBitmapShader.setDX(dx);
             fillBitmapShader.setTextureDimensions(width, height);
+            fillBitmapShader.setOpacity(opacity);
             glBindTexture(GL_TEXTURE_2D, texture);
 
 

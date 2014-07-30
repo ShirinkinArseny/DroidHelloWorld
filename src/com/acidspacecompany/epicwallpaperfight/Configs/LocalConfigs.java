@@ -66,10 +66,10 @@ public class LocalConfigs {
         paintingType = params[2].equals("FILL") ? Graphic.PaintingType.Fill : Graphic.PaintingType.Tile;
         if (params[0].equals("RESOURCE")) {
             int resourceId = Integer.parseInt(params[1]);
-            World.setBackgroung(resourceId, paintingType, (int)getBackgroundScale());
+            World.setBackgroung(resourceId, paintingType, (int)getBackgroundScale(), getBackgroundOpacity());
         } else {
             Bitmap file = loadBitmapFromFile(params[1]);
-            World.setBackgroung(file, paintingType, (int)getBackgroundScale());
+            World.setBackgroung(file, paintingType, (int)getBackgroundScale(), getBackgroundOpacity());
         }
 
     }
